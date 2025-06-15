@@ -27,11 +27,9 @@ export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
   return (
     <div className="w-64 bg-white border-r border-gray-200 h-screen">
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center">
-            <School className="w-5 h-5 text-white mr-2" />
-          </div>
-          <h1 className="text-xl font-bold text-blue-600">EduBot</h1>
+        <div className="flex items-center font-bold text-xl">
+          <School className="text-blue-700" size={32} />
+          <span className="ml-3 text-blue-700 font-bold">EduBot</span>
         </div>
       </div>
       
