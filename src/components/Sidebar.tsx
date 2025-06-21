@@ -24,6 +24,21 @@ const menuItems = [
 ];
 
 export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
+  // Lấy role từ localStorage
+  let role = '';
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    role = user.role || '';
+  } catch {}
+
+  // Lọc menu: chỉ admin mới thấy mục 'users'
+  const filteredMenuItems = menuItems.filter(item => {
+    if (item.id === 'users') {
+      return role === 'admin';
+    }
+    return true;
+  });
+
   return (
     <div className="w-64 bg-white border-r border-gray-200 h-screen">
       <div className="p-6 border-b border-gray-200">
@@ -34,7 +49,7 @@ export function Sidebar({ activeItem, onItemClick }: SidebarProps) {
       </div>
       
       <nav className="mt-6">
-        {menuItems.map((item) => {
+        {filteredMenuItems.map((item) => {
           const IconComponent = item.icon;
           const isActive = activeItem === item.id;
           
