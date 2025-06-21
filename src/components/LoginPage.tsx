@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { userServices } from '../services/userServices';
-
+import { useNavigate } from 'react-router-dom';
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,14 +21,19 @@ function LoginPage() {
       localStorage.setItem('accessToken', response.data.accessToken);
       // Kiểm tra role, chỉ cho phép admin
       if (response.data.user.role === 'admin') {
-        window.location.href = '/dashboard';
+        // Set authentication state
+        localStorage.setItem('isAuthenticated', 'true');
+        // Use navigate instead of window.location for better routing
+        navigate('/dashboard');
       } else {
         setError('Chỉ admin mới được truy cập dashboard');
         localStorage.removeItem('user');
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('isAuthenticated');
       }
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Đăng nhập thất bại');
+      localStorage.removeItem('isAuthenticated');
     } finally {
       setLoading(false);
     }
