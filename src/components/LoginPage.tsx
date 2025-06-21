@@ -16,12 +16,15 @@ function LoginPage() {
       const response = await userServices.login(email, password);
       // Lưu thông tin user vào localStorage
       localStorage.setItem('user', JSON.stringify(response.data.user));
+      // Lưu accessToken vào localStorage
+      localStorage.setItem('accessToken', response.data.accessToken);
       // Kiểm tra role, chỉ cho phép admin
       if (response.data.user.role === 'admin') {
         window.location.href = '/dashboard';
       } else {
         setError('Chỉ admin mới được truy cập dashboard');
         localStorage.removeItem('user');
+        localStorage.removeItem('accessToken');
       }
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Đăng nhập thất bại');

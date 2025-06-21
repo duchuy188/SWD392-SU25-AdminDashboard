@@ -12,5 +12,7 @@ export const userServices = {
   getProfile: () => {
     return axiosInstance.get('/auth/profile');
   },
-
+  refreshToken: () => {
+    return axiosInstance.post('/auth/refresh-token');
+  }
 };
