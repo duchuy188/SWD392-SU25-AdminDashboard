@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MetricCard from './MetricCard';
 import { SystemStatus } from './SystemStatus';
@@ -14,17 +15,25 @@ import {
 
 function DashboardPage() {
   const [activeItem, setActiveItem] = useState('dashboard');
+  const navigate = useNavigate();
 
   useEffect(() => {
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (user.role !== 'admin') {
-        window.location.href = '/';
+        handleLogout();
       }
     } catch {
-      window.location.href = '/';
+      handleLogout();
     }
   }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('isAuthenticated');
+    navigate('/');
+  };
 
   const metrics = [
     {
@@ -49,7 +58,7 @@ function DashboardPage() {
 
   return (
     <div className="flex h-screen bg-gray-100">
-      <Sidebar activeItem={activeItem} onItemClick={setActiveItem} />
+      <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">
