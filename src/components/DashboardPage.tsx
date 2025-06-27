@@ -6,6 +6,7 @@ import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
 import ChatManagement from './ChatManagement';
+import TestManagement from './TestManagement';
 import { 
   Users, 
   MessageSquare, 
@@ -70,6 +71,10 @@ function DashboardPage() {
           ) : activeItem === 'chat' ? (
             <div className="animate-fadeIn">
               <ChatManagement />
+            </div>
+          ) : activeItem === 'tests' ? (
+            <div className="animate-fadeIn">
+              <TestManagement />
             </div>
           ) : (
             <div className="animate-fadeIn">
