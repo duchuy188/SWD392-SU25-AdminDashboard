@@ -5,6 +5,7 @@ import MetricCard from './MetricCard';
 import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
+import ChatManagement from './ChatManagement';
 import { 
   Users, 
   MessageSquare, 
@@ -57,31 +58,46 @@ function DashboardPage() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen gradient-primary">
       <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">
           {activeItem === 'users' ? (
-            <UserManagement />
+            <div className="animate-fadeIn">
+              <UserManagement />
+            </div>
+          ) : activeItem === 'chat' ? (
+            <div className="animate-fadeIn">
+              <ChatManagement />
+            </div>
           ) : (
-            <>
+            <div className="animate-fadeIn">
               <div className="mb-8">
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-gray-600 mt-2">Tổng quan về hoạt động của hệ thống EduBot</p>
+                <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+                <p className="text-white/80 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {metrics.map((metric, index) => (
-                  <MetricCard key={index} {...metric} />
+                  <div 
+                    key={index} 
+                    className={`animate-fadeIn hover-lift delay-${index}00`}
+                  >
+                    <MetricCard {...metric} />
+                  </div>
                 ))}
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <SystemStatus />
-                <RecentActivity />
+                <div className="animate-fadeIn hover-lift delay-400">
+                  <SystemStatus />
+                </div>
+                <div className="animate-fadeIn hover-lift delay-500">
+                  <RecentActivity />
+                </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </div>

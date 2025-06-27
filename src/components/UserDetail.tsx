@@ -113,11 +113,17 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-xl">
-          <div className="flex items-center space-x-2">
-            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-500"></div>
-            <p className="text-gray-700">Đang tải thông tin...</p>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div className="glass rounded-2xl p-8 max-w-md w-full mx-4 animate-slideUp">
+          <div className="flex flex-col items-center space-y-4">
+            <div className="relative">
+              <div className="w-16 h-16 gradient-primary rounded-full animate-spin"></div>
+              <div className="absolute inset-0 w-16 h-16 gradient-secondary rounded-full animate-ping opacity-20"></div>
+              <div className="absolute inset-4 w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                <div className="w-4 h-4 gradient-warning rounded-full animate-bounce"></div>
+              </div>
+            </div>
+            <p className="text-white font-medium text-lg">Đang tải thông tin...</p>
           </div>
         </div>
       </div>
@@ -126,17 +132,22 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
   if (error) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-xl">
-          <div className="flex items-center space-x-2 text-red-600">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <p>{error}</p>
+      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div className="glass rounded-2xl p-8 max-w-md w-full mx-4 border-l-4 border-red-500 animate-slideUp">
+          <div className="flex items-center mb-6">
+            <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mr-4">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="text-white font-bold text-lg">Lỗi</h3>
+              <p className="text-white/80">{error}</p>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+            className="w-full px-6 py-3 gradient-danger text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold"
           >
             Đóng
           </button>
@@ -150,13 +161,24 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-white px-6 py-4 border-b flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-800">Thông tin người dùng</h2>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+      <div className="glass rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden mx-4 animate-slideUp">
+        <div className="sticky top-0 glass-dark px-8 py-6 flex justify-between items-center border-b border-white/20">
+          <div className="flex items-center">
+            <div className="w-10 h-10 gradient-primary rounded-2xl flex items-center justify-center mr-4">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-white">Thông tin người dùng</h2>
+              <p className="text-white/80">Chi tiết và thông tin học viên</p>
+            </div>
+          </div>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-gray-700 transition-colors"
+            title="Đóng modal"
+            className="text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 p-2 rounded-xl"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -164,38 +186,42 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           </button>
         </div>
 
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-140px)] custom-scrollbar">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6">
               <div className="relative">
                 {user.profilePicture ? (
                   <img
                     src={user.profilePicture}
                     alt={user.fullName}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg"
+                    className="w-24 h-24 rounded-2xl object-cover border-4 border-white/20 shadow-2xl"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center border-4 border-white shadow-lg">
-                    <span className="text-3xl text-gray-500">{user.fullName.charAt(0)}</span>
+                  <div className="w-24 h-24 rounded-2xl gradient-secondary flex items-center justify-center border-4 border-white/20 shadow-2xl">
+                    <span className="text-3xl text-white font-bold">{user.fullName.charAt(0)}</span>
                   </div>
                 )}
                 <span 
-                  className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${
+                  className={`absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-3 border-white shadow-lg ${
                     user.isActive ? 'bg-green-500' : 'bg-red-500'
                   }`}
                 />
               </div>
               <div>
-                <h3 className="text-2xl font-bold text-gray-900">{user.fullName}</h3>
-                <p className="text-gray-600">{user.email}</p>
-                <div className="flex items-center mt-2 space-x-2">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                <h3 className="text-3xl font-bold text-white mb-2">{user.fullName}</h3>
+                <p className="text-white/80 text-lg mb-3">{user.email}</p>
+                <div className="flex items-center space-x-3">
+                  <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${
+                    user.role === 'admin' 
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' 
+                      : 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white'
                   }`}>
                     {user.role === 'admin' ? 'Quản trị viên' : 'Học viên'}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                  <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${
+                    user.isActive 
+                      ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white' 
+                      : 'bg-gradient-to-r from-red-500 to-pink-500 text-white'
                   }`}>
                     {user.isActive ? 'Đang hoạt động' : 'Không hoạt động'}
                   </span>
@@ -205,9 +231,9 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
             {!isEditing && (
               <button
                 onClick={handleEditClick}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                className="px-6 py-3 gradient-warning text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 font-semibold"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
                 <span>Chỉnh sửa</span>
@@ -216,38 +242,49 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           </div>
 
           {isEditing ? (
-            <form onSubmit={handleSubmit} className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Chỉnh sửa thông tin</h3>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
-                    Họ và tên
-                  </label>
-                  <input
-                    type="text"
-                    id="fullName"
-                    name="fullName"
-                    value={editForm.fullName}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                    required
-                  />
+            <div className="glass rounded-2xl p-8 animate-fadeIn">
+              <div className="flex items-center mb-6">
+                <div className="w-8 h-8 gradient-warning rounded-full flex items-center justify-center mr-3">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white">Chỉnh sửa thông tin</h3>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="fullName" className="block text-sm font-semibold text-white mb-2">
+                      Họ và tên
+                    </label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      value={editForm.fullName}
+                      onChange={handleInputChange}
+                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                      placeholder="Nhập họ và tên"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
+                      Số điện thoại
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={editForm.phone}
+                      onChange={handleInputChange}
+                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                      placeholder="Nhập số điện thoại"
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-                    Số điện thoại
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value={editForm.phone}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="address" className="block text-sm font-semibold text-white mb-2">
                     Địa chỉ
                   </label>
                   <input
@@ -256,231 +293,295 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     name="address"
                     value={editForm.address}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                    className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                    placeholder="Nhập địa chỉ"
                   />
                 </div>
-                <div className="flex justify-end space-x-3 mt-6">
+                <div className="flex justify-end space-x-4 pt-4">
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="px-6 py-3 glass text-white rounded-xl hover:bg-white/20 transition-all duration-300 font-semibold"
                   >
                     Hủy
                   </button>
                   <button
                     type="submit"
                     disabled={updateLoading}
-                    className={`px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
+                    className={`px-6 py-3 gradient-success text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold flex items-center space-x-2 ${
                       updateLoading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
                     {updateLoading ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                         <span>Đang cập nhật...</span>
-                      </div>
+                      </>
                     ) : (
-                      'Lưu thay đổi'
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                        <span>Lưu thay đổi</span>
+                      </>
                     )}
                   </button>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
           ) : (
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin cơ bản</h3>
-              <div className="grid grid-cols-2 gap-6">
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Email</p>
-                  <p className="mt-1 text-gray-900">{user.email}</p>
+            <div className="glass rounded-2xl p-8 animate-fadeIn">
+              <div className="flex items-center mb-6">
+                <div className="w-8 h-8 gradient-info rounded-full flex items-center justify-center mr-3">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Họ và tên</p>
-                  <p className="mt-1 text-gray-900">{user.fullName}</p>
+                <h3 className="text-xl font-bold text-white">Thông tin cơ bản</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <div>
+                    <p className="text-sm font-semibold text-white/60 mb-1">Email</p>
+                    <p className="text-white text-lg">{user.email}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white/60 mb-1">Họ và tên</p>
+                    <p className="text-white text-lg">{user.fullName}</p>
+                  </div>
+                  {user.phone && (
+                    <div>
+                      <p className="text-sm font-semibold text-white/60 mb-1">Số điện thoại</p>
+                      <p className="text-white text-lg">{user.phone}</p>
+                    </div>
+                  )}
                 </div>
-                {user.phone && (
+                <div className="space-y-6">
+                  {user.address && (
+                    <div>
+                      <p className="text-sm font-semibold text-white/60 mb-1">Địa chỉ</p>
+                      <p className="text-white text-lg break-words">{user.address}</p>
+                    </div>
+                  )}
                   <div>
-                    <p className="text-sm font-medium text-gray-500">Số điện thoại</p>
-                    <p className="mt-1 text-gray-900">{user.phone}</p>
+                    <p className="text-sm font-semibold text-white/60 mb-1">Ngày tạo tài khoản</p>
+                    <p className="text-white text-lg">
+                      {new Date(user.createdAt).toLocaleDateString('vi-VN', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </p>
                   </div>
-                )}
-                {user.address && (
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Địa chỉ</p>
-                    <p className="mt-1 text-gray-900">{user.address}</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Ngày tạo tài khoản</p>
-                  <p className="mt-1 text-gray-900">
-                    {new Date(user.createdAt).toLocaleDateString('vi-VN', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
                 </div>
               </div>
             </div>
           )}
-
           {/* Student Information */}
           {studentInfo && (
-            <div className="space-y-6">
-              <div className="bg-gray-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin học viên</h3>
-                
-                {/* Student IDs */}
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Mã học viên</p>
-                    <p className="mt-1 text-gray-900">{studentInfo._id}</p>
+            <div className="space-y-8">
+              <div className="glass rounded-2xl p-8 animate-fadeIn">
+                <div className="flex items-center mb-6">
+                  <div className="w-8 h-8 gradient-success rounded-full flex items-center justify-center mr-3">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Mã người dùng</p>
-                    <p className="mt-1 text-gray-900">{studentInfo.userId}</p>
-                  </div>
+                  <h3 className="text-xl font-bold text-white">Thông tin học viên</h3>
                 </div>
-
-                <div className="grid grid-cols-2 gap-6">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   {studentInfo.grade && (
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Lớp</p>
-                      <p className="mt-1 text-gray-900">{studentInfo.grade}</p>
+                      <p className="text-sm font-semibold text-white/60 mb-1">Lớp</p>
+                      <p className="text-white text-lg">{studentInfo.grade}</p>
                     </div>
                   )}
                   {studentInfo.personalityType && (
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Tính cách</p>
-                      <p className="mt-1 text-gray-900">{studentInfo.personalityType}</p>
+                      <p className="text-sm font-semibold text-white/60 mb-1">Tính cách</p>
+                      <p className="text-white text-lg">{studentInfo.personalityType}</p>
                     </div>
                   )}
                 </div>
 
-                {/* Interests - Show even if empty */}
-                <div className="mt-6">
-                  <p className="text-sm font-medium text-gray-500 mb-2">Sở thích</p>
-                  <div className="flex flex-wrap gap-2">
+                {/* Interests */}
+                <div className="mb-8">
+                  <p className="text-sm font-semibold text-white/60 mb-4">Sở thích</p>
+                  <div className="flex flex-wrap gap-3">
                     {studentInfo.interests.length > 0 ? (
                       studentInfo.interests.map((interest, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                          className="px-4 py-2 interest-tag text-white rounded-xl text-sm font-medium"
                         >
                           {interest}
                         </span>
                       ))
                     ) : (
-                      <p className="text-sm text-gray-500 italic">Chưa có thông tin sở thích</p>
+                      <div className="glass-dark rounded-xl p-4 w-full text-center">
+                        <div className="w-12 h-12 empty-state-icon gradient-info rounded-full flex items-center justify-center mx-auto mb-2">
+                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                          </svg>
+                        </div>
+                        <p className="text-white/60 italic">Chưa có thông tin sở thích</p>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Preferred FPT Majors - Show even if empty */}
-                <div className="mt-6">
-                  <p className="text-sm font-medium text-gray-500 mb-2">Ngành học quan tâm</p>
-                  <div className="flex flex-wrap gap-2">
+                {/* Preferred FPT Majors */}
+                <div className="mb-8">
+                  <p className="text-sm font-semibold text-white/60 mb-4">Ngành học quan tâm</p>
+                  <div className="flex flex-wrap gap-3">
                     {studentInfo.preferredFPTMajors.length > 0 ? (
                       studentInfo.preferredFPTMajors.map((major, index) => (
                         <span
                           key={index}
-                          className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium"
+                          className="px-4 py-2 major-tag text-white rounded-xl text-sm font-medium"
                         >
                           {major}
                         </span>
                       ))
                     ) : (
-                      <p className="text-sm text-gray-500 italic">Chưa có thông tin ngành học quan tâm</p>
+                      <div className="glass-dark rounded-xl p-4 w-full text-center">
+                        <div className="w-12 h-12 empty-state-icon gradient-success rounded-full flex items-center justify-center mx-auto mb-2">
+                          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                          </svg>
+                        </div>
+                        <p className="text-white/60 italic">Chưa có thông tin ngành học quan tâm</p>
+                      </div>
                     )}
                   </div>
                 </div>
 
-                {/* Academic Results - Show even if empty */}
-                <div className="mt-6">
-                  <h4 className="text-base font-semibold text-gray-900 mb-4">Kết quả học tập</h4>
+                {/* Academic Results */}
+                <div className="mb-8">
+                  <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                    <div className="w-6 h-6 gradient-warning rounded-full flex items-center justify-center mr-2">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                      </svg>
+                    </div>
+                    Kết quả học tập
+                  </h4>
                   {studentInfo.academicResults.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-100">
-                          <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Môn học
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Điểm
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Học kỳ
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {studentInfo.academicResults.map((result, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {result.subject}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {result.score}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {result.semester}
-                              </td>
+                    <div className="glass-dark rounded-xl overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full">
+                          <thead className="bg-white/10">
+                            <tr>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Môn học
+                              </th>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Điểm
+                              </th>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Học kỳ
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="divide-y divide-white/20">
+                            {studentInfo.academicResults.map((result, index) => (
+                              <tr key={index} className="table-row-hover">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                                  {result.subject}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                  <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
+                                    result.score >= 8 ? 'score-excellent' : 
+                                    result.score >= 6.5 ? 'score-good' : 'score-poor'
+                                  }`}>
+                                    {result.score}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                  {result.semester}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center py-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-500 italic">Chưa có kết quả học tập</p>
+                    <div className="glass-dark rounded-xl p-8 text-center">
+                      <div className="w-16 h-16 empty-state-icon gradient-info rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                      </div>
+                      <p className="text-white/60 italic">Chưa có kết quả học tập</p>
                     </div>
                   )}
                 </div>
 
-                {/* Test Results - Show even if empty */}
-                <div className="mt-6">
-                  <h4 className="text-base font-semibold text-gray-900 mb-4">Kết quả kiểm tra</h4>
+                {/* Test Results */}
+                <div>
+                  <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                    <div className="w-6 h-6 gradient-info rounded-full flex items-center justify-center mr-2">
+                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                      </svg>
+                    </div>
+                    Kết quả kiểm tra
+                  </h4>
                   {studentInfo.testResults.length > 0 ? (
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-100">
-                          <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Bài kiểm tra
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Điểm
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                              Ngày
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                          {studentInfo.testResults.map((result, index) => (
-                            <tr key={index} className="hover:bg-gray-50">
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {result.test}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {result.score}
-                              </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                {new Date(result.date).toLocaleDateString('vi-VN', {
-                                  year: 'numeric',
-                                  month: 'long',
-                                  day: 'numeric'
-                                })}
-                              </td>
+                    <div className="glass-dark rounded-xl overflow-hidden">
+                      <div className="overflow-x-auto">
+                        <table className="min-w-full">
+                          <thead className="bg-white/10">
+                            <tr>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Bài kiểm tra
+                              </th>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Điểm
+                              </th>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Ngày
+                              </th>
                             </tr>
-                          ))}
-                        </tbody>
-                      </table>
+                          </thead>
+                          <tbody className="divide-y divide-white/20">
+                            {studentInfo.testResults.map((result, index) => (
+                              <tr key={index} className="table-row-hover">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                                  {result.test}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                  <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
+                                    result.score >= 8 ? 'score-excellent' : 
+                                    result.score >= 6.5 ? 'score-good' : 'score-poor'
+                                  }`}>
+                                    {result.score}
+                                  </span>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                  {new Date(result.date).toLocaleDateString('vi-VN', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                  })}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   ) : (
-                    <div className="text-center py-4 bg-gray-50 rounded-lg">
-                      <p className="text-sm text-gray-500 italic">Chưa có kết quả kiểm tra</p>
+                    <div className="glass-dark rounded-xl p-8 text-center">
+                      <div className="w-16 h-16 empty-state-icon gradient-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                        </svg>
+                      </div>
+                      <p className="text-white/60 italic">Chưa có kết quả kiểm tra</p>
                     </div>
                   )}
                 </div>
