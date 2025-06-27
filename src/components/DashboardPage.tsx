@@ -7,6 +7,7 @@ import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
 import ChatManagement from './ChatManagement';
 import TestManagement from './TestManagement';
+import CreateNotifications from './CreateNotifications';
 import { 
   Users, 
   MessageSquare, 
@@ -17,6 +18,7 @@ import {
 
 function DashboardPage() {
   const [activeItem, setActiveItem] = useState('dashboard');
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,6 +60,11 @@ function DashboardPage() {
     }
   ];
 
+  const handleNotificationSuccess = () => {
+    setShowNotificationModal(false);
+    // You can add additional success handling here, like showing a toast message
+  };
+
   return (
     <div className="flex h-screen gradient-primary">
       <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
@@ -75,6 +82,31 @@ function DashboardPage() {
           ) : activeItem === 'tests' ? (
             <div className="animate-fadeIn">
               <TestManagement />
+            </div>
+          ) : activeItem === 'notifications' ? (
+            <div className="animate-fadeIn">
+              <div className="mb-8">
+                <h1 className="text-3xl font-bold text-white mb-2">Quản lý thông báo</h1>
+                <p className="text-white/80 text-lg">Gửi thông báo đến người dùng</p>
+              </div>
+              <div className="bg-white rounded-xl p-6 shadow-lg">
+                <button
+                  onClick={() => setShowNotificationModal(true)}
+                  className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Tạo thông báo mới
+                </button>
+                {showNotificationModal && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="max-w-2xl w-full mx-4">
+                      <CreateNotifications
+                        onClose={() => setShowNotificationModal(false)}
+                        onSuccess={handleNotificationSuccess}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <div className="animate-fadeIn">
