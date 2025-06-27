@@ -330,18 +330,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
               <div className="bg-gray-50 rounded-lg p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Thông tin học viên</h3>
                 
-                {/* Student IDs */}
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Mã học viên</p>
-                    <p className="mt-1 text-gray-900">{studentInfo._id}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-gray-500">Mã người dùng</p>
-                    <p className="mt-1 text-gray-900">{studentInfo.userId}</p>
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-2 gap-6">
                   {studentInfo.grade && (
                     <div>
