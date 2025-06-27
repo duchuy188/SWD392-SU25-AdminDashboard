@@ -221,6 +221,8 @@ const UserManagement: React.FC = () => {
                     <select
                       value={user.role}
                       onChange={(e) => handleRoleUpdate(user._id, e.target.value as 'student' | 'admin')}
+                      title="Chọn vai trò"
+                      aria-label="Chọn vai trò người dùng"
                       className={`${getRoleBadgeClass(user.role)} border-none cursor-pointer focus:ring-2 focus:ring-blue-500`}
                     >
                       <option value="student">student</option>
@@ -237,8 +239,9 @@ const UserManagement: React.FC = () => {
                     <select
                       value={user.isActive.toString()}
                       onChange={(e) => handleStatusUpdate(user._id, e.target.value)}
-                      className={`${getStatusBadgeClass(user.isActive)} border-none cursor-pointer focus:ring-2 focus:ring-blue-500`}
-                      style={{ minWidth: '100px' }}
+                      title="Chọn trạng thái"
+                      aria-label="Chọn trạng thái người dùng"
+                      className={`${getStatusBadgeClass(user.isActive)} border-none cursor-pointer focus:ring-2 focus:ring-blue-500 min-w-[100px]`}
                     >
                       <option value="true" className="bg-[#e3fafc] text-[#0c8599]">Unblock</option>
                       <option value="false" className="bg-red-50 text-red-600">Block</option>

@@ -5,6 +5,7 @@ import MetricCard from './MetricCard';
 import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
+import ChatManagement from './ChatManagement';
 import { 
   Users, 
   MessageSquare, 
@@ -64,6 +65,8 @@ function DashboardPage() {
         <div className="p-8">
           {activeItem === 'users' ? (
             <UserManagement />
+          ) : activeItem === 'chat' ? (
+            <ChatManagement />
           ) : (
             <>
               <div className="mb-8">

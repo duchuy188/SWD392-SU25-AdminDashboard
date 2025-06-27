@@ -50,6 +50,8 @@ function LoginPage() {
             <label className="block text-gray-700 font-medium mb-1">Email</label>
             <input
               type="email"
+              title="Nhập email"
+              placeholder="Nhập email của bạn"
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={email}
               onChange={e => setEmail(e.target.value)}
@@ -60,6 +62,8 @@ function LoginPage() {
             <label className="block text-gray-700 font-medium mb-1">Mật khẩu</label>
             <input
               type="password"
+              title="Nhập mật khẩu"
+              placeholder="Nhập mật khẩu của bạn"
               className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={password}
               onChange={e => setPassword(e.target.value)}

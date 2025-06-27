@@ -6,7 +6,8 @@ import {
   FileText, 
   GraduationCap, 
   MapPin,
-  LogOut
+  LogOut,
+  MessageCircle
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -19,6 +20,7 @@ const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home },
   { id: 'system', label: 'Hệ thống', icon: Settings },
   { id: 'users', label: 'Quản lý người dùng', icon: Users },
+  { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
   { id: 'logs', label: 'Logs', icon: FileText },
   { id: 'majors', label: 'Ngành học', icon: GraduationCap },
   { id: 'career', label: 'Hướng nghiệp', icon: MapPin },
@@ -32,9 +34,9 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
     role = user.role || '';
   } catch {}
 
-  // Lọc menu: chỉ admin mới thấy mục 'users'
+  // Lọc menu: chỉ admin mới thấy mục 'users' và 'chat'
   const filteredMenuItems = menuItems.filter(item => {
-    if (item.id === 'users') {
+    if (item.id === 'users' || item.id === 'chat') {
       return role === 'admin';
     }
     return true;
