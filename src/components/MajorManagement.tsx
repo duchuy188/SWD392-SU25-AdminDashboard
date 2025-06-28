@@ -4,6 +4,7 @@ import { MajorFormData } from '../types/major';
 import CreateMajorModal from './modals/CreateMajorModal';
 import MajorDetailModal from './modals/MajorDetailModal';
 import EditMajorModal from './modals/EditMajorModal';
+import { toast } from 'react-toastify';
 
 const MajorManagement: React.FC = () => {
     const [majors, setMajors] = useState<MajorFormData[]>([]);
@@ -21,12 +22,13 @@ const MajorManagement: React.FC = () => {
 
     const departments = [
         'Công nghệ thông tin',
-        'Kinh tế',
-        'Kỹ thuật',
-        'Y học',
+        'Quản trị kinh doanh',
+        'Công nghệ truyền thông',
         'Luật',
-        'Khoa học xã hội',
-        'Nghệ thuật'
+        'Ngôn ngữ Anh',
+        'Ngôn ngữ Trung Quốc',
+        'Ngôn ngữ Nhật',
+        'Ngôn ngữ Hàn Quốc'
     ];
 
     useEffect(() => {
@@ -50,7 +52,7 @@ const MajorManagement: React.FC = () => {
             
             if (response.majors && Array.isArray(response.majors)) {
                 setMajors(response.majors);
-                setTotalPages(Math.ceil(response.total / 10) || 1);
+                setTotalPages(response.totalPages || Math.ceil(response.totalItems / 10) || 1);
             } else {
                 throw new Error('Invalid data format received from server');
             }
@@ -65,35 +67,116 @@ const MajorManagement: React.FC = () => {
 
     const handleCreateMajor = async (majorData: MajorFormData) => {
         try {
+            // Kiểm tra các trường bắt buộc
+            if (!majorData.name?.trim()) {
+                toast.error('Vui lòng nhập tên ngành học');
+                return;
+            }
+            
+            if (!majorData.department?.trim()) {
+                toast.error('Vui lòng chọn khoa/viện');
+                return;
+            }
+            
+            if (!majorData.code?.trim()) {
+                toast.error('Vui lòng nhập mã ngành học');
+                return;
+            }
+            
+            if (!majorData.totalCredits || isNaN(Number(majorData.totalCredits)) || Number(majorData.totalCredits) <= 0) {
+                toast.error('Vui lòng nhập tổng số tín chỉ hợp lệ');
+                return;
+            }
+            
+            if (!majorData.admissionCriteria?.trim()) {
+                toast.error('Vui lòng nhập tiêu chí tuyển sinh');
+                return;
+            }
+            
+            // Kiểm tra tuition
+            if (!majorData.tuition || 
+                !majorData.tuition.firstSem || 
+                !majorData.tuition.midSem || 
+                !majorData.tuition.lastSem) {
+                toast.error('Vui lòng nhập đầy đủ thông tin học phí');
+                return;
+            }
+
+            const defaultProgramStructure = {
+                preparation: {
+                    duration: "",
+                    objectives: [],
+                    courses: []
+                },
+                basic: {
+                    duration: "",
+                    objectives: [],
+                    courses: []
+                },
+                ojt: {
+                    duration: "",
+                    objectives: []
+                },
+                specialization: {
+                    duration: "",
+                    objectives: [],
+                    courses: []
+                },
+                graduation: {
+                    duration: "Học kỳ cuối",
+                    objectives: [],
+                    options: []
+                }
+            };
+
+            // Và gán vào majorData nếu chưa có
+            if (!majorData.programStructure) {
+                majorData.programStructure = defaultProgramStructure;
+            }
+
             const formData = adminMajorServices.createMajorFormData(majorData);
             await adminMajorServices.createMajor(formData);
             setShowCreateModal(false);
             fetchMajors();
-            alert('Tạo ngành học thành công!');
+            toast.success('Tạo ngành học thành công!');
         } catch (err: any) {
             console.error('Error creating major:', err);
-            const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
-            alert('Lỗi khi tạo ngành học: ' + errorMessage);
+            const errorMessage = err.response?.data?.error || err.message || 'Unknown error';
+            toast.error('Lỗi khi tạo ngành học: ' + errorMessage);
         }
     };
 
     const handleUpdateMajor = async (majorData: MajorFormData) => {
         if (!editingMajor?._id) {
-            alert('Không tìm thấy ID ngành học để cập nhật');
+            toast.error('Không tìm thấy ID ngành học để cập nhật');
             return;
         }
         
         try {
             // Validate required fields
+            if (!majorData.name?.trim()) {
+                toast.error('Vui lòng nhập tên ngành học');
+                return;
+            }
+            
+            if (!majorData.code?.trim()) {
+                toast.error('Vui lòng nhập mã ngành học');
+                return;
+            }
+            
+            if (!majorData.department?.trim()) {
+                toast.error('Vui lòng chọn khoa/viện');
+                return;
+            }
+            
             if (!majorData.admissionCriteria?.trim()) {
-                alert('Vui lòng nhập tiêu chí tuyển sinh');
+                toast.error('Vui lòng nhập tiêu chí tuyển sinh');
                 return;
             }
 
-            // Ensure availableAt is properly formatted
-            if (!Array.isArray(majorData.availableAt) || majorData.availableAt.length === 0) {
-                alert('Vui lòng chọn ít nhất một cơ sở đào tạo');
-                return;
+            // Ensure availableAt is properly formatted - initialize as empty array if missing
+            if (!majorData.availableAt) {
+                majorData.availableAt = [];
             }
 
             setLoading(true);
@@ -102,14 +185,14 @@ const MajorManagement: React.FC = () => {
             
             if (response) {
                 setEditingMajor(null);
-                setShowCreateModal(false);
+                setShowEditModal(false);
                 await fetchMajors();
-                alert('Cập nhật ngành học thành công!');
+                toast.success('Cập nhật ngành học thành công!');
             }
         } catch (err: any) {
             console.error('Error updating major:', err);
             const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
-            alert(`Lỗi khi cập nhật ngành học: ${errorMessage}`);
+            toast.error(`Lỗi khi cập nhật ngành học: ${errorMessage}`);
         } finally {
             setLoading(false);
         }
@@ -121,10 +204,10 @@ const MajorManagement: React.FC = () => {
         try {
             await adminMajorServices.deleteMajor(majorId);
             fetchMajors();
-            alert('Xóa ngành học thành công!');
+            toast.success('Xóa ngành học thành công!');
         } catch (err: any) {
             console.error('Error deleting major:', err);
-            alert('Lỗi khi xóa ngành học: ' + (err.message || 'Unknown error'));
+            toast.error('Lỗi khi xóa ngành học: ' + (err.message || 'Unknown error'));
         }
     };
 
@@ -139,7 +222,7 @@ const MajorManagement: React.FC = () => {
             setShowDetailModal(true);
         } catch (err: any) {
             console.error('Error fetching major details:', err);
-            alert('Lỗi khi tải chi tiết ngành học');
+            toast.error('Lỗi khi tải chi tiết ngành học');
         }
     };
 
@@ -235,10 +318,10 @@ const MajorManagement: React.FC = () => {
                                 <tr key={major?._id || major?.code || Math.random()} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            {major?.majorImage && (
+                                            {major?.imageUrl && (
                                                 <img
                                                     className="h-10 w-10 rounded-full object-cover mr-3"
-                                                    src={major.majorImage.name}
+                                                    src={major.imageUrl}
                                                     alt={major?.name || 'Major image'}
                                                 />
                                             )}

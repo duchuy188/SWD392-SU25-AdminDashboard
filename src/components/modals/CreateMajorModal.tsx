@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { MajorFormData, CareerProspect, Scholarship} from '../../types/major';
+import { MajorFormData, CareerProspect, Scholarship, Campus } from '../../types/major';
+import { toast } from 'react-toastify';
 
 interface CreateMajorModalProps {
     isOpen: boolean;
@@ -67,15 +68,17 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
     });
 
     const [activeTab, setActiveTab] = useState('basic');
+    const [loading, setLoading] = useState(false);
 
     const departments = [
         'Công nghệ thông tin',
-        'Kinh tế',
-        'Kỹ thuật',
-        'Y học',
+        'Quản trị kinh doanh',
+        'Công nghệ truyền thông',
         'Luật',
-        'Khoa học xã hội',
-        'Nghệ thuật'
+        'Ngôn ngữ Anh',
+        'Ngôn ngữ Trung Quốc',
+        'Ngôn ngữ Nhật',
+        'Ngôn ngữ Hàn Quốc'
     ];
 
     useEffect(() => {
@@ -83,6 +86,15 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
             setFormData(initialData);
         }
     }, [initialData]);
+
+    useEffect(() => {
+        // Cleanup function to revoke object URLs when component unmounts
+        return () => {
+            if (formData.majorImage) {
+                URL.revokeObjectURL(URL.createObjectURL(formData.majorImage));
+            }
+        };
+    }, [formData.majorImage]);
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({
@@ -176,6 +188,23 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        // Kiểm tra các trường bắt buộc
+        if (!formData.name || !formData.code || !formData.department || 
+            !formData.totalCredits || !formData.admissionCriteria || 
+            formData.availableAt.length === 0) {
+            toast.error('Vui lòng điền đầy đủ thông tin bắt buộc và chọn ít nhất một campus', {
+                position: "top-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+        
+        setLoading(true);
         onSubmit(formData);
     };
 
@@ -322,14 +351,27 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
                                         Hình ảnh ngành học
                                     </label>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        placeholder="Chọn hình ảnh cho ngành học"
-                                        title="Chọn hình ảnh cho ngành học"
-                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                        onChange={handleFileChange}
-                                    />
+                                    <div className="space-y-3">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            placeholder="Chọn hình ảnh cho ngành học"
+                                            title="Chọn hình ảnh cho ngành học"
+                                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            onChange={handleFileChange}
+                                        />
+                                        
+                                        {/* Hiển thị ảnh xem trước */}
+                                        {(formData.majorImage || formData.imageUrl) && (
+                                            <div className="mt-2">
+                                                <img 
+                                                    src={formData.majorImage ? URL.createObjectURL(formData.majorImage) : formData.imageUrl} 
+                                                    alt="Ảnh xem trước" 
+                                                    className="max-h-40 rounded-md border border-gray-300"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -350,6 +392,34 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                         <label htmlFor="isNewProgram" className="ml-2 block text-sm text-gray-900">
                                             Chương trình mới
                                         </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Campus có ngành này *
+                                    </label>
+                                    <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                        {['HANOI', 'HCMC', 'DANANG', 'CANTHO', 'QNHON'].map((campus) => (
+                                            <div key={campus} className="flex items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    id={`campus-${campus}`}
+                                                    checked={formData.availableAt.includes(campus as Campus)}
+                                                    onChange={(e) => {
+                                                        if (e.target.checked) {
+                                                            handleInputChange('availableAt', [...formData.availableAt, campus as Campus]);
+                                                        } else {
+                                                            handleInputChange('availableAt', formData.availableAt.filter(c => c !== campus));
+                                                        }
+                                                    }}
+                                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                />
+                                                <label htmlFor={`campus-${campus}`} className="ml-2 block text-sm text-gray-900">
+                                                    {campus}
+                                                </label>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -448,9 +518,15 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                 type="text"
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.firstSem}
-                                                onChange={(e) => handleNestedInputChange('tuition', 'firstSem', e.target.value)}
-                                                placeholder="VD: 15,000,000"
+                                                onChange={(e) => {
+                                                    const value = e.target.value.replace(/\D/g, '');
+                                                    handleNestedInputChange('tuition', 'firstSem', Number(value));
+                                                }}
+                                                placeholder="VD: 31600000"
                                             />
+                                            <p className="text-xs text-gray-500 mt-1">
+                                                {formData.tuition.firstSem.toLocaleString('vi-VN')} VNĐ
+                                            </p>
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">Học kỳ giữa</label>
@@ -471,6 +547,523 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                 onChange={(e) => handleNestedInputChange('tuition', 'lastSem', e.target.value)}
                                                 placeholder="VD: 15,000,000"
                                             />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Program Structure Tab */}
+                        {activeTab === 'program' && (
+                            <div className="space-y-6">
+                                {/* Preparation Phase */}
+                                <div className="border border-gray-300 rounded-md p-4 mb-4">
+                                    <h4 className="text-md font-medium text-gray-900 mb-3">Giai đoạn chuẩn bị</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value={formData.programStructure?.preparation?.duration || ''}
+                                                onChange={(e) => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.preparation.duration = e.target.value;
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                placeholder="VD: 1 năm đầu"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mục tiêu</label>
+                                            {formData.programStructure?.preparation?.objectives?.map((objective, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={objective}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.preparation.objectives[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập mục tiêu"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.preparation.objectives = updatedStructure.preparation.objectives.filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.preparation.objectives = [...updatedStructure.preparation.objectives, ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm mục tiêu
+                                            </button>
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Các môn học</label>
+                                            {formData.programStructure?.preparation?.courses?.map((course, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={course}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.preparation.courses = [...(updatedStructure.preparation.courses || [])];
+                                                            updatedStructure.preparation.courses[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập tên môn học"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.preparation.courses = (updatedStructure.preparation.courses || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.preparation) updatedStructure.preparation = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.preparation.courses = [...(updatedStructure.preparation.courses || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm môn học
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                {/* Basic Phase */}
+                                <div className="border border-gray-300 rounded-md p-4 mb-4">
+                                    <h4 className="text-md font-medium text-gray-900 mb-3">Giai đoạn cơ bản</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value={formData.programStructure?.basic?.duration || ''}
+                                                onChange={(e) => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.basic.duration = e.target.value;
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                placeholder="VD: 1.5 năm tiếp theo"
+                                            />
+                                        </div>
+                                        
+                                        {/* Basic Phase - Objectives */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mục tiêu</label>
+                                            {formData.programStructure?.basic?.objectives?.map((objective, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={objective}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.basic.objectives[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập mục tiêu"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.basic.objectives = (updatedStructure.basic.objectives || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.basic.objectives = [...(updatedStructure.basic.objectives || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm mục tiêu
+                                            </button>
+                                        </div>
+                                        
+                                        {/* Basic Phase - Courses */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Các môn học</label>
+                                            {formData.programStructure?.basic?.courses?.map((course, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={course}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.basic.courses = [...(updatedStructure.basic.courses || [])];
+                                                            updatedStructure.basic.courses[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập tên môn học"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.basic.courses = (updatedStructure.basic.courses || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.basic) updatedStructure.basic = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.basic.courses = [...(updatedStructure.basic.courses || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm môn học
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* OJT Phase */}
+                                <div className="border border-gray-300 rounded-md p-4 mb-4">
+                                    <h4 className="text-md font-medium text-gray-900 mb-3">Giai đoạn thực tập</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value={formData.programStructure?.ojt?.duration || ''}
+                                                onChange={(e) => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.ojt) updatedStructure.ojt = {duration: '', objectives: []};
+                                                    updatedStructure.ojt.duration = e.target.value;
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                placeholder="VD: 4 tháng"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mục tiêu</label>
+                                            {formData.programStructure?.ojt?.objectives?.map((objective, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={objective}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.ojt) updatedStructure.ojt = {duration: '', objectives: []};
+                                                            updatedStructure.ojt.objectives[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập mục tiêu thực tập"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.ojt) updatedStructure.ojt = {duration: '', objectives: []};
+                                                            updatedStructure.ojt.objectives = (updatedStructure.ojt.objectives || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.ojt) updatedStructure.ojt = {duration: '', objectives: []};
+                                                    updatedStructure.ojt.objectives = [...(updatedStructure.ojt.objectives || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm mục tiêu
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Specialization Phase */}
+                                <div className="border border-gray-300 rounded-md p-4 mb-4">
+                                    <h4 className="text-md font-medium text-gray-900 mb-3">Giai đoạn chuyên ngành</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value={formData.programStructure?.specialization?.duration || ''}
+                                                onChange={(e) => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.specialization.duration = e.target.value;
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                placeholder="VD: 1 năm cuối"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mục tiêu</label>
+                                            {formData.programStructure?.specialization?.objectives?.map((objective, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={objective}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.specialization.objectives[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập mục tiêu"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.specialization.objectives = (updatedStructure.specialization.objectives || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.specialization.objectives = [...(updatedStructure.specialization.objectives || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm mục tiêu
+                                            </button>
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Các môn học</label>
+                                            {formData.programStructure?.specialization?.courses?.map((course, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={course}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.specialization.courses = [...(updatedStructure.specialization.courses || [])];
+                                                            updatedStructure.specialization.courses[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập tên môn học"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                            updatedStructure.specialization.courses = (updatedStructure.specialization.courses || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.specialization) updatedStructure.specialization = {duration: '', objectives: [], courses: []};
+                                                    updatedStructure.specialization.courses = [...(updatedStructure.specialization.courses || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm môn học
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Graduation Phase */}
+                                <div className="border border-gray-300 rounded-md p-4 mb-4">
+                                    <h4 className="text-md font-medium text-gray-900 mb-3">Giai đoạn tốt nghiệp</h4>
+                                    <div className="space-y-3">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Thời gian</label>
+                                            <input
+                                                type="text"
+                                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                value={formData.programStructure?.graduation?.duration || ''}
+                                                onChange={(e) => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                    updatedStructure.graduation.duration = e.target.value;
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                placeholder="VD: Học kỳ cuối"
+                                            />
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Mục tiêu</label>
+                                            {formData.programStructure?.graduation?.objectives?.map((objective, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={objective}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                            updatedStructure.graduation.objectives[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập mục tiêu tốt nghiệp"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                            updatedStructure.graduation.objectives = (updatedStructure.graduation.objectives || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                    updatedStructure.graduation.objectives = [...(updatedStructure.graduation.objectives || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm mục tiêu
+                                            </button>
+                                        </div>
+                                        
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Các lựa chọn tốt nghiệp</label>
+                                            {formData.programStructure?.graduation?.options?.map((option, idx) => (
+                                                <div key={idx} className="flex gap-2 mb-2">
+                                                    <input
+                                                        type="text"
+                                                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                        value={option}
+                                                        onChange={(e) => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                            updatedStructure.graduation.options = [...(updatedStructure.graduation.options || [])];
+                                                            updatedStructure.graduation.options[idx] = e.target.value;
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        placeholder="Nhập lựa chọn tốt nghiệp"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const updatedStructure = {...formData.programStructure};
+                                                            if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                            updatedStructure.graduation.options = (updatedStructure.graduation.options || []).filter((_, i) => i !== idx);
+                                                            handleInputChange('programStructure', updatedStructure);
+                                                        }}
+                                                        className="px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    const updatedStructure = {...formData.programStructure};
+                                                    if (!updatedStructure.graduation) updatedStructure.graduation = {duration: '', objectives: [], options: []};
+                                                    updatedStructure.graduation.options = [...(updatedStructure.graduation.options || []), ''];
+                                                    handleInputChange('programStructure', updatedStructure);
+                                                }}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                            >
+                                                + Thêm lựa chọn
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -597,9 +1190,20 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                             </button>
                             <button
                                 type="submit"
-                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                disabled={loading}
+                                className={`px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
-                                {isEdit ? 'Cập nhật' : 'Tạo mới'}
+                                {loading ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        Đang xử lý...
+                                    </>
+                                ) : (
+                                    isEdit ? 'Cập nhật' : 'Tạo mới'
+                                )}
                             </button>
                         </div>
                     </form>
