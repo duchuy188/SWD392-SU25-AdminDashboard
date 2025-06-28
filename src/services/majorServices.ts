@@ -92,11 +92,10 @@ export const adminMajorServices = {
         }
         
         if (majorData.availableAt?.length) {
-            // Chỉ gửi campus đầu tiên (dạng chuỗi) thay vì mảng
-            const firstCampus = typeof majorData.availableAt === 'string' ? majorData.availableAt : majorData.availableAt[0];
-            if (typeof firstCampus === 'string' && ['HANOI', 'HCMC', 'DANANG', 'CANTHO', 'QNHON'].includes(firstCampus)) {
-                formData.append('availableAt', firstCampus);
-            }
+           
+            majorData.availableAt.forEach(campus => {
+                formData.append('availableAt[]', campus);
+            });
         }
         
         if (majorData.subjectCombinations?.length) {
