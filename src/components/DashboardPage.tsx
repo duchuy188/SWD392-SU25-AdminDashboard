@@ -8,6 +8,7 @@ import UserManagement from './UserManagement';
 import ChatManagement from './ChatManagement';
 import TestManagement from './TestManagement';
 import CreateNotifications from './CreateNotifications';
+import MajorManagement from './MajorManagement';
 import { 
   Users, 
   MessageSquare, 
@@ -82,6 +83,10 @@ function DashboardPage() {
           ) : activeItem === 'tests' ? (
             <div className="animate-fadeIn">
               <TestManagement />
+            </div>
+          ) : activeItem === 'majors' ? (
+            <div className="animate-fadeIn">
+              <MajorManagement />
             </div>
           ) : activeItem === 'notifications' ? (
             <div className="animate-fadeIn">
