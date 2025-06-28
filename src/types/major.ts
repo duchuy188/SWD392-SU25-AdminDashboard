@@ -1,3 +1,5 @@
+export type Campus = 'HANOI' | 'HCMC' | 'DANANG' | 'CANTHO' | 'QNHON';
+
 export type MajorFormProps = {
     initialData?: MajorFormData;
     onSubmit: (data: MajorFormData) => void;
@@ -6,110 +8,74 @@ export type MajorFormProps = {
 export type CareerProspect = {
     title: string;
     description: string;
-    opportunities?: string[];
-    industries?: string[];
 }
 
 export type Scholarship = {
     name: string;
     description: string;
     value: string;
-    criteria?: string[];
-    duration?: string;
-    deadline?: string;
 }
 
 export type Tuition = {
-    firstSem: string | number;
-    midSem: string | number;
-    lastSem: string | number;
-    currency?: string;
-    notes?: string;
+    firstSem: number;
+    midSem: number;
+    lastSem: number;
 }
 
 export type CampusTuition = {
-    [key: string]: Tuition;
+    HANOI?: Tuition;
+    HCMC?: Tuition;
+    DANANG?: Tuition;
+    CANTHO?: Tuition;
+    QNHON?: Tuition;
 }
 
-export type ProgramSectionBase = {
+export type InternationalPartner = {
+    country: string;
+    universities: string[];
+}
+
+export type ProgramSection = {
     duration: string;
     objectives: string[];
-    credits?: number;
-    description?: string;
-}
-
-export type Course = {
-    code: string;
-    name: string;
-    credits: number;
-    description?: string;
-    prerequisites?: string[];
-}
-
-export type ProgramSectionWithCourses = ProgramSectionBase & {
-    courses: Course[];
-    totalCredits?: number;
-}
-
-export type GraduationSection = ProgramSectionBase & {
-    options: string[];
-    requirements?: string[];
-    thesisDetails?: string;
+    courses?: string[];
 }
 
 export type ProgramStructure = {
-    preparation: ProgramSectionWithCourses;
-    basic: ProgramSectionWithCourses;
-    ojt: ProgramSectionBase & {
-        partnerCompanies?: string[];
-        duration?: string;
-        evaluationCriteria?: string[];
+    preparation?: ProgramSection;
+    basic?: ProgramSection;
+    ojt?: {
+        duration: string;
+        objectives: string[];
     };
-    specialization: ProgramSectionWithCourses;
-    graduation: GraduationSection;
+    specialization?: ProgramSection;
+    graduation?: {
+        duration: string;
+        objectives: string[];
+        options: string[];
+    };
 }
 
 export type MajorFormData = {
-    id?: string;
+    _id: string;
     name: string;
-    code: string;
     department: string;
     description: string;
     shortDescription: string;
-    totalCredits: string | number;
-    admissionCriteria: string;
-    isNewProgram: boolean;
-    requiredSkills: string[];
-    advantages: string[];
-    availableAt: string[];
-    subjectCombinations: string[];
+    code: string;
+    totalCredits: number;
     tuition: Tuition;
     tuitionByCampus?: CampusTuition;
+    requiredSkills: string[];
+    advantages: string[];
+    availableAt: Campus[];
+    admissionCriteria: string;
     programStructure: ProgramStructure;
     careerProspects: CareerProspect[];
+    subjectCombinations: string[];
+    isNewProgram: boolean;
     scholarships: Scholarship[];
-    imageUrl?: string;
     majorImage?: File | null;
-    status?: 'active' | 'inactive' | 'draft';
-    createdAt?: string;
-    updatedAt?: string;
-    startDate?: string;
-    endDate?: string;
-    facultyContact?: {
-        name: string;
-        email: string;
-        phone?: string;
-        office?: string;
-    };
-    accreditation?: {
-        body: string;
-        status: string;
-        validUntil: string;
-    }[];
-    statistics?: {
-        enrollmentCount?: number;
-        graduationRate?: number;
-        employmentRate?: number;
-        averageSalary?: number;
-    };
+    imageUrl?: string;
+    internationalPartners?: InternationalPartner[];
 }

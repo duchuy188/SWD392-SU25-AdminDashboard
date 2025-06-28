@@ -3,6 +3,7 @@ import { adminMajorServices } from '../services/majorServices';
 import { MajorFormData } from '../types/major';
 import CreateMajorModal from './modals/CreateMajorModal';
 import MajorDetailModal from './modals/MajorDetailModal';
+import EditMajorModal from './modals/EditMajorModal';
 
 const MajorManagement: React.FC = () => {
     const [majors, setMajors] = useState<MajorFormData[]>([]);
@@ -10,13 +11,13 @@ const MajorManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
-    const [selectedStatus, setSelectedStatus] = useState<'all' | 'active' | 'inactive' | 'draft'>('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [showDetailModal, setShowDetailModal] = useState(false);
     const [selectedMajor, setSelectedMajor] = useState<MajorFormData | null>(null);
     const [editingMajor, setEditingMajor] = useState<MajorFormData | null>(null);
+    const [showEditModal, setShowEditModal] = useState(false);
 
     const departments = [
         'Công nghệ thông tin',
@@ -30,11 +31,7 @@ const MajorManagement: React.FC = () => {
 
     useEffect(() => {
         fetchMajors();
-    }, [currentPage, searchTerm, selectedDepartment, selectedStatus]);
-
-    useEffect(() => {
-        console.log('Current majors state:', majors);
-    }, [majors]);
+    }, [currentPage, searchTerm, selectedDepartment]);
 
     const fetchMajors = async () => {
         try {
@@ -45,61 +42,22 @@ const MajorManagement: React.FC = () => {
                 limit: 10,
                 search: searchTerm || undefined,
                 department: selectedDepartment || undefined,
-                status: selectedStatus === 'all' ? undefined : selectedStatus,
                 sortBy: 'createdAt',
                 sortOrder: 'desc' as const
             };
 
-            console.log('Fetching majors with params:', params);
             const response = await adminMajorServices.getAllMajors(params);
-            console.log('Full response:', response);
-            console.log('Response data:', response.data);
             
-            // Handle different possible response structures
-            let majorsData = [];
-            let totalCount = 0;
-            
-            if (response?.data) {
-                if (response.data.data) {
-                    // If response has nested data structure
-                    majorsData = response.data.data.majors || response.data.data || [];
-                    totalCount = response.data.data.total || response.data.data.totalCount || response.data.data.pagination?.total || 0;
-                } else if (Array.isArray(response.data)) {
-                    // If response.data is directly an array
-                    majorsData = response.data;
-                    totalCount = response.data.length;
-                } else {
-                    // If response.data has majors directly
-                    majorsData = response.data.majors || [];
-                    totalCount = response.data.total || response.data.totalCount || response.data.pagination?.total || 0;
-                }
+            if (response.majors && Array.isArray(response.majors)) {
+                setMajors(response.majors);
+                setTotalPages(Math.ceil(response.total / 10) || 1);
+            } else {
+                throw new Error('Invalid data format received from server');
             }
-            
-            console.log('Processed majors data:', majorsData);
-            console.log('Total count:', totalCount);
-            console.log('Is majors data an array?', Array.isArray(majorsData));
-            
-            // Ensure majorsData is always an array
-            if (!Array.isArray(majorsData)) {
-                console.warn('majorsData is not an array, setting to empty array');
-                majorsData = [];
-            }
-            
-            setMajors(majorsData);
-            setTotalPages(Math.ceil(totalCount / 10) || 1);
-            setError(null);
         } catch (err: any) {
-            console.error('Detailed error:', err);
-            console.error('Error response:', err.response);
-            
-            // Use mock data as fallback for development/testing
-            console.log('Using mock data as fallback');
-            setMajors(mockMajors);
-            setTotalPages(1);
-            
-            setError(`Lỗi khi tải danh sách ngành học: ${err.message || 'Unknown error'}. Đang hiển thị dữ liệu mẫu.`);
-            setMajors([]); // Set to empty array on error
             console.error('Error fetching majors:', err);
+            setError(`Lỗi khi tải danh sách ngành học: ${err.message}`);
+            setMajors([]);
         } finally {
             setLoading(false);
         }
@@ -114,23 +72,46 @@ const MajorManagement: React.FC = () => {
             alert('Tạo ngành học thành công!');
         } catch (err: any) {
             console.error('Error creating major:', err);
-            alert('Lỗi khi tạo ngành học: ' + (err.message || 'Unknown error'));
+            const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
+            alert('Lỗi khi tạo ngành học: ' + errorMessage);
         }
     };
 
     const handleUpdateMajor = async (majorData: MajorFormData) => {
-        if (!editingMajor?.id) return;
+        if (!editingMajor?._id) {
+            alert('Không tìm thấy ID ngành học để cập nhật');
+            return;
+        }
         
         try {
+            // Validate required fields
+            if (!majorData.admissionCriteria?.trim()) {
+                alert('Vui lòng nhập tiêu chí tuyển sinh');
+                return;
+            }
+
+            // Ensure availableAt is properly formatted
+            if (!Array.isArray(majorData.availableAt) || majorData.availableAt.length === 0) {
+                alert('Vui lòng chọn ít nhất một cơ sở đào tạo');
+                return;
+            }
+
+            setLoading(true);
             const formData = adminMajorServices.createMajorFormData(majorData);
-            await adminMajorServices.updateMajor(editingMajor.id, formData);
-            setEditingMajor(null);
-            setShowCreateModal(false);
-            fetchMajors();
-            alert('Cập nhật ngành học thành công!');
+            const response = await adminMajorServices.updateMajor(editingMajor._id, formData);
+            
+            if (response) {
+                setEditingMajor(null);
+                setShowCreateModal(false);
+                await fetchMajors();
+                alert('Cập nhật ngành học thành công!');
+            }
         } catch (err: any) {
             console.error('Error updating major:', err);
-            alert('Lỗi khi cập nhật ngành học: ' + (err.message || 'Unknown error'));
+            const errorMessage = err.response?.data?.message || err.message || 'Unknown error';
+            alert(`Lỗi khi cập nhật ngành học: ${errorMessage}`);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -149,9 +130,9 @@ const MajorManagement: React.FC = () => {
 
     const handleViewDetails = async (major: MajorFormData) => {
         try {
-            if (major.id) {
-                const response = await adminMajorServices.getMajorById(major.id);
-                setSelectedMajor(response.data);
+            if (major._id) {
+                const response = await adminMajorServices.getMajorById(major._id);
+                setSelectedMajor(response);
             } else {
                 setSelectedMajor(major);
             }
@@ -164,22 +145,7 @@ const MajorManagement: React.FC = () => {
 
     const handleEditMajor = (major: MajorFormData) => {
         setEditingMajor(major);
-        setShowCreateModal(true);
-    };
-
-    const getStatusBadge = (status?: string) => {
-        const statusConfig = {
-            active: { color: 'bg-green-100 text-green-800', text: 'Hoạt động' },
-            inactive: { color: 'bg-gray-100 text-gray-800', text: 'Không hoạt động' },
-            draft: { color: 'bg-yellow-100 text-yellow-800', text: 'Bản nháp' }
-        };
-        
-        const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.draft;
-        return (
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${config.color}`}>
-                {config.text}
-            </span>
-        );
+        setShowEditModal(true);
     };
 
     if (loading && majors.length === 0) {
@@ -205,7 +171,7 @@ const MajorManagement: React.FC = () => {
 
             {/* Filters and Search */}
             <div className="mb-6 bg-white p-4 rounded-lg shadow">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
                         <input
@@ -228,20 +194,6 @@ const MajorManagement: React.FC = () => {
                             {departments.map(dept => (
                                 <option key={dept} value={dept}>{dept}</option>
                             ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
-                        <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={selectedStatus}
-                            onChange={(e) => setSelectedStatus(e.target.value as any)}
-                            aria-label="Chọn trạng thái"
-                        >
-                            <option value="all">Tất cả trạng thái</option>
-                            <option value="active">Hoạt động</option>
-                            <option value="inactive">Không hoạt động</option>
-                            <option value="draft">Bản nháp</option>
                         </select>
                     </div>
                     <div className="flex items-end">
@@ -274,22 +226,19 @@ const MajorManagement: React.FC = () => {
                                     Tín chỉ
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Trạng thái
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Thao tác
                                 </th>
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
                             {Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
-                                <tr key={major?.id || major?.code || Math.random()} className="hover:bg-gray-50">
+                                <tr key={major?._id || major?.code || Math.random()} className="hover:bg-gray-50">
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
-                                            {major?.imageUrl && (
+                                            {major?.majorImage && (
                                                 <img
                                                     className="h-10 w-10 rounded-full object-cover mr-3"
-                                                    src={major.imageUrl}
+                                                    src={major.majorImage.name}
                                                     alt={major?.name || 'Major image'}
                                                 />
                                             )}
@@ -312,9 +261,6 @@ const MajorManagement: React.FC = () => {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {major?.totalCredits || 'N/A'}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        {getStatusBadge(major?.status)}
-                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                         <div className="flex space-x-2">
                                             <button
@@ -330,7 +276,7 @@ const MajorManagement: React.FC = () => {
                                                 Sửa
                                             </button>
                                             <button
-                                                onClick={() => major?.id && handleDeleteMajor(major.id)}
+                                                onClick={() => major?._id && handleDeleteMajor(major._id)}
                                                 className="text-red-600 hover:text-red-900"
                                             >
                                                 Xóa
@@ -348,11 +294,6 @@ const MajorManagement: React.FC = () => {
                         <p className="text-gray-500">
                             {!Array.isArray(majors) ? 'Dữ liệu không hợp lệ' : 'Không có ngành học nào được tìm thấy'}
                         </p>
-                        {!Array.isArray(majors) && (
-                            <p className="text-red-500 text-sm mt-2">
-                                Debug: majors type = {typeof majors}, majors = {JSON.stringify(majors)}
-                            </p>
-                        )}
                     </div>
                 )}
             </div>
@@ -400,9 +341,21 @@ const MajorManagement: React.FC = () => {
                         setShowCreateModal(false);
                         setEditingMajor(null);
                     }}
-                    onSubmit={editingMajor ? handleUpdateMajor : handleCreateMajor}
-                    initialData={editingMajor || undefined}
-                    isEdit={!!editingMajor}
+                    onSubmit={handleCreateMajor}
+                    initialData={undefined}
+                    isEdit={false}
+                />
+            )}
+
+            {showEditModal && editingMajor && (
+                <EditMajorModal
+                    isOpen={showEditModal}
+                    onClose={() => {
+                        setShowEditModal(false);
+                        setEditingMajor(null);
+                    }}
+                    onSubmit={handleUpdateMajor}
+                    major={editingMajor}
                 />
             )}
 
@@ -419,9 +372,9 @@ const MajorManagement: React.FC = () => {
                         handleEditMajor(selectedMajor);
                     }}
                     onDelete={() => {
-                        if (selectedMajor.id) {
+                        if (selectedMajor._id) {
                             setShowDetailModal(false);
-                            handleDeleteMajor(selectedMajor.id);
+                            handleDeleteMajor(selectedMajor._id);
                         }
                     }}
                 />

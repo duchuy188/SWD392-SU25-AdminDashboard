@@ -1,71 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { MajorFormData, CareerProspect, Scholarship} from '../../types/major';
+import { MajorFormData, CareerProspect, Campus } from '../../types/major';
 
-interface CreateMajorModalProps {
+interface EditMajorModalProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: (data: MajorFormData) => void;
-    initialData?: MajorFormData;
-    isEdit?: boolean;
+    major: MajorFormData;
 }
 
-const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
+const EditMajorModal: React.FC<EditMajorModalProps> = ({
     isOpen,
     onClose,
     onSubmit,
-    initialData,
-    isEdit = false
+    major
 }) => {
-    const [formData, setFormData] = useState<MajorFormData>({
-        name: '',
-        code: '',
-        department: '',
-        description: '',
-        shortDescription: '',
-        totalCredits: 0,
-        admissionCriteria: '',
-        isNewProgram: false,
-        requiredSkills: [],
-        advantages: [],
-        availableAt: [],
-        subjectCombinations: [],
-        tuition: {
-            firstSem: 0,
-            midSem: 0,
-            lastSem: 0
-        },
-        programStructure: {
-            preparation: {
-                duration: '',
-                objectives: [],
-                courses: []
-            },
-            basic: {
-                duration: '',
-                objectives: [],
-                courses: []
-            },
-            ojt: {
-                duration: '',
-                objectives: []
-            },
-            specialization: {
-                duration: '',
-                objectives: [],
-                courses: []
-            },
-            graduation: {
-                duration: '',
-                objectives: [],
-                options: []
-            }
-        },
-        careerProspects: [],
-        scholarships: [],
-        majorImage: null,
-        _id: ''
-    });
-
+    const [formData, setFormData] = useState<MajorFormData>(major);
     const [activeTab, setActiveTab] = useState('basic');
 
     const departments = [
@@ -78,11 +27,11 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
         'Nghệ thuật'
     ];
 
+    const campuses: Campus[] = ['HANOI', 'HCMC', 'DANANG', 'CANTHO', 'QNHON'];
+
     useEffect(() => {
-        if (initialData) {
-            setFormData(initialData);
-        }
-    }, [initialData]);
+        setFormData(major);
+    }, [major]);
 
     const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({
@@ -123,7 +72,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
         }));
     };
 
-    const handleCareerProspectChange = (index: number, field: keyof CareerProspect, value: any) => {
+    const handleCareerProspectChange = (index: number, field: keyof CareerProspect, value: string) => {
         setFormData(prev => {
             const careerProspects = [...prev.careerProspects];
             careerProspects[index] = { ...careerProspects[index], [field]: value };
@@ -145,28 +94,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
         }));
     };
 
-    const handleScholarshipChange = (index: number, field: keyof Scholarship, value: any) => {
-        setFormData(prev => {
-            const scholarships = [...prev.scholarships];
-            scholarships[index] = { ...scholarships[index], [field]: value };
-            return { ...prev, scholarships };
-        });
-    };
-
-    const addScholarship = () => {
-        setFormData(prev => ({
-            ...prev,
-            scholarships: [...prev.scholarships, { name: '', description: '', value: '' }]
-        }));
-    };
-
-    const removeScholarship = (index: number) => {
-        setFormData(prev => ({
-            ...prev,
-            scholarships: prev.scholarships.filter((_, i) => i !== index)
-        }));
-    };
-
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
@@ -185,7 +112,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
         { id: 'basic', label: 'Thông tin cơ bản' },
         { id: 'details', label: 'Thông tin chi tiết' },
         { id: 'program', label: 'Chương trình đào tạo' },
-        { id: 'career', label: 'Nghề nghiệp & Học bổng' }
+        { id: 'career', label: 'Nghề nghiệp' }
     ];
 
     return (
@@ -196,7 +123,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                 <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
                     <div className="mb-4">
                         <h3 className="text-lg font-medium leading-6 text-gray-900">
-                            {isEdit ? 'Chỉnh sửa ngành học' : 'Thêm ngành học mới'}
+                            Chỉnh sửa ngành học: {major.name}
                         </h3>
                     </div>
 
@@ -212,7 +139,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                             ? 'border-blue-500 text-blue-600'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                     }`}
-                                >
+                                >   
                                     {tab.label}
                                 </button>
                             ))}
@@ -234,8 +161,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.name}
                                             onChange={(e) => handleInputChange('name', e.target.value)}
-                                            placeholder="Nhập tên ngành học"
-                                            aria-label="Tên ngành học"
                                         />
                                     </div>
                                     <div>
@@ -248,8 +173,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.code}
                                             onChange={(e) => handleInputChange('code', e.target.value)}
-                                            placeholder="Nhập mã ngành"
-                                            aria-label="Mã ngành"
                                         />
                                     </div>
                                 </div>
@@ -264,7 +187,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.department}
                                             onChange={(e) => handleInputChange('department', e.target.value)}
-                                            aria-label="Chọn khoa/viện"
                                         >
                                             <option value="">Chọn khoa/viện</option>
                                             {departments.map(dept => (
@@ -281,9 +203,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                             required
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.totalCredits}
-                                            onChange={(e) => handleInputChange('totalCredits', e.target.value)}
-                                            placeholder="Nhập số tín chỉ"
-                                            aria-label="Tổng số tín chỉ"
+                                            onChange={(e) => handleInputChange('totalCredits', parseInt(e.target.value))}
                                         />
                                     </div>
                                 </div>
@@ -298,8 +218,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.shortDescription}
                                         onChange={(e) => handleInputChange('shortDescription', e.target.value)}
-                                        placeholder="Nhập mô tả ngắn về ngành học"
-                                        aria-label="Mô tả ngắn"
                                     />
                                 </div>
 
@@ -310,8 +228,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                     <textarea
                                         required
                                         rows={5}
-                                        placeholder="Nhập mô tả chi tiết về ngành học..."
-                                        title="Mô tả chi tiết về ngành học"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.description}
                                         onChange={(e) => handleInputChange('description', e.target.value)}
@@ -325,31 +241,39 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                     <input
                                         type="file"
                                         accept="image/*"
-                                        placeholder="Chọn hình ảnh cho ngành học"
-                                        title="Chọn hình ảnh cho ngành học"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         onChange={handleFileChange}
                                     />
+                                    {formData.imageUrl && (
+                                        <img
+                                            src={formData.imageUrl}
+                                            alt={formData.name}
+                                            className="mt-2 h-32 w-auto object-cover rounded"
+                                        />
+                                    )}
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                                            Trạng thái
-                                        </label>
-                                        
-                                    </div>
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            id="isNewProgram"
-                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                            checked={formData.isNewProgram}
-                                            onChange={(e) => handleInputChange('isNewProgram', e.target.checked)}
-                                        />
-                                        <label htmlFor="isNewProgram" className="ml-2 block text-sm text-gray-900">
-                                            Chương trình mới
-                                        </label>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Cơ sở đào tạo *
+                                    </label>
+                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        {campuses.map(campus => (
+                                            <label key={campus} className="flex items-center space-x-2">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={formData.availableAt.includes(campus)}
+                                                    onChange={(e) => {
+                                                        const newAvailableAt = e.target.checked
+                                                            ? [...formData.availableAt, campus]
+                                                            : formData.availableAt.filter(c => c !== campus);
+                                                        handleInputChange('availableAt', newAvailableAt);
+                                                    }}
+                                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                                />
+                                                <span className="text-sm text-gray-700">{campus}</span>
+                                            </label>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -360,12 +284,11 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                             <div className="space-y-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                                        Tiêu chí tuyển sinh
+                                        Tiêu chí tuyển sinh *
                                     </label>
                                     <textarea
+                                        required
                                         rows={4}
-                                        placeholder="Nhập tiêu chí tuyển sinh..."
-                                        title="Tiêu chí tuyển sinh"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.admissionCriteria}
                                         onChange={(e) => handleInputChange('admissionCriteria', e.target.value)}
@@ -384,7 +307,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={skill}
                                                 onChange={(e) => handleArrayInputChange('requiredSkills', index, e.target.value)}
-                                                placeholder="Nhập kỹ năng"
                                             />
                                             <button
                                                 type="button"
@@ -416,7 +338,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={advantage}
                                                 onChange={(e) => handleArrayInputChange('advantages', index, e.target.value)}
-                                                placeholder="Nhập ưu điểm"
                                             />
                                             <button
                                                 type="button"
@@ -439,37 +360,37 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                 {/* Tuition */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Học phí
+                                        Học phí *
                                     </label>
                                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">Học kỳ đầu</label>
                                             <input
-                                                type="text"
+                                                type="number"
+                                                required
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.firstSem}
-                                                onChange={(e) => handleNestedInputChange('tuition', 'firstSem', e.target.value)}
-                                                placeholder="VD: 15,000,000"
+                                                onChange={(e) => handleNestedInputChange('tuition', 'firstSem', parseInt(e.target.value))}
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">Học kỳ giữa</label>
                                             <input
-                                                type="text"
+                                                type="number"
+                                                required
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.midSem}
-                                                onChange={(e) => handleNestedInputChange('tuition', 'midSem', e.target.value)}
-                                                placeholder="VD: 15,000,000"
+                                                onChange={(e) => handleNestedInputChange('tuition', 'midSem', parseInt(e.target.value))}
                                             />
                                         </div>
                                         <div>
                                             <label className="block text-xs text-gray-500 mb-1">Học kỳ cuối</label>
                                             <input
-                                                type="text"
+                                                type="number"
+                                                required
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.lastSem}
-                                                onChange={(e) => handleNestedInputChange('tuition', 'lastSem', e.target.value)}
-                                                placeholder="VD: 15,000,000"
+                                                onChange={(e) => handleNestedInputChange('tuition', 'lastSem', parseInt(e.target.value))}
                                             />
                                         </div>
                                     </div>
@@ -477,10 +398,9 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                             </div>
                         )}
 
-                        {/* Career & Scholarships Tab */}
+                        {/* Career Prospects Tab */}
                         {activeTab === 'career' && (
                             <div className="space-y-6">
-                                {/* Career Prospects */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Triển vọng nghề nghiệp
@@ -495,7 +415,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         value={career.title}
                                                         onChange={(e) => handleCareerProspectChange(index, 'title', e.target.value)}
-                                                        placeholder="VD: Lập trình viên"
                                                     />
                                                 </div>
                                                 <div>
@@ -505,7 +424,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         value={career.description}
                                                         onChange={(e) => handleCareerProspectChange(index, 'description', e.target.value)}
-                                                        placeholder="Mô tả về nghề nghiệp này"
                                                     />
                                                 </div>
                                             </div>
@@ -526,63 +444,6 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                         + Thêm triển vọng nghề nghiệp
                                     </button>
                                 </div>
-
-                                {/* Scholarships */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        Học bổng
-                                    </label>
-                                    {formData.scholarships.map((scholarship, index) => (
-                                        <div key={index} className="border border-gray-300 rounded-md p-4 mb-4">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                <div>
-                                                    <label className="block text-xs text-gray-500 mb-1">Tên học bổng</label>
-                                                    <input
-                                                        type="text"
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        value={scholarship.name}
-                                                        onChange={(e) => handleScholarshipChange(index, 'name', e.target.value)}
-                                                        placeholder="VD: Học bổng xuất sắc"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="block text-xs text-gray-500 mb-1">Giá trị</label>
-                                                    <input
-                                                        type="text"
-                                                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                        value={scholarship.value}
-                                                        onChange={(e) => handleScholarshipChange(index, 'value', e.target.value)}
-                                                        placeholder="VD: 50% học phí"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="mt-4">
-                                                <label className="block text-xs text-gray-500 mb-1">Mô tả</label>
-                                                <textarea
-                                                    rows={2}
-                                                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    value={scholarship.description}
-                                                    onChange={(e) => handleScholarshipChange(index, 'description', e.target.value)}
-                                                    placeholder="Mô tả về học bổng này"
-                                                />
-                                            </div>
-                                            <button
-                                                type="button"
-                                                onClick={() => removeScholarship(index)}
-                                                className="mt-2 px-3 py-1 bg-red-500 text-white rounded-md hover:bg-red-600 text-sm"
-                                            >
-                                                Xóa
-                                            </button>
-                                        </div>
-                                    ))}
-                                    <button
-                                        type="button"
-                                        onClick={addScholarship}
-                                        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                                    >
-                                        + Thêm học bổng
-                                    </button>
-                                </div>
                             </div>
                         )}
 
@@ -599,7 +460,7 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
                                 type="submit"
                                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                             >
-                                {isEdit ? 'Cập nhật' : 'Tạo mới'}
+                                Lưu thay đổi
                             </button>
                         </div>
                     </form>
@@ -609,4 +470,4 @@ const CreateMajorModal: React.FC<CreateMajorModalProps> = ({
     );
 };
 
-export default CreateMajorModal;
+export default EditMajorModal; 
