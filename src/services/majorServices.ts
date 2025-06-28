@@ -92,11 +92,11 @@ export const adminMajorServices = {
         }
         
         if (majorData.availableAt?.length) {
-            // Ensure each campus is a valid string value
-            const validCampuses = majorData.availableAt.filter(campus => 
-                typeof campus === 'string' && ['HANOI', 'HCMC', 'DANANG', 'CANTHO', 'QNHON'].includes(campus)
-            );
-            formData.append('availableAt', JSON.stringify(validCampuses));
+            // Chỉ gửi campus đầu tiên (dạng chuỗi) thay vì mảng
+            const firstCampus = typeof majorData.availableAt === 'string' ? majorData.availableAt : majorData.availableAt[0];
+            if (typeof firstCampus === 'string' && ['HANOI', 'HCMC', 'DANANG', 'CANTHO', 'QNHON'].includes(firstCampus)) {
+                formData.append('availableAt', firstCampus);
+            }
         }
         
         if (majorData.subjectCombinations?.length) {
