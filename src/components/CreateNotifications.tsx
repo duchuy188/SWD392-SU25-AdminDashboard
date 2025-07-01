@@ -233,6 +233,7 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
             <button
               type="button"
               onClick={onClose}
+              aria-label="Đóng modal"
               className="text-white hover:text-gray-200 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

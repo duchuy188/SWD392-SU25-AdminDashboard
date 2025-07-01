@@ -213,6 +213,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <input
                                             type="text"
                                             required
+                                            placeholder="Nhập tên ngành học"
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.name}
                                             onChange={(e) => handleInputChange('name', e.target.value)}
@@ -225,6 +226,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <input
                                             type="text"
                                             required
+                                            placeholder="Nhập mã ngành"
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.code}
                                             onChange={(e) => handleInputChange('code', e.target.value)}
@@ -239,6 +241,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         </label>
                                         <select
                                             required
+                                            aria-label="Chọn khoa/viện"
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.department}
                                             onChange={(e) => handleInputChange('department', e.target.value)}
@@ -256,6 +259,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <input
                                             type="number"
                                             required
+                                            placeholder="Nhập số tín chỉ"
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             value={formData.totalCredits}
                                             onChange={(e) => handleInputChange('totalCredits', parseInt(e.target.value))}
@@ -270,6 +274,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                     <textarea
                                         required
                                         rows={3}
+                                        placeholder="Nhập mô tả ngắn về ngành học"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.shortDescription}
                                         onChange={(e) => handleInputChange('shortDescription', e.target.value)}
@@ -283,6 +288,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                     <textarea
                                         required
                                         rows={5}
+                                        placeholder="Nhập mô tả chi tiết về ngành học"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.description}
                                         onChange={(e) => handleInputChange('description', e.target.value)}
@@ -297,6 +303,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <input
                                             type="file"
                                             accept="image/*"
+                                            aria-label="Chọn hình ảnh ngành học"
                                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                             onChange={handleFileChange}
                                         />
@@ -364,6 +371,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                     <textarea
                                         required
                                         rows={4}
+                                        placeholder="Nhập tiêu chí tuyển sinh của ngành học"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         value={formData.admissionCriteria}
                                         onChange={(e) => handleInputChange('admissionCriteria', e.target.value)}
@@ -379,6 +387,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <div key={index} className="flex gap-2 mb-2">
                                             <input
                                                 type="text"
+                                                placeholder="Nhập kỹ năng cần thiết"
                                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={skill}
                                                 onChange={(e) => handleArrayInputChange('requiredSkills', index, e.target.value)}
@@ -410,6 +419,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                         <div key={index} className="flex gap-2 mb-2">
                                             <input
                                                 type="text"
+                                                placeholder="Nhập ưu điểm của ngành"
                                                 className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={advantage}
                                                 onChange={(e) => handleArrayInputChange('advantages', index, e.target.value)}
@@ -443,6 +453,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                             <input
                                                 type="number"
                                                 required
+                                                placeholder="Học phí học kỳ đầu"
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.firstSem}
                                                 onChange={(e) => handleNestedInputChange('tuition', 'firstSem', parseInt(e.target.value))}
@@ -453,6 +464,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                             <input
                                                 type="number"
                                                 required
+                                                placeholder="Học phí học kỳ giữa"
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.midSem}
                                                 onChange={(e) => handleNestedInputChange('tuition', 'midSem', parseInt(e.target.value))}
@@ -463,6 +475,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                             <input
                                                 type="number"
                                                 required
+                                                placeholder="Học phí học kỳ cuối"
                                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                 value={formData.tuition.lastSem}
                                                 onChange={(e) => handleNestedInputChange('tuition', 'lastSem', parseInt(e.target.value))}
@@ -1005,6 +1018,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         value={career.title}
                                                         onChange={(e) => handleCareerProspectChange(index, 'title', e.target.value)}
+                                                        placeholder="Nhập tiêu đề"
                                                     />
                                                 </div>
                                                 <div>
@@ -1014,6 +1028,7 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
                                                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                                         value={career.description}
                                                         onChange={(e) => handleCareerProspectChange(index, 'description', e.target.value)}
+                                                        placeholder="Nhập mô tả"
                                                     />
                                                 </div>
                                             </div>
@@ -1128,4 +1143,4 @@ const EditMajorModal: React.FC<EditMajorModalProps> = ({
     );
 };
 
-export default EditMajorModal; 
+export default EditMajorModal;

@@ -315,6 +315,7 @@ const MajorManagement: React.FC = () => {
                         <select
                             value={selectedDepartment}
                             onChange={(e) => setSelectedDepartment(e.target.value)}
+                            aria-label="Chọn khoa/viện để lọc"
                             className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-200 appearance-none cursor-pointer"
                         >
                             <option value="">Tất cả khoa/viện</option>
