@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { adminMajorServices } from '../services/majorServices';
 import { MajorFormData } from '../types/major';
 import CreateMajorModal from './modals/CreateMajorModal';
@@ -8,9 +8,11 @@ import { toast } from 'react-toastify';
 
 const MajorManagement: React.FC = () => {
     const [majors, setMajors] = useState<MajorFormData[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [initialLoad, setInitialLoad] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -32,17 +34,27 @@ const MajorManagement: React.FC = () => {
     ];
 
     useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    useEffect(() => {
         fetchMajors();
-    }, [currentPage, searchTerm, selectedDepartment]);
+    }, [currentPage, debouncedSearchTerm, selectedDepartment]);
 
     const fetchMajors = async () => {
         try {
-            setLoading(true);
+            if (!initialLoad) {
+                setLoading(true);
+            }
             setError(null);
             const params = {
                 page: currentPage,
                 limit: 10,
-                search: searchTerm || undefined,
+                search: debouncedSearchTerm || undefined,
                 department: selectedDepartment || undefined,
                 sortBy: 'createdAt',
                 sortOrder: 'desc' as const
@@ -62,6 +74,7 @@ const MajorManagement: React.FC = () => {
             setMajors([]);
         } finally {
             setLoading(false);
+            setInitialLoad(false);
         }
     };
 
@@ -231,7 +244,41 @@ const MajorManagement: React.FC = () => {
         setShowEditModal(true);
     };
 
-    if (loading && majors.length === 0) {
+    const LoadingSkeleton = () => (
+        <>
+            {[1, 2, 3].map((i) => (
+                <tr key={i} className="animate-pulse">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex items-center">
+                            <div className="h-10 w-10 rounded-full bg-gray-200 mr-3"></div>
+                            <div>
+                                <div className="h-4 w-48 bg-gray-200 rounded"></div>
+                                <div className="h-3 w-32 bg-gray-200 rounded mt-2"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-20 bg-gray-200 rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-32 bg-gray-200 rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="flex space-x-2">
+                            <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                            <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                            <div className="h-4 w-12 bg-gray-200 rounded"></div>
+                        </div>
+                    </td>
+                </tr>
+            ))}
+        </>
+    );
+
+    if (initialLoad) {
         return (
             <div className="flex justify-center items-center min-h-96">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -262,7 +309,10 @@ const MajorManagement: React.FC = () => {
                             placeholder="Tên ngành học, mã ngành..."
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={(e) => {
+                                e.preventDefault();
+                                setSearchTerm(e.target.value);
+                            }}
                         />
                     </div>
                     <div>
@@ -291,7 +341,12 @@ const MajorManagement: React.FC = () => {
             </div>
 
             {/* Major List */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
+            <div className="bg-white rounded-lg shadow overflow-hidden relative">
+                {loading && (
+                    <div className="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ease-in-out z-10">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                    </div>
+                )}
                 <div className="overflow-x-auto">
                     <table className="min-w-full divide-y divide-gray-200">
                         <thead className="bg-gray-50">
@@ -314,60 +369,64 @@ const MajorManagement: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody className="bg-white divide-y divide-gray-200">
-                            {Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
-                                <tr key={major?._id || major?.code || Math.random()} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            {major?.imageUrl && (
-                                                <img
-                                                    className="h-10 w-10 rounded-full object-cover mr-3"
-                                                    src={major.imageUrl}
-                                                    alt={major?.name || 'Major image'}
-                                                />
-                                            )}
-                                            <div>
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {major?.name || 'N/A'}
-                                                </div>
-                                                <div className="text-sm text-gray-500 max-w-xs truncate">
-                                                    {major?.shortDescription || ''}
+                            {loading ? (
+                                <LoadingSkeleton />
+                            ) : (
+                                Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
+                                    <tr key={major?._id || major?.code || Math.random()} className="hover:bg-gray-50">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <div className="flex items-center">
+                                                {major?.imageUrl && (
+                                                    <img
+                                                        className="h-10 w-10 rounded-full object-cover mr-3"
+                                                        src={major.imageUrl}
+                                                        alt={major?.name || 'Major image'}
+                                                    />
+                                                )}
+                                                <div>
+                                                    <div className="text-sm font-medium text-gray-900">
+                                                        {major?.name || 'N/A'}
+                                                    </div>
+                                                    <div className="text-sm text-gray-500 max-w-xs truncate">
+                                                        {major?.shortDescription || ''}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.code || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.department || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.totalCredits || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleViewDetails(major)}
-                                                className="text-blue-600 hover:text-blue-900"
-                                            >
-                                                Xem
-                                            </button>
-                                            <button
-                                                onClick={() => handleEditMajor(major)}
-                                                className="text-indigo-600 hover:text-indigo-900"
-                                            >
-                                                Sửa
-                                            </button>
-                                            <button
-                                                onClick={() => major?._id && handleDeleteMajor(major._id)}
-                                                className="text-red-600 hover:text-red-900"
-                                            >
-                                                Xóa
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )) : null}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {major?.code || 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {major?.department || 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                            {major?.totalCredits || 'N/A'}
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                            <div className="flex space-x-2">
+                                                <button
+                                                    onClick={() => handleViewDetails(major)}
+                                                    className="text-blue-600 hover:text-blue-900"
+                                                >
+                                                    Xem
+                                                </button>
+                                                <button
+                                                    onClick={() => handleEditMajor(major)}
+                                                    className="text-indigo-600 hover:text-indigo-900"
+                                                >
+                                                    Sửa
+                                                </button>
+                                                <button
+                                                    onClick={() => major?._id && handleDeleteMajor(major._id)}
+                                                    className="text-red-600 hover:text-red-900"
+                                                >
+                                                    Xóa
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )) : null
+                            )}
                         </tbody>
                     </table>
                 </div>
