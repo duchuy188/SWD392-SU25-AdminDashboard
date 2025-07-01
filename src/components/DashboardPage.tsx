@@ -95,12 +95,14 @@ function DashboardPage() {
                 <p className="text-white/80 text-lg">Gửi thông báo đến người dùng</p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-lg">
-                <button
-                  onClick={() => setShowNotificationModal(true)}
-                  className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Tạo thông báo mới
-                </button>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setShowNotificationModal(true)}
+                    className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Tạo thông báo mới
+                  </button>
+                </div>
                 {showNotificationModal && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="max-w-2xl w-full mx-4">
