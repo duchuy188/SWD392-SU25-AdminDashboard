@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import MetricCard from './MetricCard';
 import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
@@ -95,12 +94,14 @@ function DashboardPage() {
                 <p className="text-white/80 text-lg">Gửi thông báo đến người dùng</p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-lg">
-                <button
-                  onClick={() => setShowNotificationModal(true)}
-                  className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  Tạo thông báo mới
-                </button>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setShowNotificationModal(true)}
+                    className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  >
+                    Tạo thông báo mới
+                  </button>
+                </div>
                 {showNotificationModal && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="max-w-2xl w-full mx-4">
@@ -118,17 +119,6 @@ function DashboardPage() {
               <div className="mb-8">
                 <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
                 <p className="text-white/80 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {metrics.map((metric, index) => (
-                  <div 
-                    key={index} 
-                    className={`animate-fadeIn hover-lift delay-${index}00`}
-                  >
-                    <MetricCard {...metric} />
-                  </div>
-                ))}
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

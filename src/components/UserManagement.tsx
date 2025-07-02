@@ -343,12 +343,14 @@ const UserManagement: React.FC = () => {
                         onChange={(e) => handleRoleUpdate(user._id, e.target.value as 'student' | 'admin')}
                         title="Chọn vai trò"
                         aria-label="Chọn vai trò người dùng"
-                        className={`glass text-white px-3 py-1 rounded-full text-sm font-medium border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                          user.role === 'admin' ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-cyan-500'
+                        className={`text-white px-4 py-2 rounded-full text-sm font-bold border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                          user.role === 'admin' 
+                            ? 'bg-gradient-to-r from-red-500 via-pink-500 to-purple-600 hover:from-red-600 hover:via-pink-600 hover:to-purple-700' 
+                            : 'bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 hover:from-blue-600 hover:via-indigo-600 hover:to-purple-600'
                         }`}
                       >
-                        <option value="student" className="bg-gray-800 text-white">student</option>
-                        <option value="admin" className="bg-gray-800 text-white">admin</option>
+                        <option value="student" className="bg-gray-800 text-white font-medium">student</option>
+                        <option value="admin" className="bg-gray-800 text-white font-medium">admin</option>
                       </select>
                     )}
                   </td>
@@ -363,12 +365,14 @@ const UserManagement: React.FC = () => {
                         onChange={(e) => handleStatusUpdate(user._id, e.target.value)}
                         title="Chọn trạng thái"
                         aria-label="Chọn trạng thái người dùng"
-                        className={`glass text-white px-3 py-1 rounded-full text-sm font-medium border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 min-w-[100px] ${
-                          user.isActive ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-red-500 to-pink-500'
+                        className={`text-white px-4 py-2 rounded-full text-sm font-bold border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 min-w-[100px] shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                          user.isActive 
+                            ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700' 
+                            : 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-600 hover:from-red-600 hover:via-rose-600 hover:to-pink-700'
                         }`}
                       >
-                        <option value="true" className="bg-gray-800 text-white">Unblock</option>
-                        <option value="false" className="bg-gray-800 text-white">Block</option>
+                        <option value="true" className="bg-gray-800 text-white font-medium">Unblock</option>
+                        <option value="false" className="bg-gray-800 text-white font-medium">Block</option>
                       </select>
                     )}
                   </td>

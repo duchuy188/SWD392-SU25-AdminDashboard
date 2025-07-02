@@ -113,8 +113,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
   if (loading) {
     return (
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-        <div className="glass rounded-2xl p-8 max-w-md w-full mx-4 animate-slideUp">
+      <div className="fixed inset-0 bg-blue-900/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl p-8 max-w-md w-full mx-4 animate-slideUp shadow-2xl border border-blue-200">
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
               <div className="w-16 h-16 gradient-primary rounded-full animate-spin"></div>
@@ -123,7 +123,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                 <div className="w-4 h-4 gradient-warning rounded-full animate-bounce"></div>
               </div>
             </div>
-            <p className="text-white font-medium text-lg">Đang tải thông tin...</p>
+            <p className="text-blue-800 font-medium text-lg">Đang tải thông tin...</p>
           </div>
         </div>
       </div>
@@ -132,8 +132,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
   if (error) {
     return (
-      <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-        <div className="glass rounded-2xl p-8 max-w-md w-full mx-4 border-l-4 border-red-500 animate-slideUp">
+      <div className="fixed inset-0 bg-blue-900/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+        <div className="bg-white/95 backdrop-blur-md rounded-2xl p-8 max-w-md w-full mx-4 border-l-4 border-red-500 animate-slideUp shadow-2xl">
           <div className="flex items-center mb-6">
             <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center mr-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,8 +141,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
               </svg>
             </div>
             <div>
-              <h3 className="text-white font-bold text-lg">Lỗi</h3>
-              <p className="text-white/80">{error}</p>
+              <h3 className="text-red-700 font-bold text-lg">Lỗi</h3>
+              <p className="text-gray-700">{error}</p>
             </div>
           </div>
           <button
@@ -161,9 +161,9 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
-      <div className="glass rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden mx-4 animate-slideUp">
-        <div className="sticky top-0 glass-dark px-8 py-6 flex justify-between items-center border-b border-white/20">
+    <div className="fixed inset-0 bg-blue-900/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fadeIn">
+      <div className="bg-white/95 backdrop-blur-md rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden mx-4 animate-slideUp border border-blue-200">
+        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-cyan-500 px-8 py-6 flex justify-between items-center border-b border-blue-300">
           <div className="flex items-center">
             <div className="w-10 h-10 gradient-primary rounded-2xl flex items-center justify-center mr-4">
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -178,7 +178,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           <button
             onClick={onClose}
             title="Đóng modal"
-            className="text-white/80 hover:text-white hover:bg-white/20 transition-all duration-300 p-2 rounded-xl"
+            className="text-white/90 hover:text-white hover:bg-white/20 transition-all duration-300 p-2 rounded-xl"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -186,7 +186,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           </button>
         </div>
 
-        <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-140px)] custom-scrollbar">
+        <div className="p-8 space-y-8 overflow-y-auto max-h-[calc(90vh-140px)] custom-scrollbar bg-gradient-to-br from-blue-50 to-cyan-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-6">
               <div className="relative">
@@ -194,10 +194,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                   <img
                     src={user.profilePicture}
                     alt={user.fullName}
-                    className="w-24 h-24 rounded-2xl object-cover border-4 border-white/20 shadow-2xl"
+                    className="w-24 h-24 rounded-2xl object-cover border-4 border-blue-200 shadow-2xl"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-2xl gradient-secondary flex items-center justify-center border-4 border-white/20 shadow-2xl">
+                  <div className="w-24 h-24 rounded-2xl gradient-secondary flex items-center justify-center border-4 border-blue-200 shadow-2xl">
                     <span className="text-3xl text-white font-bold">{user.fullName.charAt(0)}</span>
                   </div>
                 )}
@@ -208,8 +208,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                 />
               </div>
               <div>
-                <h3 className="text-3xl font-bold text-white mb-2">{user.fullName}</h3>
-                <p className="text-white/80 text-lg mb-3">{user.email}</p>
+                <h3 className="text-3xl font-bold text-gray-800 mb-2">{user.fullName}</h3>
+                <p className="text-gray-600 text-lg mb-3">{user.email}</p>
                 <div className="flex items-center space-x-3">
                   <span className={`px-4 py-2 rounded-xl text-sm font-semibold ${
                     user.role === 'admin' 
@@ -242,19 +242,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           </div>
 
           {isEditing ? (
-            <div className="glass rounded-2xl p-8 animate-fadeIn">
+            <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 animate-fadeIn shadow-lg border border-blue-200">
               <div className="flex items-center mb-6">
                 <div className="w-8 h-8 gradient-warning rounded-full flex items-center justify-center mr-3">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white">Chỉnh sửa thông tin</h3>
+                <h3 className="text-xl font-bold text-gray-800">Chỉnh sửa thông tin</h3>
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label htmlFor="fullName" className="block text-sm font-semibold text-white mb-2">
+                    <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
                       Họ và tên
                     </label>
                     <input
@@ -263,13 +263,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                       name="fullName"
                       value={editForm.fullName}
                       onChange={handleInputChange}
-                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
                       placeholder="Nhập họ và tên"
                       required
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-white mb-2">
+                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
                       Số điện thoại
                     </label>
                     <input
@@ -278,13 +278,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                       name="phone"
                       value={editForm.phone}
                       onChange={handleInputChange}
-                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
                       placeholder="Nhập số điện thoại"
                     />
                   </div>
                 </div>
                 <div>
-                  <label htmlFor="address" className="block text-sm font-semibold text-white mb-2">
+                  <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
                     Địa chỉ
                   </label>
                   <input
@@ -293,7 +293,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     name="address"
                     value={editForm.address}
                     onChange={handleInputChange}
-                    className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 placeholder-white/50"
+                    className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
                     placeholder="Nhập địa chỉ"
                   />
                 </div>
@@ -301,7 +301,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="px-6 py-3 glass text-white rounded-xl hover:bg-white/20 transition-all duration-300 font-semibold"
+                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl hover:bg-gray-300 transition-all duration-300 font-semibold"
                   >
                     Hủy
                   </button>
@@ -330,42 +330,42 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
               </form>
             </div>
           ) : (
-            <div className="glass rounded-2xl p-8 animate-fadeIn">
+            <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 animate-fadeIn shadow-lg border border-blue-200">
               <div className="flex items-center mb-6">
                 <div className="w-8 h-8 gradient-info rounded-full flex items-center justify-center mr-3">
                   <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-white">Thông tin cơ bản</h3>
+                <h3 className="text-xl font-bold text-gray-800">Thông tin cơ bản</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-6">
                   <div>
-                    <p className="text-sm font-semibold text-white/60 mb-1">Email</p>
-                    <p className="text-white text-lg">{user.email}</p>
+                    <p className="text-sm font-semibold text-gray-600 mb-1">Email</p>
+                    <p className="text-gray-800 text-lg">{user.email}</p>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white/60 mb-1">Họ và tên</p>
-                    <p className="text-white text-lg">{user.fullName}</p>
+                    <p className="text-sm font-semibold text-gray-600 mb-1">Họ và tên</p>
+                    <p className="text-gray-800 text-lg">{user.fullName}</p>
                   </div>
                   {user.phone && (
                     <div>
-                      <p className="text-sm font-semibold text-white/60 mb-1">Số điện thoại</p>
-                      <p className="text-white text-lg">{user.phone}</p>
+                      <p className="text-sm font-semibold text-gray-600 mb-1">Số điện thoại</p>
+                      <p className="text-gray-800 text-lg">{user.phone}</p>
                     </div>
                   )}
                 </div>
                 <div className="space-y-6">
                   {user.address && (
                     <div>
-                      <p className="text-sm font-semibold text-white/60 mb-1">Địa chỉ</p>
-                      <p className="text-white text-lg break-words">{user.address}</p>
+                      <p className="text-sm font-semibold text-gray-600 mb-1">Địa chỉ</p>
+                      <p className="text-gray-800 text-lg break-words">{user.address}</p>
                     </div>
                   )}
                   <div>
-                    <p className="text-sm font-semibold text-white/60 mb-1">Ngày tạo tài khoản</p>
-                    <p className="text-white text-lg">
+                    <p className="text-sm font-semibold text-gray-600 mb-1">Ngày tạo tài khoản</p>
+                    <p className="text-gray-800 text-lg">
                       {new Date(user.createdAt).toLocaleDateString('vi-VN', {
                         year: 'numeric',
                         month: 'long',
@@ -380,34 +380,34 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
           {/* Student Information */}
           {studentInfo && (
             <div className="space-y-8">
-              <div className="glass rounded-2xl p-8 animate-fadeIn">
+              <div className="bg-white/80 backdrop-blur-md rounded-2xl p-8 animate-fadeIn shadow-lg border border-blue-200">
                 <div className="flex items-center mb-6">
                   <div className="w-8 h-8 gradient-success rounded-full flex items-center justify-center mr-3">
                     <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white">Thông tin học viên</h3>
+                  <h3 className="text-xl font-bold text-gray-800">Thông tin học viên</h3>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                   {studentInfo.grade && (
                     <div>
-                      <p className="text-sm font-semibold text-white/60 mb-1">Lớp</p>
-                      <p className="text-white text-lg">{studentInfo.grade}</p>
+                      <p className="text-sm font-semibold text-gray-600 mb-1">Lớp</p>
+                      <p className="text-gray-800 text-lg">{studentInfo.grade}</p>
                     </div>
                   )}
                   {studentInfo.personalityType && (
                     <div>
-                      <p className="text-sm font-semibold text-white/60 mb-1">Tính cách</p>
-                      <p className="text-white text-lg">{studentInfo.personalityType}</p>
+                      <p className="text-sm font-semibold text-gray-600 mb-1">Tính cách</p>
+                      <p className="text-gray-800 text-lg">{studentInfo.personalityType}</p>
                     </div>
                   )}
                 </div>
 
                 {/* Interests */}
                 <div className="mb-8">
-                  <p className="text-sm font-semibold text-white/60 mb-4">Sở thích</p>
+                  <p className="text-sm font-semibold text-gray-600 mb-4">Sở thích</p>
                   <div className="flex flex-wrap gap-3">
                     {studentInfo.interests.length > 0 ? (
                       studentInfo.interests.map((interest, index) => (
@@ -419,13 +419,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                         </span>
                       ))
                     ) : (
-                      <div className="glass-dark rounded-xl p-4 w-full text-center">
+                      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 w-full text-center border border-blue-100">
                         <div className="w-12 h-12 empty-state-icon gradient-info rounded-full flex items-center justify-center mx-auto mb-2">
                           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                           </svg>
                         </div>
-                        <p className="text-white/60 italic">Chưa có thông tin sở thích</p>
+                        <p className="text-gray-600 italic">Chưa có thông tin sở thích</p>
                       </div>
                     )}
                   </div>
@@ -433,7 +433,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
                 {/* Preferred FPT Majors */}
                 <div className="mb-8">
-                  <p className="text-sm font-semibold text-white/60 mb-4">Ngành học quan tâm</p>
+                  <p className="text-sm font-semibold text-gray-600 mb-4">Ngành học quan tâm</p>
                   <div className="flex flex-wrap gap-3">
                     {studentInfo.preferredFPTMajors.length > 0 ? (
                       studentInfo.preferredFPTMajors.map((major, index) => (
@@ -445,14 +445,14 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                         </span>
                       ))
                     ) : (
-                      <div className="glass-dark rounded-xl p-4 w-full text-center">
+                      <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 w-full text-center border border-blue-100">
                         <div className="w-12 h-12 empty-state-icon gradient-success rounded-full flex items-center justify-center mx-auto mb-2">
                           <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
                           </svg>
                         </div>
-                        <p className="text-white/60 italic">Chưa có thông tin ngành học quan tâm</p>
+                        <p className="text-gray-600 italic">Chưa có thông tin ngành học quan tâm</p>
                       </div>
                     )}
                   </div>
@@ -460,7 +460,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
 
                 {/* Academic Results */}
                 <div className="mb-8">
-                  <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                  <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                     <div className="w-6 h-6 gradient-warning rounded-full flex items-center justify-center mr-2">
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -469,29 +469,29 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     Kết quả học tập
                   </h4>
                   {studentInfo.academicResults.length > 0 ? (
-                    <div className="glass-dark rounded-xl overflow-hidden">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl overflow-hidden border border-blue-200">
                       <div className="overflow-x-auto">
                         <table className="min-w-full">
-                          <thead className="bg-white/10">
+                          <thead className="bg-blue-100/80">
                             <tr>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Môn học
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Điểm
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Học kỳ
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-white/20">
+                          <tbody className="divide-y divide-blue-200/50">
                             {studentInfo.academicResults.map((result, index) => (
-                              <tr key={index} className="table-row-hover">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                              <tr key={index} className="hover:bg-blue-50/50 transition-colors duration-200">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                                   {result.subject}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                   <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
                                     result.score >= 8 ? 'score-excellent' : 
                                     result.score >= 6.5 ? 'score-good' : 'score-poor'
@@ -499,7 +499,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                                     {result.score}
                                   </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                   {result.semester}
                                 </td>
                               </tr>
@@ -509,20 +509,20 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="glass-dark rounded-xl p-8 text-center">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl p-8 text-center border border-blue-100">
                       <div className="w-16 h-16 empty-state-icon gradient-info rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                         </svg>
                       </div>
-                      <p className="text-white/60 italic">Chưa có kết quả học tập</p>
+                      <p className="text-gray-600 italic">Chưa có kết quả học tập</p>
                     </div>
                   )}
                 </div>
 
                 {/* Test Results */}
                 <div>
-                  <h4 className="text-lg font-bold text-white mb-4 flex items-center">
+                  <h4 className="text-lg font-bold text-gray-800 mb-4 flex items-center">
                     <div className="w-6 h-6 gradient-info rounded-full flex items-center justify-center mr-2">
                       <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -531,29 +531,29 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     Kết quả kiểm tra
                   </h4>
                   {studentInfo.testResults.length > 0 ? (
-                    <div className="glass-dark rounded-xl overflow-hidden">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl overflow-hidden border border-blue-200">
                       <div className="overflow-x-auto">
                         <table className="min-w-full">
-                          <thead className="bg-white/10">
+                          <thead className="bg-blue-100/80">
                             <tr>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Bài kiểm tra
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Điểm
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Ngày
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-white/20">
+                          <tbody className="divide-y divide-blue-200/50">
                             {studentInfo.testResults.map((result, index) => (
-                              <tr key={index} className="table-row-hover">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                              <tr key={index} className="hover:bg-blue-50/50 transition-colors duration-200">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                                   {result.test}
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                   <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
                                     result.score >= 8 ? 'score-excellent' : 
                                     result.score >= 6.5 ? 'score-good' : 'score-poor'
@@ -561,7 +561,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                                     {result.score}
                                   </span>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                   {new Date(result.date).toLocaleDateString('vi-VN', {
                                     year: 'numeric',
                                     month: 'long',
@@ -575,13 +575,13 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                       </div>
                     </div>
                   ) : (
-                    <div className="glass-dark rounded-xl p-8 text-center">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl p-8 text-center border border-blue-100">
                       <div className="w-16 h-16 empty-state-icon gradient-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                         <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                         </svg>
                       </div>
-                      <p className="text-white/60 italic">Chưa có kết quả kiểm tra</p>
+                      <p className="text-gray-600 italic">Chưa có kết quả kiểm tra</p>
                     </div>
                   )}
                 </div>

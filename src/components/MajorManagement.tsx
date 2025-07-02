@@ -5,12 +5,15 @@ import CreateMajorModal from './modals/CreateMajorModal';
 import MajorDetailModal from './modals/MajorDetailModal';
 import EditMajorModal from './modals/EditMajorModal';
 import { toast } from 'react-toastify';
+import { Search, Filter, RefreshCw, GraduationCap, Building2, BookOpen, Users, Eye, Edit, Trash2 } from 'lucide-react';
 
 const MajorManagement: React.FC = () => {
     const [majors, setMajors] = useState<MajorFormData[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [initialLoad, setInitialLoad] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -32,17 +35,27 @@ const MajorManagement: React.FC = () => {
     ];
 
     useEffect(() => {
+        const timer = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchTerm]);
+
+    useEffect(() => {
         fetchMajors();
-    }, [currentPage, searchTerm, selectedDepartment]);
+    }, [currentPage, debouncedSearchTerm, selectedDepartment]);
 
     const fetchMajors = async () => {
         try {
-            setLoading(true);
+            if (!initialLoad) {
+                setLoading(true);
+            }
             setError(null);
             const params = {
                 page: currentPage,
                 limit: 10,
-                search: searchTerm || undefined,
+                search: debouncedSearchTerm || undefined,
                 department: selectedDepartment || undefined,
                 sortBy: 'createdAt',
                 sortOrder: 'desc' as const
@@ -62,6 +75,7 @@ const MajorManagement: React.FC = () => {
             setMajors([]);
         } finally {
             setLoading(false);
+            setInitialLoad(false);
         }
     };
 
@@ -231,164 +245,259 @@ const MajorManagement: React.FC = () => {
         setShowEditModal(true);
     };
 
-    if (loading && majors.length === 0) {
+    const LoadingSkeleton = () => (
+        <>
+            {[1, 2, 3].map((i) => (
+                <tr key={i} className="animate-pulse border-b border-white/10">
+                    <td className="py-5 px-6">
+                        <div className="flex items-center gap-4">
+                            <div className="h-12 w-12 rounded-xl bg-white/10"></div>
+                            <div className="flex-1">
+                                <div className="h-5 w-48 bg-white/10 rounded mb-2"></div>
+                                <div className="h-3 w-32 bg-white/10 rounded"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td className="py-5 px-4 text-center">
+                        <div className="inline-flex">
+                            <div className="h-6 w-16 bg-white/10 rounded-full"></div>
+                        </div>
+                    </td>
+                    <td className="py-5 px-4 text-center">
+                        <div className="h-4 w-24 bg-white/10 rounded mx-auto"></div>
+                    </td>
+                    <td className="py-5 px-4 text-center">
+                        <div className="h-4 w-12 bg-white/10 rounded mx-auto"></div>
+                    </td>
+                    <td className="py-5 px-4">
+                        <div className="flex items-center justify-center gap-1">
+                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
+                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
+                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
+                        </div>
+                    </td>
+                </tr>
+            ))}
+        </>
+    );
+
+    if (initialLoad) {
         return (
             <div className="flex justify-center items-center min-h-96">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+                <RefreshCw className="w-8 h-8 text-blue-400 animate-spin" />
             </div>
         );
     }
 
     return (
-        <div className="p-6">
-            <div className="mb-6">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản lý Ngành học</h1>
-                <p className="text-gray-600">Quản lý thông tin các ngành học trong hệ thống</p>
+        <div className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-3xl font-bold text-white mb-2">Quản lý Ngành học</h1>
+                    <p className="text-white/80">Quản lý thông tin các ngành học trong hệ thống</p>
+                </div>
             </div>
 
-            {error && (
-                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-                    {error}
-                </div>
-            )}
-
-            {/* Filters and Search */}
-            <div className="mb-6 bg-white p-4 rounded-lg shadow">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Tìm kiếm</label>
+            {/* Search and Filter */}
+            <div className="glass p-6 rounded-xl border border-white/20">
+                <div className="flex flex-col lg:flex-row gap-4">
+                    <div className="flex-1 relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
                         <input
                             type="text"
-                            placeholder="Tên ngành học, mã ngành..."
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Tìm kiếm ngành học..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
                         />
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Khoa/Viện</label>
+                    <div className="flex items-center gap-2">
+                        <Filter className="text-purple-300 w-4 h-4" />
                         <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             value={selectedDepartment}
                             onChange={(e) => setSelectedDepartment(e.target.value)}
-                            aria-label="Chọn khoa/viện"
+                            aria-label="Chọn khoa/viện để lọc"
+                            className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-200 appearance-none cursor-pointer"
                         >
                             <option value="">Tất cả khoa/viện</option>
                             {departments.map(dept => (
-                                <option key={dept} value={dept}>{dept}</option>
+                                <option key={dept} value={dept} className="bg-gray-800 text-white">{dept}</option>
                             ))}
                         </select>
                     </div>
-                    <div className="flex items-end">
-                        <button
-                            onClick={() => setShowCreateModal(true)}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-                        >
-                            + Thêm ngành học
-                        </button>
+                    <button
+                        onClick={() => setShowCreateModal(true)}
+                        className="btn-primary flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200"
+                    >
+                        <GraduationCap className="w-4 h-4" />
+                        Thêm ngành học
+                    </button>
+                </div>
+            </div>
+
+            {/* Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="glass p-4 rounded-xl border border-white/20">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-white/60 text-sm">Tổng số ngành</p>
+                            <p className="text-2xl font-bold text-white">{majors.length}</p>
+                        </div>
+                        <GraduationCap className="w-8 h-8 text-blue-400" />
+                    </div>
+                </div>
+                <div className="glass p-4 rounded-xl border border-white/20">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-white/60 text-sm">Số khoa/viện</p>
+                            <p className="text-2xl font-bold text-white">{departments.length}</p>
+                        </div>
+                        <Building2 className="w-8 h-8 text-purple-400" />
+                    </div>
+                </div>
+                <div className="glass p-4 rounded-xl border border-white/20">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-white/60 text-sm">Tổng tín chỉ</p>
+                            <p className="text-2xl font-bold text-white">
+                                {majors.reduce((sum, major) => sum + (major.totalCredits || 0), 0)}
+                            </p>
+                        </div>
+                        <BookOpen className="w-8 h-8 text-green-400" />
+                    </div>
+                </div>
+                <div className="glass p-4 rounded-xl border border-white/20">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-white/60 text-sm">Sinh viên</p>
+                            <p className="text-2xl font-bold text-white">-</p>
+                        </div>
+                        <Users className="w-8 h-8 text-yellow-400" />
                     </div>
                 </div>
             </div>
 
             {/* Major List */}
-            <div className="bg-white rounded-lg shadow overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="min-w-full divide-y divide-gray-200">
-                        <thead className="bg-gray-50">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Ngành học
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Mã ngành
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Khoa/Viện
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Tín chỉ
-                                </th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Thao tác
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody className="bg-white divide-y divide-gray-200">
-                            {Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
-                                <tr key={major?._id || major?.code || Math.random()} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="flex items-center">
-                                            {major?.imageUrl && (
-                                                <img
-                                                    className="h-10 w-10 rounded-full object-cover mr-3"
-                                                    src={major.imageUrl}
-                                                    alt={major?.name || 'Major image'}
-                                                />
-                                            )}
-                                            <div>
-                                                <div className="text-sm font-medium text-gray-900">
-                                                    {major?.name || 'N/A'}
-                                                </div>
-                                                <div className="text-sm text-gray-500 max-w-xs truncate">
-                                                    {major?.shortDescription || ''}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.code || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.department || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                        {major?.totalCredits || 'N/A'}
-                                    </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => handleViewDetails(major)}
-                                                className="text-blue-600 hover:text-blue-900"
-                                            >
-                                                Xem
-                                            </button>
-                                            <button
-                                                onClick={() => handleEditMajor(major)}
-                                                className="text-indigo-600 hover:text-indigo-900"
-                                            >
-                                                Sửa
-                                            </button>
-                                            <button
-                                                onClick={() => major?._id && handleDeleteMajor(major._id)}
-                                                className="text-red-600 hover:text-red-900"
-                                            >
-                                                Xóa
-                                            </button>
-                                        </div>
-                                    </td>
+            <div className="glass p-6 rounded-xl border border-white/20">
+                {loading ? (
+                    <div className="text-center py-8">
+                        <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
+                        <p className="text-white/80">Đang tải danh sách ngành học...</p>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead>
+                                <tr className="border-b border-white/20">
+                                    <th className="text-left py-4 px-6 text-white font-semibold">Ngành học</th>
+                                    <th className="text-center py-4 px-4 text-white font-semibold">Mã ngành</th>
+                                    <th className="text-center py-4 px-4 text-white font-semibold">Khoa/Viện</th>
+                                    <th className="text-center py-4 px-4 text-white font-semibold">Tín chỉ</th>
+                                    <th className="text-center py-4 px-4 text-white font-semibold">Thao tác</th>
                                 </tr>
-                            )) : null}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {loading ? (
+                                    <LoadingSkeleton />
+                                ) : (
+                                    Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
+                                        <tr key={major?._id || major?.code || Math.random()} className="border-b border-white/10 hover:bg-white/5 transition-all duration-200 group">
+                                            <td className="py-5 px-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
+                                                        <GraduationCap className="w-6 h-6 text-white" />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <div className="text-white font-semibold text-lg mb-1">{major?.name || 'N/A'}</div>
+                                                        <div className="text-white/60 text-sm line-clamp-1">{major?.shortDescription || 'Chưa có mô tả'}</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="py-5 px-4 text-center">
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                                    {major?.code || 'N/A'}
+                                                </span>
+                                            </td>
+                                            <td className="py-5 px-4 text-center">
+                                                <div className="text-white/90 font-medium">{major?.department || 'N/A'}</div>
+                                            </td>
+                                            <td className="py-5 px-4 text-center">
+                                                <div className="inline-flex items-center gap-1">
+                                                    <BookOpen className="w-4 h-4 text-green-400" />
+                                                    <span className="text-white font-medium">{major?.totalCredits || 'N/A'}</span>
+                                                </div>
+                                            </td>
+                                            <td className="py-5 px-4">
+                                                <div className="flex items-center justify-center gap-1">
+                                                    <button
+                                                        onClick={() => handleViewDetails(major)}
+                                                        className="group/btn relative p-2 hover:bg-blue-500/20 rounded-lg transition-all duration-200 text-blue-400 hover:text-blue-300"
+                                                        title="Xem chi tiết"
+                                                    >
+                                                        <Eye className="w-5 h-5" />
+                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
+                                                            Xem chi tiết
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleEditMajor(major)}
+                                                        className="group/btn relative p-2 hover:bg-yellow-500/20 rounded-lg transition-all duration-200 text-yellow-400 hover:text-yellow-300"
+                                                        title="Chỉnh sửa"
+                                                    >
+                                                        <Edit className="w-5 h-5" />
+                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
+                                                            Chỉnh sửa
+                                                        </span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => major?._id && handleDeleteMajor(major._id)}
+                                                        className="group/btn relative p-2 hover:bg-red-500/20 rounded-lg transition-all duration-200 text-red-400 hover:text-red-300"
+                                                        title="Xóa"
+                                                    >
+                                                        <Trash2 className="w-5 h-5" />
+                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
+                                                            Xóa
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )) : null
+                                )}
+                            </tbody>
+                        </table>
 
-                {(!Array.isArray(majors) || majors.length === 0) && !loading && (
-                    <div className="text-center py-12">
-                        <p className="text-gray-500">
-                            {!Array.isArray(majors) ? 'Dữ liệu không hợp lệ' : 'Không có ngành học nào được tìm thấy'}
-                        </p>
+                        {(!Array.isArray(majors) || majors.length === 0) && !loading && (
+                            <div className="text-center py-8">
+                                <GraduationCap className="w-12 h-12 text-white/30 mx-auto mb-4" />
+                                <p className="text-white/60 text-lg mb-2">
+                                    {searchTerm || selectedDepartment
+                                        ? 'Không tìm thấy ngành học nào'
+                                        : 'Chưa có ngành học nào'}
+                                </p>
+                                <p className="text-white/40">
+                                    {searchTerm || selectedDepartment
+                                        ? 'Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc'
+                                        : 'Thêm ngành học đầu tiên để bắt đầu'}
+                                </p>
+                            </div>
+                        )}
                     </div>
                 )}
             </div>
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="mt-6 flex justify-center">
-                    <nav className="flex space-x-2">
+                <div className="flex items-center justify-between bg-[#7E57C2]/30 rounded-xl px-4 py-2">
+                    <div className="text-white/80">
+                        Hiển thị {majors.length} ngành học
+                    </div>
+                    <div className="flex items-center gap-2">
                         <button
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
-                            className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                            className="text-white/80 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed px-2"
                         >
                             Trước
                         </button>
@@ -396,10 +505,10 @@ const MajorManagement: React.FC = () => {
                             <button
                                 key={page}
                                 onClick={() => setCurrentPage(page)}
-                                className={`px-3 py-2 border rounded-md ${
+                                className={`min-w-[2rem] px-2 py-1 rounded-md ${
                                     currentPage === page
-                                        ? 'bg-blue-600 text-white border-blue-600'
-                                        : 'border-gray-300 hover:bg-gray-50'
+                                        ? 'bg-[#7E57C2] text-white'
+                                        : 'text-white/80 hover:text-white'
                                 }`}
                             >
                                 {page}
@@ -408,11 +517,11 @@ const MajorManagement: React.FC = () => {
                         <button
                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="px-3 py-2 border border-gray-300 rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                            className="text-white/80 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed px-2"
                         >
                             Sau
                         </button>
-                    </nav>
+                    </div>
                 </div>
             )}
 

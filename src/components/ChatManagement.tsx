@@ -410,26 +410,26 @@ const ChatManagement: React.FC = () => {
       {selectedConversation && (
         <div className="fixed inset-0 z-50 overflow-y-auto animate-fadeIn">
           <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 bg-gradient-to-br from-purple-900/80 to-pink-900/80 backdrop-blur-sm transition-opacity" onClick={() => setSelectedConversation(null)}></div>
+            <div className="fixed inset-0 bg-blue-900/80 backdrop-blur-sm transition-opacity" onClick={() => setSelectedConversation(null)}></div>
             
-            <div className="inline-block align-bottom bg-gradient-to-br from-indigo-900 to-purple-900 rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full animate-slideIn border border-purple-500/30">
-              <div className="px-8 py-6 border-b border-purple-400/30 flex justify-between items-center bg-gradient-to-r from-purple-800/50 to-pink-800/50">
+            <div className="inline-block align-bottom bg-white/95 backdrop-blur-md rounded-3xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full animate-slideIn border border-blue-200">
+              <div className="px-8 py-6 border-b border-blue-300 flex justify-between items-center bg-gradient-to-r from-blue-600 to-cyan-500">
                 <div className="flex items-center">
-                  <div className="w-14 h-14 bg-gradient-to-br from-pink-500 to-rose-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
                     <span className="text-white font-bold text-xl">
                       {(selectedConversation.student?.fullName || 'N')[0]?.toUpperCase()}
                     </span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-300 to-purple-300 bg-clip-text text-transparent">
+                    <h3 className="text-2xl font-bold text-white">
                       Chi tiết cuộc trò chuyện
                     </h3>
-                    <p className="text-purple-200">{selectedConversation.student?.fullName || 'Không có tên'}</p>
+                    <p className="text-white/90">{selectedConversation.student?.fullName || 'Không có tên'}</p>
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedConversation(null)}
-                  className="w-12 h-12 bg-white/10 hover:bg-white/20 text-purple-200 hover:text-white rounded-xl transition-all duration-300 flex items-center justify-center backdrop-blur-sm"
+                  className="w-12 h-12 bg-white/10 hover:bg-white/20 text-white/90 hover:text-white rounded-xl transition-all duration-300 flex items-center justify-center backdrop-blur-sm"
                   title="Đóng"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -438,51 +438,51 @@ const ChatManagement: React.FC = () => {
                 </button>
               </div>
               
-              <div className="p-8 overflow-y-auto max-h-[70vh]">
+              <div className="p-8 overflow-y-auto max-h-[70vh] bg-gradient-to-br from-blue-50 to-cyan-50">
                 {/* Thông tin cơ bản */}
-                <div className="mb-8 bg-gradient-to-r from-purple-800/40 to-pink-800/40 rounded-3xl p-8 border border-purple-400/20">
+                <div className="mb-8 bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-blue-200 shadow-lg">
                   <div className="flex items-center mb-6">
-                    <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-xl flex items-center justify-center mr-4">
+                    <div className="w-8 h-8 gradient-info rounded-xl flex items-center justify-center mr-4">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h4 className="text-xl font-bold bg-gradient-to-r from-cyan-300 to-blue-300 bg-clip-text text-transparent">Thông tin cuộc trò chuyện</h4>
+                    <h4 className="text-xl font-bold text-gray-800">Thông tin cuộc trò chuyện</h4>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="bg-gradient-to-br from-purple-700/30 to-pink-700/30 rounded-2xl p-5 border border-purple-400/20">
-                      <div className="text-sm text-purple-300 mb-2 font-medium">Thời gian bắt đầu</div>
-                      <div className="text-purple-100 font-semibold text-lg">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-blue-100">
+                      <div className="text-sm text-gray-600 mb-2 font-medium">Thời gian bắt đầu</div>
+                      <div className="text-gray-800 font-semibold text-lg">
                         {selectedConversation.startTime ? formatDate(selectedConversation.startTime) : 'N/A'}
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-700/30 to-pink-700/30 rounded-2xl p-5 border border-purple-400/20">
-                      <div className="text-sm text-purple-300 mb-2 font-medium">Học sinh</div>
-                      <div className="text-purple-100 font-semibold text-lg">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-blue-100">
+                      <div className="text-sm text-gray-600 mb-2 font-medium">Học sinh</div>
+                      <div className="text-gray-800 font-semibold text-lg">
                         {selectedConversation.student?.fullName || 'Không có tên'}
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-700/30 to-pink-700/30 rounded-2xl p-5 border border-purple-400/20">
-                      <div className="text-sm text-purple-300 mb-2 font-medium">Email</div>
-                      <div className="text-purple-100 font-semibold text-lg">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-blue-100">
+                      <div className="text-sm text-gray-600 mb-2 font-medium">Email</div>
+                      <div className="text-gray-800 font-semibold text-lg">
                         {selectedConversation.student?.email || 'Không có email'}
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-700/30 to-pink-700/30 rounded-2xl p-5 border border-purple-400/20">
-                      <div className="text-sm text-purple-300 mb-2 font-medium">Chủ đề cuối</div>
-                      <div className="text-purple-100 font-semibold text-lg">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-blue-100">
+                      <div className="text-sm text-gray-600 mb-2 font-medium">Chủ đề cuối</div>
+                      <div className="text-gray-800 font-semibold text-lg">
                         {selectedConversation.lastTopic || 'Chưa có chủ đề'}
                       </div>
                     </div>
-                    <div className="bg-gradient-to-br from-purple-700/30 to-pink-700/30 rounded-2xl p-5 md:col-span-2 border border-purple-400/20">
-                      <div className="text-sm text-purple-300 mb-2 font-medium">Số tương tác</div>
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 md:col-span-2 border border-blue-100">
+                      <div className="text-sm text-gray-600 mb-2 font-medium">Số tương tác</div>
                       <div className="flex items-center">
                         <div className="w-10 h-10 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full flex items-center justify-center mr-3">
                           <span className="text-white font-bold text-sm">
                             {selectedConversation.interactions?.length || 0}
                           </span>
                         </div>
-                        <span className="text-purple-100 font-semibold text-lg">tương tác</span>
+                        <span className="text-gray-800 font-semibold text-lg">tương tác</span>
                       </div>
                     </div>
                   </div>
@@ -491,24 +491,24 @@ const ChatManagement: React.FC = () => {
                 {/* Các tương tác */}
                 <div className="space-y-8">
                   <div className="flex items-center">
-                    <div className="w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl flex items-center justify-center mr-4">
+                    <div className="w-8 h-8 gradient-success rounded-xl flex items-center justify-center mr-4">
                       <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
-                    <h4 className="text-xl font-bold bg-gradient-to-r from-emerald-300 to-teal-300 bg-clip-text text-transparent">Lịch sử tương tác</h4>
+                    <h4 className="text-xl font-bold text-gray-800">Lịch sử tương tác</h4>
                   </div>
                   {selectedConversation.interactions && selectedConversation.interactions.length > 0 ? (
                     selectedConversation.interactions.map((interaction, index) => (
-                      <div key={index} className={`bg-gradient-to-r from-indigo-800/40 to-purple-800/40 rounded-3xl p-8 border border-indigo-400/20 animate-fadeIn delay-${index % 3}00`}>
+                      <div key={index} className={`bg-white/80 backdrop-blur-md rounded-3xl p-8 border border-blue-200 shadow-lg animate-fadeIn delay-${index % 3}00`}>
                         <div className="flex items-center justify-between mb-6">
                           <div className="flex items-center">
                             <div className="w-10 h-10 bg-gradient-to-br from-violet-500 to-purple-600 rounded-full flex items-center justify-center mr-4">
                               <span className="text-white font-bold text-sm">{index + 1}</span>
                             </div>
-                            <span className="text-purple-200 font-semibold text-lg">Tương tác #{index + 1}</span>
+                            <span className="text-gray-800 font-semibold text-lg">Tương tác #{index + 1}</span>
                           </div>
-                          <div className="text-xs text-purple-300 bg-purple-700/30 px-4 py-2 rounded-full border border-purple-400/20">
+                          <div className="text-xs text-gray-600 bg-blue-100 px-4 py-2 rounded-full border border-blue-200">
                             {interaction.timestamp ? formatDate(interaction.timestamp) : 'N/A'}
                           </div>
                         </div>
@@ -516,24 +516,24 @@ const ChatManagement: React.FC = () => {
                         <div className="space-y-6">
                           <div>
                             <div className="flex items-center mb-3">
-                              <svg className="w-5 h-5 text-sky-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-5 h-5 text-sky-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
-                              <span className="text-sm font-bold text-sky-400">Câu hỏi</span>
+                              <span className="text-sm font-bold text-sky-600">Câu hỏi</span>
                             </div>
-                            <div className="text-purple-100 bg-gradient-to-r from-sky-900/40 to-blue-900/40 p-5 rounded-2xl border-l-4 border-sky-400">
+                            <div className="text-gray-800 bg-white/60 backdrop-blur-sm p-5 rounded-2xl border-l-4 border-sky-400">
                               {interaction.query || 'Không có câu hỏi'}
                             </div>
                           </div>
                           
                           <div>
                             <div className="flex items-center mb-3">
-                              <svg className="w-5 h-5 text-emerald-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-5 h-5 text-emerald-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2v-6a2 2 0 012-2h8z" />
                               </svg>
-                              <span className="text-sm font-bold text-emerald-400">Phản hồi</span>
+                              <span className="text-sm font-bold text-emerald-600">Phản hồi</span>
                             </div>
-                            <div className="text-purple-100 bg-gradient-to-r from-emerald-900/40 to-teal-900/40 p-5 rounded-2xl border-l-4 border-emerald-400">
+                            <div className="text-gray-800 bg-white/60 backdrop-blur-sm p-5 rounded-2xl border-l-4 border-emerald-400">
                               {interaction.response || 'Không có phản hồi'}
                             </div>
                           </div>
@@ -541,14 +541,14 @@ const ChatManagement: React.FC = () => {
                       </div>
                     ))
                   ) : (
-                    <div className="bg-gradient-to-r from-slate-800/40 to-gray-800/40 rounded-3xl p-16 text-center border border-slate-400/20">
-                      <div className="w-20 h-20 bg-gradient-to-br from-slate-500 to-gray-600 rounded-full flex items-center justify-center mx-auto mb-6 opacity-60">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-16 text-center border border-blue-100">
+                      <div className="w-20 h-20 gradient-info rounded-full flex items-center justify-center mx-auto mb-6 opacity-60">
                         <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.18-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.18 4.03-8 9-8s9 3.82 9 8z" />
                         </svg>
                       </div>
-                      <div className="text-slate-300 text-xl font-semibold mb-2">Không có tương tác nào</div>
-                      <div className="text-slate-400 text-sm">Cuộc trò chuyện này chưa có bất kỳ tương tác nào</div>
+                      <div className="text-gray-700 text-xl font-semibold mb-2">Không có tương tác nào</div>
+                      <div className="text-gray-600 text-sm">Cuộc trò chuyện này chưa có bất kỳ tương tác nào</div>
                     </div>
                   )}
                 </div>
