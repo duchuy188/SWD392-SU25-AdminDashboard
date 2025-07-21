@@ -362,12 +362,14 @@ const UserManagement: React.FC = () => {
                         onChange={(e) => handleStatusUpdate(user._id, e.target.value)}
                         title="Chọn trạng thái"
                         aria-label="Chọn trạng thái người dùng"
-                        className={`glass text-white px-3 py-1 rounded-full text-sm font-medium border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 min-w-[100px] ${
-                          user.isActive ? 'bg-gradient-to-r from-green-500 to-emerald-500' : 'bg-gradient-to-r from-red-500 to-pink-500'
+                        className={`text-white px-4 py-2 rounded-full text-sm font-bold border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 min-w-[100px] shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                          user.isActive 
+                            ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700' 
+                            : 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-600 hover:from-red-600 hover:via-rose-600 hover:to-pink-700'
                         }`}
                       >
-                        <option value="true" className="bg-gray-800 text-white">Unblock</option>
-                        <option value="false" className="bg-gray-800 text-white">Block</option>
+                        <option value="true" className="bg-gray-800 text-white font-medium">Unblock</option>
+                        <option value="false" className="bg-gray-800 text-white font-medium">Block</option>
                       </select>
                     )}
                   </td>

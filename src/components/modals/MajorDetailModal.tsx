@@ -21,79 +21,86 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
     return (
         <div className="fixed inset-0 z-50 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-                <div className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" onClick={onClose}></div>
+                <div className="fixed inset-0 transition-opacity bg-blue-900/80 backdrop-blur-sm" onClick={onClose}></div>
 
-                <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-lg">
+                <div className="inline-block w-full max-w-4xl p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white/95 backdrop-blur-md shadow-2xl rounded-2xl border border-blue-200">
                     <div className="flex justify-between items-start mb-6">
-                        <div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">{major.name}</h3>
+                        <div className="bg-gradient-to-r from-blue-600 to-cyan-500 p-4 rounded-xl">
+                            <h3 className="text-2xl font-bold text-white mb-2">{major.name}</h3>
                             <div className="flex items-center space-x-4">
-                                <span className="text-sm text-gray-600">Mã ngành: {major.code}</span>
+                                <span className="text-sm text-white/90">Mã ngành: {major.code}</span>
                             </div>
                         </div>
                         <div className="flex space-x-2">
                             <button
                                 onClick={onEdit}
-                                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm font-medium"
+                                className="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             >
                                 Chỉnh sửa
                             </button>
                             <button
                                 onClick={onDelete}
-                                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 text-sm font-medium"
+                                className="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             >
                                 Xóa
                             </button>
                             <button
                                 onClick={onClose}
-                                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 text-sm font-medium"
+                                className="px-4 py-2 bg-gradient-to-r from-gray-400 to-gray-500 text-white rounded-lg hover:from-gray-500 hover:to-gray-600 text-sm font-medium transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
                             >
                                 Đóng
                             </button>
                         </div>
                     </div>
 
-                    <div className="max-h-96 overflow-y-auto">
+                    <div className="max-h-96 overflow-y-auto bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl">
                         {/* Image */}
                         {(major.majorImage || major.imageUrl) && (
                             <div className="mb-6">
                                 <img
                                     src={major.imageUrl || (major.majorImage instanceof File ? URL.createObjectURL(major.majorImage) : '')}
                                     alt={major.name}
-                                    className="w-full h-48 object-cover rounded-lg"
+                                    className="w-full h-48 object-cover rounded-xl shadow-lg border border-blue-200"
                                 />
                             </div>
                         )}
 
                         {/* Basic Information */}
                         <div className="mb-6">
-                            <h4 className="text-lg font-semibold text-gray-900 mb-3">Thông tin cơ bản</h4>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Khoa/Viện</label>
-                                    <p className="text-sm text-gray-900">{major.department}</p>
+                            <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                <span className="w-6 h-6 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-full flex items-center justify-center">
+                                    <span className="text-white text-xs font-bold">i</span>
+                                </span>
+                                Thông tin cơ bản
+                            </h4>
+                            <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-blue-700">Khoa/Viện</label>
+                                        <p className="text-sm text-gray-800">{major.department}</p>
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-blue-700">Tổng số tín chỉ</label>
+                                        <p className="text-sm text-gray-800">{major.totalCredits}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Tổng số tín chỉ</label>
-                                    <p className="text-sm text-gray-900">{major.totalCredits}</p>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-blue-700">Mô tả ngắn</label>
+                                    <p className="text-sm text-gray-800 mt-1">{major.shortDescription}</p>
                                 </div>
-                            </div>
-                            <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700">Mô tả ngắn</label>
-                                <p className="text-sm text-gray-900 mt-1">{major.shortDescription}</p>
-                            </div>
-                            <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700">Mô tả chi tiết</label>
-                                <p className="text-sm text-gray-900 mt-1 whitespace-pre-wrap">{major.description}</p>
-                            </div>
-                            <div className="mt-4">
-                                <label className="block text-sm font-medium text-gray-700">Cơ sở đào tạo</label>
-                                <div className="flex flex-wrap gap-2 mt-1">
-                                    {major.availableAt.map((campus) => (
-                                        <span key={campus} className="px-2 py-1 bg-gray-100 text-gray-800 rounded-full text-xs">
-                                            {campus}
-                                        </span>
-                                    ))}
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-blue-700">Mô tả chi tiết</label>
+                                    <p className="text-sm text-gray-800 mt-1 whitespace-pre-wrap">{major.description}</p>
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-blue-700">Cơ sở đào tạo</label>
+                                    <div className="flex flex-wrap gap-2 mt-1">
+                                        {major.availableAt.map((campus) => (
+                                            <span key={campus} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs border border-blue-200">
+                                                {campus}
+                                            </span>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -101,51 +108,79 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* Admission Criteria */}
                         {major.admissionCriteria && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Tiêu chí tuyển sinh</h4>
-                                <p className="text-sm text-gray-900 whitespace-pre-wrap">{major.admissionCriteria}</p>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-green-500 to-emerald-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">T</span>
+                                    </span>
+                                    Tiêu chí tuyển sinh
+                                </h4>
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
+                                    <p className="text-sm text-gray-800 whitespace-pre-wrap">{major.admissionCriteria}</p>
+                                </div>
                             </div>
                         )}
 
                         {/* Required Skills */}
                         {major.requiredSkills && major.requiredSkills.length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Kỹ năng cần thiết</h4>
-                                <ul className="list-disc list-inside space-y-1">
-                                    {major.requiredSkills.map((skill, index) => (
-                                        <li key={index} className="text-sm text-gray-900">{skill}</li>
-                                    ))}
-                                </ul>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">S</span>
+                                    </span>
+                                    Kỹ năng cần thiết
+                                </h4>
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {major.requiredSkills.map((skill, index) => (
+                                            <li key={index} className="text-sm text-gray-800">{skill}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         )}
 
                         {/* Advantages */}
                         {major.advantages && major.advantages.length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Ưu điểm của ngành</h4>
-                                <ul className="list-disc list-inside space-y-1">
-                                    {major.advantages.map((advantage, index) => (
-                                        <li key={index} className="text-sm text-gray-900">{advantage}</li>
-                                    ))}
-                                </ul>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-orange-500 to-red-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">A</span>
+                                    </span>
+                                    Ưu điểm của ngành
+                                </h4>
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {major.advantages.map((advantage, index) => (
+                                            <li key={index} className="text-sm text-gray-800">{advantage}</li>
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
                         )}
 
                         {/* Tuition */}
                         {major.tuition && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Học phí</h4>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div className="bg-gray-50 p-3 rounded-lg">
-                                        <label className="block text-xs font-medium text-gray-600">Học kỳ đầu</label>
-                                        <p className="text-sm font-semibold text-gray-900">{major.tuition.firstSem.toLocaleString()} VNĐ</p>
-                                    </div>
-                                    <div className="bg-gray-50 p-3 rounded-lg">
-                                        <label className="block text-xs font-medium text-gray-600">Học kỳ giữa</label>
-                                        <p className="text-sm font-semibold text-gray-900">{major.tuition.midSem.toLocaleString()} VNĐ</p>
-                                    </div>
-                                    <div className="bg-gray-50 p-3 rounded-lg">
-                                        <label className="block text-xs font-medium text-gray-600">Học kỳ cuối</label>
-                                        <p className="text-sm font-semibold text-gray-900">{major.tuition.lastSem.toLocaleString()} VNĐ</p>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-yellow-500 to-orange-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">$</span>
+                                    </span>
+                                    Học phí
+                                </h4>
+                                <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-sm">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                            <label className="block text-xs font-medium text-blue-700">Học kỳ đầu</label>
+                                            <p className="text-sm font-semibold text-gray-800">{major.tuition.firstSem.toLocaleString()} VNĐ</p>
+                                        </div>
+                                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                            <label className="block text-xs font-medium text-blue-700">Học kỳ giữa</label>
+                                            <p className="text-sm font-semibold text-gray-800">{major.tuition.midSem.toLocaleString()} VNĐ</p>
+                                        </div>
+                                        <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                            <label className="block text-xs font-medium text-blue-700">Học kỳ cuối</label>
+                                            <p className="text-sm font-semibold text-gray-800">{major.tuition.lastSem.toLocaleString()} VNĐ</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -154,24 +189,29 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* Tuition By Campus */}
                         {major.tuitionByCampus && Object.keys(major.tuitionByCampus).length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Học phí theo cơ sở</h4>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-indigo-500 to-purple-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">C</span>
+                                    </span>
+                                    Học phí theo cơ sở
+                                </h4>
                                 <div className="space-y-4">
                                     {Object.entries(major.tuitionByCampus).map(([campus, tuition]) => (
                                         tuition && (
-                                            <div key={campus} className="bg-gray-50 p-4 rounded-lg">
-                                                <h5 className="font-medium text-gray-900 mb-3">{campus}</h5>
+                                            <div key={campus} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                                <h5 className="font-medium text-blue-800 mb-3">{campus}</h5>
                                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                                    <div>
-                                                        <label className="block text-xs font-medium text-gray-600">Học kỳ đầu</label>
-                                                        <p className="text-sm font-semibold text-gray-900">{tuition.firstSem.toLocaleString()} VNĐ</p>
+                                                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                                        <label className="block text-xs font-medium text-blue-700">Học kỳ đầu</label>
+                                                        <p className="text-sm font-semibold text-gray-800">{tuition.firstSem.toLocaleString()} VNĐ</p>
                                                     </div>
-                                                    <div>
-                                                        <label className="block text-xs font-medium text-gray-600">Học kỳ giữa</label>
-                                                        <p className="text-sm font-semibold text-gray-900">{tuition.midSem.toLocaleString()} VNĐ</p>
+                                                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                                        <label className="block text-xs font-medium text-blue-700">Học kỳ giữa</label>
+                                                        <p className="text-sm font-semibold text-gray-800">{tuition.midSem.toLocaleString()} VNĐ</p>
                                                     </div>
-                                                    <div>
-                                                        <label className="block text-xs font-medium text-gray-600">Học kỳ cuối</label>
-                                                        <p className="text-sm font-semibold text-gray-900">{tuition.lastSem.toLocaleString()} VNĐ</p>
+                                                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                                        <label className="block text-xs font-medium text-blue-700">Học kỳ cuối</label>
+                                                        <p className="text-sm font-semibold text-gray-800">{tuition.lastSem.toLocaleString()} VNĐ</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,11 +224,16 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* Career Prospects */}
                         {major.careerProspects && major.careerProspects.length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Triển vọng nghề nghiệp</h4>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-teal-500 to-cyan-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">W</span>
+                                    </span>
+                                    Triển vọng nghề nghiệp
+                                </h4>
                                 <div className="space-y-4">
                                     {major.careerProspects.map((career, index) => (
-                                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-2">{career.title}</h5>
+                                        <div key={index} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-2">{career.title}</h5>
                                             <p className="text-sm text-gray-700">{career.description}</p>
                                         </div>
                                     ))}
@@ -199,13 +244,18 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* Scholarships */}
                         {major.scholarships && major.scholarships.length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Học bổng</h4>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">★</span>
+                                    </span>
+                                    Học bổng
+                                </h4>
                                 <div className="space-y-4">
                                     {major.scholarships.map((scholarship, index) => (
-                                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                                        <div key={index} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
                                             <div className="flex justify-between items-start mb-2">
-                                                <h5 className="font-medium text-gray-900">{scholarship.name}</h5>
-                                                <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                                                <h5 className="font-medium text-blue-800">{scholarship.name}</h5>
+                                                <span className="bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium border border-green-200">
                                                     {scholarship.value}
                                                 </span>
                                             </div>
@@ -219,11 +269,16 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* International Partners */}
                         {major.internationalPartners && major.internationalPartners.length > 0 && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Đối tác quốc tế</h4>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-violet-500 to-purple-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">🌍</span>
+                                    </span>
+                                    Đối tác quốc tế
+                                </h4>
                                 <div className="space-y-4">
                                     {major.internationalPartners.map((partner, index) => (
-                                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-2">{partner.country}</h5>
+                                        <div key={index} className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-2">{partner.country}</h5>
                                             <ul className="list-disc list-inside space-y-1">
                                                 {partner.universities.map((university, uniIndex) => (
                                                     <li key={uniIndex} className="text-sm text-gray-700">{university}</li>
@@ -238,33 +293,41 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
                         {/* Program Structure */}
                         {major.programStructure && (
                             <div className="mb-6">
-                                <h4 className="text-lg font-semibold text-gray-900 mb-3">Cấu trúc chương trình học</h4>
+                                <h4 className="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                                    <span className="w-6 h-6 bg-gradient-to-r from-rose-500 to-pink-400 rounded-full flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">P</span>
+                                    </span>
+                                    Cấu trúc chương trình học
+                                </h4>
                                 <div className="space-y-6">
                                     {/* Preparation Phase */}
                                     {major.programStructure.preparation && (
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-3">Giai đoạn chuẩn bị</h5>
+                                        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-3 flex items-center gap-2">
+                                                <span className="w-4 h-4 bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full"></span>
+                                                Giai đoạn chuẩn bị
+                                            </h5>
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-600">Thời gian</label>
-                                                    <p className="text-sm text-gray-900">{major.programStructure.preparation.duration}</p>
+                                                    <label className="block text-sm font-medium text-blue-700">Thời gian</label>
+                                                    <p className="text-sm text-gray-800">{major.programStructure.preparation.duration}</p>
                                                 </div>
                                                 {major.programStructure.preparation.objectives?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Mục tiêu</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Mục tiêu</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.preparation.objectives.map((objective, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{objective}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{objective}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 )}
                                                 {major.programStructure.preparation.courses && major.programStructure.preparation.courses.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Các môn học</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Các môn học</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.preparation.courses.map((course, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{course}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{course}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
@@ -275,29 +338,32 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
 
                                     {/* Basic Phase */}
                                     {major.programStructure.basic && (
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-3">Giai đoạn cơ bản</h5>
+                                        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-3 flex items-center gap-2">
+                                                <span className="w-4 h-4 bg-gradient-to-r from-green-400 to-emerald-300 rounded-full"></span>
+                                                Giai đoạn cơ bản
+                                            </h5>
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-600">Thời gian</label>
-                                                    <p className="text-sm text-gray-900">{major.programStructure.basic.duration}</p>
+                                                    <label className="block text-sm font-medium text-blue-700">Thời gian</label>
+                                                    <p className="text-sm text-gray-800">{major.programStructure.basic.duration}</p>
                                                 </div>
                                                 {major.programStructure.basic.objectives?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Mục tiêu</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Mục tiêu</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.basic.objectives.map((objective, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{objective}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{objective}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 )}
                                                 {major.programStructure.basic.courses && major.programStructure.basic.courses.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Các môn học</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Các môn học</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.basic.courses.map((course, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{course}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{course}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
@@ -308,19 +374,22 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
 
                                     {/* OJT Phase */}
                                     {major.programStructure.ojt && (
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-3">Giai đoạn OJT</h5>
+                                        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-3 flex items-center gap-2">
+                                                <span className="w-4 h-4 bg-gradient-to-r from-orange-400 to-red-300 rounded-full"></span>
+                                                Giai đoạn OJT
+                                            </h5>
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-600">Thời gian</label>
-                                                    <p className="text-sm text-gray-900">{major.programStructure.ojt.duration}</p>
+                                                    <label className="block text-sm font-medium text-blue-700">Thời gian</label>
+                                                    <p className="text-sm text-gray-800">{major.programStructure.ojt.duration}</p>
                                                 </div>
                                                 {major.programStructure.ojt.objectives?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Mục tiêu</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Mục tiêu</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.ojt.objectives.map((objective, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{objective}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{objective}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
@@ -331,29 +400,32 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
 
                                     {/* Specialization Phase */}
                                     {major.programStructure.specialization && (
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-3">Giai đoạn chuyên ngành</h5>
+                                        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-3 flex items-center gap-2">
+                                                <span className="w-4 h-4 bg-gradient-to-r from-purple-400 to-violet-300 rounded-full"></span>
+                                                Giai đoạn chuyên ngành
+                                            </h5>
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-600">Thời gian</label>
-                                                    <p className="text-sm text-gray-900">{major.programStructure.specialization.duration}</p>
+                                                    <label className="block text-sm font-medium text-blue-700">Thời gian</label>
+                                                    <p className="text-sm text-gray-800">{major.programStructure.specialization.duration}</p>
                                                 </div>
                                                 {major.programStructure.specialization.objectives?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Mục tiêu</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Mục tiêu</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.specialization.objectives.map((objective, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{objective}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{objective}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 )}
                                                 {major.programStructure.specialization.courses && major.programStructure.specialization.courses.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Các môn học</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Các môn học</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.specialization.courses.map((course, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{course}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{course}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
@@ -364,29 +436,32 @@ const MajorDetailModal: React.FC<MajorDetailModalProps> = ({
 
                                     {/* Graduation Phase */}
                                     {major.programStructure.graduation && (
-                                        <div className="bg-gray-50 p-4 rounded-lg">
-                                            <h5 className="font-medium text-gray-900 mb-3">Giai đoạn tốt nghiệp</h5>
+                                        <div className="bg-white/90 backdrop-blur-sm p-4 rounded-xl border border-blue-200 shadow-sm">
+                                            <h5 className="font-medium text-blue-800 mb-3 flex items-center gap-2">
+                                                <span className="w-4 h-4 bg-gradient-to-r from-yellow-400 to-amber-300 rounded-full"></span>
+                                                Giai đoạn tốt nghiệp
+                                            </h5>
                                             <div className="space-y-3">
                                                 <div>
-                                                    <label className="block text-sm font-medium text-gray-600">Thời gian</label>
-                                                    <p className="text-sm text-gray-900">{major.programStructure.graduation.duration}</p>
+                                                    <label className="block text-sm font-medium text-blue-700">Thời gian</label>
+                                                    <p className="text-sm text-gray-800">{major.programStructure.graduation.duration}</p>
                                                 </div>
                                                 {major.programStructure.graduation.objectives?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Mục tiêu</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Mục tiêu</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.graduation.objectives.map((objective, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{objective}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{objective}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
                                                 )}
                                                 {major.programStructure.graduation.options?.length > 0 && (
                                                     <div>
-                                                        <label className="block text-sm font-medium text-gray-600">Các lựa chọn</label>
+                                                        <label className="block text-sm font-medium text-blue-700">Các lựa chọn</label>
                                                         <ul className="list-disc list-inside space-y-1">
                                                             {major.programStructure.graduation.options.map((option, index) => (
-                                                                <li key={index} className="text-sm text-gray-900">{option}</li>
+                                                                <li key={index} className="text-sm text-gray-800">{option}</li>
                                                             ))}
                                                         </ul>
                                                     </div>
