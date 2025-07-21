@@ -7,9 +7,10 @@ interface UserDetailProps {
   userId: string;
   onClose: () => void;
   onRoleUpdate?: (userId: string, newRole: 'student' | 'admin') => Promise<void>;
+  onUserUpdate?: (userId: string, updatedData: Partial<User>) => void; // Thêm prop này
 }
 
-const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }) => {
+const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, onUserUpdate }) => {
   const [user, setUser] = useState<User | null>(null);
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -142,12 +143,18 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
       }
 
       if (response.data) {
-        setUser(prev => prev ? { 
-          ...prev, 
+        const updatedUser = { 
           ...editForm,
           role: editForm.role as 'student' | 'admin'
-        } : null);
+        };
+        
+        setUser(prev => prev ? { ...prev, ...updatedUser } : null);
         setIsEditing(false);
+        
+        // Gọi callback để cập nhật thông tin trong component cha
+        if (onUserUpdate) {
+          onUserUpdate(userId, updatedUser);
+        }
         
         // Chỉ hiển thị toast khi không có thay đổi vai trò
         if (!roleChanged) {

@@ -156,6 +156,20 @@ const UserManagement: React.FC = () => {
     }));
   };
 
+  // Thêm hàm callback để cập nhật thông tin người dùng
+  const handleUserUpdate = async (userId: string, updatedData: Partial<User>) => {
+    try {
+      // Cập nhật thông tin người dùng trong danh sách
+      setUsers(users.map(user => 
+        user._id === userId ? { ...user, ...updatedData } : user
+      ));
+      
+      // Không cần hiển thị toast ở đây vì đã có toast trong UserDetail
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Không thể cập nhật thông tin người dùng');
+    }
+  };
+
   if (loading) return (
     <div className="flex justify-center items-center h-64 animate-fadeIn">
       <div className="relative">
@@ -531,6 +545,7 @@ const UserManagement: React.FC = () => {
           userId={selectedUserId}
           onClose={() => setSelectedUserId(null)}
           onRoleUpdate={handleRoleUpdate}
+          onUserUpdate={handleUserUpdate} // Thêm prop này
         />
       )}
     </div>
