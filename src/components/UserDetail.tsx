@@ -16,10 +16,12 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
+  // Thêm role vào editForm
   const [editForm, setEditForm] = useState({
     fullName: '',
     phone: '',
     address: '',
+    role: '' // Thêm trường role
   });
 
   // Thêm state để theo dõi trạng thái cập nhật vai trò
@@ -35,9 +37,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
       // Cập nhật lại thông tin người dùng sau khi thay đổi vai trò
       if (user) {
         setUser(prev => prev ? { ...prev, role: newRole } : null);
-        
-        // Thêm thông báo toast
-        toast.success(`Đã cập nhật vai trò của ${user.email} thành ${newRole === 'admin' ? 'Quản trị viên' : 'Học viên'}!`);
       }
     } catch (error) {
       // Xử lý lỗi
@@ -75,6 +74,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
           fullName: userData.user.fullName || '',
           phone: userData.user.phone || '',
           address: userData.user.address || '',
+          role: userData.user.role // Thêm role vào form
         });
       } catch (err: any) {
         setError(
@@ -102,6 +102,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
         fullName: user.fullName || '',
         phone: user.phone || '',
         address: user.address || '',
+        role: user.role || '', // Lưu lại vai trò khi hủy chỉnh sửa
       });
     }
     setIsEditing(false);
@@ -115,6 +116,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
     }));
   };
 
+  // Sửa lại hàm handleSubmit để không hiển thị toast khi có thay đổi vai trò
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -123,13 +125,34 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
       setUpdateLoading(true);
       setError(null);
 
-      const response = await updateUser(user._id, editForm);
+      // Cập nhật thông tin cơ bản
+      const response = await updateUser(user._id, {
+        fullName: editForm.fullName,
+        phone: editForm.phone,
+        address: editForm.address
+      });
+
+      // Biến để kiểm tra xem có thay đổi vai trò không
+      let roleChanged = false;
+
+      // Nếu vai trò thay đổi, cập nhật vai trò
+      if (onRoleUpdate && editForm.role !== user.role) {
+        await onRoleUpdate(userId, editForm.role as 'student' | 'admin');
+        roleChanged = true;
+      }
+
       if (response.data) {
-        setUser(prev => prev ? { ...prev, ...editForm } : null);
+        setUser(prev => prev ? { 
+          ...prev, 
+          ...editForm,
+          role: editForm.role as 'student' | 'admin'
+        } : null);
         setIsEditing(false);
         
-        // Thêm thông báo toast
-        toast.success(`Đã cập nhật thông tin người dùng ${user.email} thành công!`);
+        // Chỉ hiển thị toast khi không có thay đổi vai trò
+        if (!roleChanged) {
+          toast.success(`Đã cập nhật thông tin người dùng ${user.email} thành công!`);
+        }
       }
     } catch (err: any) {
       setError(
@@ -333,15 +356,15 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
                 {/* Thêm phần chỉnh sửa vai trò khi đang ở chế độ chỉnh sửa */}
                 {onRoleUpdate && (
                   <div>
-                    <label htmlFor="role" className="block text-sm font-semibold text-white mb-2">
+                    <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-2">
                       Vai trò
                     </label>
                     <select
                       id="role"
-                      value={user.role}
-                      onChange={(e) => handleRoleChange(e.target.value as 'student' | 'admin')}
-                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300"
-                      disabled={updatingRole}
+                      name="role"
+                      value={editForm.role}
+                      onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
+                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 border border-blue-200"
                     >
                       <option value="student" className="bg-gray-800 text-white">Học viên</option>
                       <option value="admin" className="bg-gray-800 text-white">Quản trị viên</option>
@@ -583,7 +606,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
                     Kết quả kiểm tra
                   </h4>
                   {user.testResults && user.testResults.length > 0 ? (
-                    <div className="glass-dark rounded-xl overflow-hidden">
+                    <div className="bg-white/60 backdrop-blur-sm rounded-xl overflow-hidden border border-blue-200">
                       <div className="overflow-x-auto">
                         <table className="min-w-full">
                           <thead className="bg-blue-100/80">
@@ -591,10 +614,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
                               <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Bài kiểm tra
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Kết quả
                               </th>
-                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                              <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
                                 Loại
                               </th>
                               <th className="px-6 py-4 text-left text-sm font-bold text-gray-800 uppercase tracking-wider">
@@ -602,7 +625,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
                               </th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-white/20">
+                          <tbody className="divide-y divide-blue-200/50">
                             {user.testResults
                               .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
                               .filter((result, index, self) => 
@@ -610,19 +633,19 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }
                               )
                               .slice(0, 5)
                               .map((result, index) => (
-                                <tr key={index} className="table-row-hover">
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                                <tr key={index} className="hover:bg-blue-50/50 transition-colors duration-200">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800 font-medium">
                                     {result.testName}
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                     <span className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500">
                                       {result.result}
                                     </span>
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     {result.testType}
                                   </td>
-                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                                     {new Date(result.date).toLocaleDateString('vi-VN', {
                                       year: 'numeric',
                                       month: 'long',
