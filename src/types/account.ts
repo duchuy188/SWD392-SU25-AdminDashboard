@@ -11,6 +11,15 @@ export interface User {
     status: string;
     googleId?: string;
     __v?: number;
+    testResults?: {
+      testId: string;
+      testName: string;
+      testType: string;
+      result: string;
+      score: any;
+      date: string;
+      _id: string;
+    }[];
   }
 
 export interface AcademicResult {

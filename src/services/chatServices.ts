@@ -17,13 +17,18 @@ export const chatServices = {
     return axiosInstance.get(`/chat/history/${studentId}`);
   },
 
-  // GET /chat/all - Lấy tất cả lịch sử chat (chỉ dành cho admin)
-  getAllChats: (page?: number, limit?: number) => {
+  // GET /chat/admin/conversations - Lọc và tìm kiếm lịch sử chat (chỉ dành cho admin)
+  getAllChats: (page?: number, limit?: number, userId?: string, keyword?: string, startDate?: string, endDate?: string, hasImage?: boolean) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
     if (limit) params.append('limit', limit.toString());
+    if (userId) params.append('userId', userId);
+    if (keyword) params.append('keyword', keyword);
+    if (startDate) params.append('startDate', startDate);
+    if (endDate) params.append('endDate', endDate);
+    if (hasImage !== undefined) params.append('hasImage', hasImage.toString());
     
-    return axiosInstance.get(`/chat/all${params.toString() ? `?${params.toString()}` : ''}`);
+    return axiosInstance.get(`/chat/admin/conversations${params.toString() ? `?${params.toString()}` : ''}`);
   },
 
 

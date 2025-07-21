@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { getUserById, updateUser } from '../services/accountServices';
 import { User, StudentInfo, UserDetailResponse } from '../types/account';
+import { toast } from 'react-toastify';
 
 interface UserDetailProps {
   userId: string;
   onClose: () => void;
+  onRoleUpdate?: (userId: string, newRole: 'student' | 'admin') => Promise<void>;
 }
 
-const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
+const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate }) => {
   const [user, setUser] = useState<User | null>(null);
   const [studentInfo, setStudentInfo] = useState<StudentInfo | null>(null);
   const [loading, setLoading] = useState(true);
@@ -19,6 +21,32 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
     phone: '',
     address: '',
   });
+
+  // Thêm state để theo dõi trạng thái cập nhật vai trò
+  const [updatingRole, setUpdatingRole] = useState(false);
+  
+  // Hàm xử lý cập nhật vai trò
+  const handleRoleChange = async (newRole: 'student' | 'admin') => {
+    if (!onRoleUpdate) return;
+    
+    try {
+      setUpdatingRole(true);
+      await onRoleUpdate(userId, newRole);
+      // Cập nhật lại thông tin người dùng sau khi thay đổi vai trò
+      if (user) {
+        setUser(prev => prev ? { ...prev, role: newRole } : null);
+        
+        // Thêm thông báo toast
+        toast.success(`Đã cập nhật vai trò của ${user.email} thành ${newRole === 'admin' ? 'Quản trị viên' : 'Học viên'}!`);
+      }
+    } catch (error) {
+      // Xử lý lỗi
+      console.error('Không thể cập nhật vai trò:', error);
+      toast.error(`Không thể cập nhật vai trò: ${error}`);
+    } finally {
+      setUpdatingRole(false);
+    }
+  };
 
   useEffect(() => {
     const fetchUserDetail = async () => {
@@ -99,6 +127,9 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
       if (response.data) {
         setUser(prev => prev ? { ...prev, ...editForm } : null);
         setIsEditing(false);
+        
+        // Thêm thông báo toast
+        toast.success(`Đã cập nhật thông tin người dùng ${user.email} thành công!`);
       }
     } catch (err: any) {
       setError(
@@ -106,6 +137,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
         err.message || 
         'Không thể cập nhật thông tin người dùng'
       );
+      toast.error(`Không thể cập nhật thông tin: ${err.response?.data?.message || err.message || 'Đã xảy ra lỗi'}`);
     } finally {
       setUpdateLoading(false);
     }
@@ -297,6 +329,26 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     placeholder="Nhập địa chỉ"
                   />
                 </div>
+                
+                {/* Thêm phần chỉnh sửa vai trò khi đang ở chế độ chỉnh sửa */}
+                {onRoleUpdate && (
+                  <div>
+                    <label htmlFor="role" className="block text-sm font-semibold text-white mb-2">
+                      Vai trò
+                    </label>
+                    <select
+                      id="role"
+                      value={user.role}
+                      onChange={(e) => handleRoleChange(e.target.value as 'student' | 'admin')}
+                      className="w-full glass text-white rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300"
+                      disabled={updatingRole}
+                    >
+                      <option value="student" className="bg-gray-800 text-white">Học viên</option>
+                      <option value="admin" className="bg-gray-800 text-white">Quản trị viên</option>
+                    </select>
+                  </div>
+                )}
+                
                 <div className="flex justify-end space-x-4 pt-4">
                   <button
                     type="button"
@@ -530,7 +582,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                     </div>
                     Kết quả kiểm tra
                   </h4>
-                  {studentInfo.testResults.length > 0 ? (
+                  {user.testResults && user.testResults.length > 0 ? (
                     <div className="glass-dark rounded-xl overflow-hidden">
                       <div className="overflow-x-auto">
                         <table className="min-w-full">
@@ -540,7 +592,10 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                                 Bài kiểm tra
                               </th>
                               <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
-                                Điểm
+                                Kết quả
+                              </th>
+                              <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                                Loại
                               </th>
                               <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
                                 Ngày
@@ -548,28 +603,34 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose }) => {
                             </tr>
                           </thead>
                           <tbody className="divide-y divide-white/20">
-                            {studentInfo.testResults.map((result, index) => (
-                              <tr key={index} className="table-row-hover">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
-                                  {result.test}
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
-                                  <span className={`px-3 py-1 rounded-full text-xs font-semibold text-white ${
-                                    result.score >= 8 ? 'score-excellent' : 
-                                    result.score >= 6.5 ? 'score-good' : 'score-poor'
-                                  }`}>
-                                    {result.score}
-                                  </span>
-                                </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
-                                  {new Date(result.date).toLocaleDateString('vi-VN', {
-                                    year: 'numeric',
-                                    month: 'long',
-                                    day: 'numeric'
-                                  })}
-                                </td>
-                              </tr>
-                            ))}
+                            {user.testResults
+                              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                              .filter((result, index, self) => 
+                                index === self.findIndex((t) => t.testId === result.testId)
+                              )
+                              .slice(0, 5)
+                              .map((result, index) => (
+                                <tr key={index} className="table-row-hover">
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white font-medium">
+                                    {result.testName}
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                                    <span className="px-3 py-1 rounded-full text-xs font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-500">
+                                      {result.result}
+                                    </span>
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                    {result.testType}
+                                  </td>
+                                  <td className="px-6 py-4 whitespace-nowrap text-sm text-white/80">
+                                    {new Date(result.date).toLocaleDateString('vi-VN', {
+                                      year: 'numeric',
+                                      month: 'long',
+                                      day: 'numeric'
+                                    })}
+                                  </td>
+                                </tr>
+                              ))}
                           </tbody>
                         </table>
                       </div>

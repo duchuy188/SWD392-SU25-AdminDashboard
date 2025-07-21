@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NotificationsServices } from '../services/NotificationsServices';
 import { NotificationRequest } from '../types/Notifications';
 import { getUsers } from '../services/accountServices';
+import { toast } from 'react-toastify';
 
 interface User {
   _id: string;
@@ -123,14 +124,17 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
 
     // Validate data before submitting
     if (notificationType === 'single' && !notificationData.userId) {
+      toast.error('Vui lòng chọn người dùng để gửi thông báo');
       console.error('No user selected for single notification');
       return;
     }
     if (notificationType === 'multiple' && (!notificationData.userIds || notificationData.userIds.length === 0)) {
+      toast.error('Vui lòng chọn ít nhất một người dùng để gửi thông báo');
       console.error('No users selected for multiple notification');
       return;
     }
     if (!notificationData.title.trim() || !notificationData.body.trim()) {
+      toast.error('Vui lòng nhập tiêu đề và nội dung thông báo');
       console.error('Title and body are required');
       return;
     }
@@ -140,21 +144,28 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
     
     try {
       let response;
+      let successMessage = '';
+      
       switch (notificationType) {
         case 'single':
           response = await NotificationsServices.sendToUser(notificationData);
+          successMessage = `Đã gửi thông báo cho người dùng ${selectedUserForSingle?.email || 'đã chọn'}`;
           break;
         case 'multiple':
           response = await NotificationsServices.sendToMany(notificationData);
+          successMessage = `Đã gửi thông báo cho ${notificationData.userIds ? notificationData.userIds.length : 0} người dùng`;
           break;
         case 'all':
           response = await NotificationsServices.sendToAll(notificationData);
+          successMessage = 'Đã gửi thông báo cho tất cả người dùng';
           break;
       }
       
       console.log('Notification response:', response);
       
       if (response?.success) {
+        toast.success(successMessage);
+        
         // Call onSuccess first
         if (onSuccess) {
           onSuccess();
@@ -165,9 +176,12 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
             onClose();
           }
         }, 100);
+      } else {
+        toast.error('Gửi thông báo thất bại: ' + (response?.message || 'Lỗi không xác định'));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error sending notification:', error);
+      toast.error('Gửi thông báo thất bại: ' + (error.message || 'Lỗi không xác định'));
     } finally {
       setIsSubmitting(false);
     }

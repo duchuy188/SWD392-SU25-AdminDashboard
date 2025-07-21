@@ -4,6 +4,7 @@ import { User } from '../types/account';
 import UserDetail from './UserDetail';
 import { CreateUserRequest } from '../services/accountServices';
 import CreateUserModal from './CreateUserModal';
+import { toast } from 'react-toastify';
 
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -63,8 +64,13 @@ const UserManagement: React.FC = () => {
       setUsers(users.map(user => 
         user._id === userId ? { ...user, role: newRole } : user
       ));
+      
+      // Thêm thông báo toast
+      const user = users.find(u => u._id === userId);
+      toast.success(`Đã cập nhật vai trò của ${user?.email || userId} thành ${newRole === 'admin' ? 'Quản trị viên' : 'Học viên'}!`);
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Không thể cập nhật vai trò người dùng');
+      toast.error(`Không thể cập nhật vai trò: ${err?.response?.data?.message || 'Đã xảy ra lỗi'}`);
     } finally {
       setUpdatingRole(null);
     }
@@ -77,8 +83,14 @@ const UserManagement: React.FC = () => {
       setUsers(users.map(user => 
         user._id === userId ? { ...user, isActive: newValue === 'true' } : user
       ));
+      
+      // Thêm thông báo toast
+      const user = users.find(u => u._id === userId);
+      const statusText = newValue === 'true' ? 'mở khóa' : 'khóa';
+      toast.success(`Đã ${statusText} tài khoản ${user?.email || userId} thành công!`);
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Không thể cập nhật trạng thái người dùng');
+      toast.error(`Không thể cập nhật trạng thái: ${err?.response?.data?.message || 'Đã xảy ra lỗi'}`);
     } finally {
       setUpdatingStatus(null);
     }
@@ -117,6 +129,7 @@ const UserManagement: React.FC = () => {
       setUsers(res.data.users);
       setTotalPages(res.data.pagination.pages);
       setTotalItems(res.data.pagination.total);
+      toast.success('Đã tạo người dùng mới thành công!');
       // Close modal and reset form
       setIsCreateModalOpen(false);
       setCreateForm({
@@ -129,6 +142,7 @@ const UserManagement: React.FC = () => {
       });
     } catch (err: any) {
       setCreateError(err?.response?.data?.message || 'Không thể tạo người dùng mới');
+      toast.error(err?.response?.data?.message || 'Không thể tạo người dùng mới');
     } finally {
       setCreateLoading(false);
     }
@@ -333,24 +347,9 @@ const UserManagement: React.FC = () => {
                     <div className="text-sm font-medium text-white">{user.fullName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {updatingRole === user._id ? (
-                      <div className="animate-pulse">
-                        <div className="h-8 w-20 glass rounded-full"></div>
-                      </div>
-                    ) : (
-                      <select
-                        value={user.role}
-                        onChange={(e) => handleRoleUpdate(user._id, e.target.value as 'student' | 'admin')}
-                        title="Chọn vai trò"
-                        aria-label="Chọn vai trò người dùng"
-                        className={`glass text-white px-3 py-1 rounded-full text-sm font-medium border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 ${
-                          user.role === 'admin' ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gradient-to-r from-blue-500 to-cyan-500'
-                        }`}
-                      >
-                        <option value="student" className="bg-gray-800 text-white">student</option>
-                        <option value="admin" className="bg-gray-800 text-white">admin</option>
-                      </select>
-                    )}
+                    <span className={getRoleBadgeClass(user.role)}>
+                      {user.role === 'admin' ? 'Admin' : 'Student'}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {updatingStatus === user._id ? (
@@ -529,6 +528,7 @@ const UserManagement: React.FC = () => {
         <UserDetail
           userId={selectedUserId}
           onClose={() => setSelectedUserId(null)}
+          onRoleUpdate={handleRoleUpdate}
         />
       )}
     </div>
