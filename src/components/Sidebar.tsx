@@ -20,6 +20,7 @@ interface MenuItem {
   label: string;
   icon: LucideIcon;
   subItems?: MenuItem[];
+  showModal?: boolean;
 }
 
 const menuItems: MenuItem[] = [
@@ -29,7 +30,7 @@ const menuItems: MenuItem[] = [
     icon: Users
   },
   { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
-  { id: 'notifications', label: 'Quản lý thông báo', icon: Bell },
+  { id: 'notifications', label: 'Tạo thông báo', icon: Bell, showModal: true },
   { id: 'tests', label: 'Quản lý bài test', icon: Brain },
   { id: 'majors', label: 'Ngành học', icon: GraduationCap },
 ];
@@ -38,9 +39,10 @@ interface SidebarProps {
   activeItem: string;
   onItemClick: (item: string) => void;
   onLogout: () => void;
+  onShowNotificationModal?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) => {
+const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout, onShowNotificationModal }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   let role = '';
   try {
@@ -55,7 +57,12 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
     return true;
   });
 
-  const handleItemClick = (itemId: string, hasSubItems: boolean) => {
+  const handleItemClick = (itemId: string, hasSubItems: boolean, showModal?: boolean) => {
+    if (showModal && onShowNotificationModal) {
+      onShowNotificationModal();
+      return;
+    }
+    
     if (hasSubItems) {
       setExpandedItem(expandedItem === itemId ? null : itemId);
     } else {
@@ -86,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
           return (
             <div key={item.id}>
               <button
-                onClick={() => handleItemClick(item.id, false)}
+                onClick={() => handleItemClick(item.id, false, item.showModal)}
                 className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl transition-all duration-200 ${
                   isActive 
                     ? 'bg-white/50 backdrop-blur-sm text-primary-900 shadow-sm' 

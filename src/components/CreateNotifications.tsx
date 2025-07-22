@@ -166,16 +166,25 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
       if (response?.success) {
         toast.success(successMessage);
         
-        // Call onSuccess first
+        // Reset form after successful submission
+        setNotificationType('single');
+        setNotificationData({
+          userId: '',
+          userIds: [],
+          title: '',
+          body: '',
+          data: {
+            type: 'message',
+            importance: 'medium'
+          }
+        });
+        setSelectedUserForSingle(null);
+        setSearchTerm('');
+        setIsDropdownOpen(false);
+        
         if (onSuccess) {
           onSuccess();
         }
-        // Then close after a short delay
-        setTimeout(() => {
-          if (onClose) {
-            onClose();
-          }
-        }, 100);
       } else {
         toast.error('Gửi thông báo thất bại: ' + (response?.message || 'Lỗi không xác định'));
       }
@@ -239,21 +248,11 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-xl">
-          <div className="flex items-center justify-between">
+    <div className="animate-fadeIn">
+      <div className="bg-white rounded-xl shadow-lg">
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-xl">
+          <div className="flex items-center">
             <h2 className="text-2xl font-bold">✉️ Tạo thông báo mới</h2>
-            <button
-              type="button"
-              onClick={onClose}
-              aria-label="Đóng modal"
-              className="text-white hover:text-gray-200 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
           </div>
           <p className="text-blue-100 mt-2">Gửi thông báo đến người dùng</p>
         </div>
@@ -489,14 +488,6 @@ const CreateNotifications: React.FC<CreateNotificationsProps> = ({ onClose, onSu
         )}
 
         <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={isSubmitting}
-            className="px-6 py-3 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 disabled:opacity-50 transition-all duration-200 flex items-center space-x-2"
-          >
-            <span>❌ Hủy</span>
-          </button>
           <button
             type="submit"
             disabled={isSubmitting}

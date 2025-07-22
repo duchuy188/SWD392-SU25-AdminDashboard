@@ -15,7 +15,6 @@ import {
 
 function DashboardPage() {
   const [activeItem, setActiveItem] = useState('users');
-  const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const navigate = useNavigate();
 
@@ -58,10 +57,6 @@ function DashboardPage() {
     }
   ];
 
-  const handleNotificationSuccess = () => {
-    setShowNotificationModal(false);
-  };
-
   const renderContent = () => {
     switch (activeItem) {
       case 'users':
@@ -95,24 +90,7 @@ function DashboardPage() {
               <p className="text-primary-700 text-lg">Gửi thông báo đến người dùng</p>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-primary-200">
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowNotificationModal(true)}
-                  className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200"
-                >
-                  Tạo thông báo mới
-                </button>
-              </div>
-              {showNotificationModal && (
-                <div className="fixed inset-0 bg-primary-900/50 backdrop-blur-sm flex items-center justify-center z-50">
-                  <div className="max-w-2xl w-full mx-4">
-                    <CreateNotifications
-                      onClose={() => setShowNotificationModal(false)}
-                      onSuccess={handleNotificationSuccess}
-                    />
-                  </div>
-                </div>
-              )}
+              <CreateNotifications />
             </div>
           </div>
         );
@@ -136,7 +114,11 @@ function DashboardPage() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-primary-50 to-primary-100">
-      <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
+      <Sidebar 
+        activeItem={activeItem} 
+        onItemClick={setActiveItem} 
+        onLogout={handleLogout}
+      />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">

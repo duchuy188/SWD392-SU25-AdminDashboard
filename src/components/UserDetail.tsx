@@ -23,7 +23,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
     phone: '',
     address: '',
     role: '', // Thêm trường role
-    isActive: false // Thêm trường isActive
   });
 
   // Thêm state để theo dõi trạng thái cập nhật vai trò
@@ -77,7 +76,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
           phone: userData.user.phone || '',
           address: userData.user.address || '',
           role: userData.user.role, // Thêm role vào form
-          isActive: userData.user.isActive // Thêm isActive vào form
         });
       } catch (err: any) {
         setError(
@@ -106,7 +104,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
         phone: user.phone || '',
         address: user.address || '',
         role: user.role || '', // Lưu lại vai trò khi hủy chỉnh sửa
-        isActive: user.isActive // Lưu lại trạng thái khi hủy chỉnh sửa
       });
     }
     setIsEditing(false);
@@ -134,7 +131,6 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
         fullName: editForm.fullName,
         phone: editForm.phone,
         address: editForm.address,
-        isActive: editForm.isActive // Thêm isActive vào request
       });
 
       // Biến để kiểm tra xem có thay đổi vai trò không
@@ -297,7 +293,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
             {!isEditing && (
               <button
                 onClick={handleEditClick}
-                className="px-6 py-3 gradient-warning text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 font-semibold"
+                className="px-6 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2 font-semibold"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -318,37 +314,100 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
                 <h3 className="text-xl font-bold text-gray-800">Chỉnh sửa thông tin</h3>
               </div>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Họ và tên
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      value={editForm.fullName}
-                      onChange={handleInputChange}
-                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
-                      placeholder="Nhập họ và tên"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Số điện thoại
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={editForm.phone}
-                      onChange={handleInputChange}
-                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
-                      placeholder="Nhập số điện thoại"
-                    />
-                  </div>
+                <div>
+                  <label htmlFor="fullName" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Họ và tên
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    value={editForm.fullName}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
+                    placeholder="Nhập họ và tên"
+                    required
+                  />
                 </div>
+
+                {/* Phần chỉnh sửa vai trò */}
+                {onRoleUpdate && (
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-4">
+                      Vai trò
+                    </label>
+                    <div className="flex gap-4">
+                      <label className={`flex-1 relative p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                        editForm.role === 'student' 
+                          ? 'border-blue-500 bg-blue-50' 
+                          : 'border-gray-200 hover:border-blue-300'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="role"
+                          value="student"
+                          checked={editForm.role === 'student'}
+                          onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
+                          className="absolute opacity-0"
+                        />
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                            editForm.role === 'student' 
+                              ? 'bg-gradient-to-r from-blue-500 to-cyan-500' 
+                              : 'bg-gray-100'
+                          }`}>
+                            <svg className={`w-5 h-5 ${editForm.role === 'student' ? 'text-white' : 'text-gray-500'}`} 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className={`font-semibold ${editForm.role === 'student' ? 'text-blue-600' : 'text-gray-700'}`}>
+                              Học viên
+                            </p>
+                            <p className="text-sm text-gray-500">Truy cập các tính năng học tập</p>
+                          </div>
+                        </div>
+                      </label>
+
+                      <label className={`flex-1 relative p-4 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+                        editForm.role === 'admin' 
+                          ? 'border-purple-500 bg-purple-50' 
+                          : 'border-gray-200 hover:border-purple-300'
+                      }`}>
+                        <input
+                          type="radio"
+                          name="role"
+                          value="admin"
+                          checked={editForm.role === 'admin'}
+                          onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
+                          className="absolute opacity-0"
+                        />
+                        <div className="flex items-center gap-3">
+                          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                            editForm.role === 'admin' 
+                              ? 'bg-gradient-to-r from-purple-500 to-pink-500' 
+                              : 'bg-gray-100'
+                          }`}>
+                            <svg className={`w-5 h-5 ${editForm.role === 'admin' ? 'text-white' : 'text-gray-500'}`} 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <p className={`font-semibold ${editForm.role === 'admin' ? 'text-purple-600' : 'text-gray-700'}`}>
+                              Quản trị viên
+                            </p>
+                            <p className="text-sm text-gray-500">Quyền quản lý hệ thống</p>
+                          </div>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                )}
+
                 <div>
                   <label htmlFor="address" className="block text-sm font-semibold text-gray-700 mb-2">
                     Địa chỉ
@@ -363,44 +422,23 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
                     placeholder="Nhập địa chỉ"
                   />
                 </div>
-                
-                {/* Thêm phần chỉnh sửa vai trò khi đang ở chế độ chỉnh sửa */}
-                {onRoleUpdate && (
-                  <div>
-                    <label htmlFor="role" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Vai trò
-                    </label>
-                    <select
-                      id="role"
-                      name="role"
-                      value={editForm.role}
-                      onChange={(e) => setEditForm(prev => ({ ...prev, role: e.target.value }))}
-                      className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 border border-blue-200"
-                    >
-                      <option value="student" className="bg-gray-800 text-white">Học viên</option>
-                      <option value="admin" className="bg-gray-800 text-white">Quản trị viên</option>
-                    </select>
-                  </div>
-                )}
-                
-                {/* Thêm phần chỉnh sửa trạng thái khi đang ở chế độ chỉnh sửa */}
+
                 <div>
-                  <label htmlFor="isActive" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Trạng thái
+                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Số điện thoại
                   </label>
-                  <select
-                    id="isActive"
-                    name="isActive"
-                    value={editForm.isActive.toString()}
-                    onChange={(e) => setEditForm(prev => ({ ...prev, isActive: e.target.value === 'true' }))}
-                    className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 border border-blue-200"
-                  >
-                    <option value="true" className="bg-gray-800 text-white">Đang hoạt động</option>
-                    <option value="false" className="bg-gray-800 text-white">Không hoạt động</option>
-                  </select>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value={editForm.phone}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 placeholder-gray-400 border border-blue-200"
+                    placeholder="Nhập số điện thoại"
+                  />
                 </div>
                 
-                <div className="flex justify-end space-x-4 pt-4">
+                <div className="flex justify-end space-x-4 mt-8">
                   <button
                     type="button"
                     onClick={handleCancelEdit}
@@ -411,7 +449,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
                   <button
                     type="submit"
                     disabled={updateLoading}
-                    className={`px-6 py-3 gradient-success text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold flex items-center space-x-2 ${
+                    className={`px-6 py-3 bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 font-semibold flex items-center space-x-2 ${
                       updateLoading ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >

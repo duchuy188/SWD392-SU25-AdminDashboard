@@ -6,9 +6,27 @@ import CreateUserModal from './CreateUserModal';
 import { toast } from 'react-toastify';
 import ConfirmModal from './modals/ConfirmModal';
 
+// Custom hook for debounce
+const useDebounce = <T,>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+};
+
 const UserManagement: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState('');
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
@@ -19,6 +37,8 @@ const UserManagement: React.FC = () => {
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [searchEmail, setSearchEmail] = useState('');
+  const debouncedSearchEmail = useDebounce(searchEmail, 500); // Debounce 500ms
   const [confirmModal, setConfirmModal] = useState<{
     isOpen: boolean;
     userId: string;
@@ -31,12 +51,17 @@ const UserManagement: React.FC = () => {
     email: ''
   });
 
-  const fetchUsers = async () => {
-    setLoading(true);
+  const fetchUsers = async (isInitialFetch = false) => {
+    if (isInitialFetch) {
+      setInitialLoading(true);
+    } else {
+      setSearchLoading(true);
+    }
     try {
       const params = {
         page,
         limit,
+        search: debouncedSearchEmail,
         ...(selectedRole !== 'all' && { role: selectedRole })
       };
       const res = await getUsers(params);
@@ -48,13 +73,25 @@ const UserManagement: React.FC = () => {
       setError(err?.response?.data?.message || 'Không thể tải danh sách người dùng');
       toast.error('Không thể tải danh sách người dùng');
     } finally {
-      setLoading(false);
+      if (isInitialFetch) {
+        setInitialLoading(false);
+      } else {
+        setSearchLoading(false);
+      }
     }
   };
 
+  // Initial fetch
   useEffect(() => {
-    fetchUsers();
-  }, [page, limit, selectedRole]);
+    fetchUsers(true);
+  }, []);
+
+  // Search and filter fetch
+  useEffect(() => {
+    if (!initialLoading) {
+      fetchUsers(false);
+    }
+  }, [page, limit, selectedRole, debouncedSearchEmail]);
 
   const handleRoleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedRole(event.target.value as 'all' | 'student' | 'admin');
@@ -141,7 +178,12 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  if (loading) return (
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchEmail(e.target.value);
+    setPage(1); // Reset về trang 1 khi search
+  };
+
+  if (initialLoading) return (
     <div className="flex justify-center items-center h-64 animate-fadeIn">
       <div className="relative">
         <div className="w-16 h-16 gradient-primary rounded-full animate-spin"></div>
@@ -164,7 +206,7 @@ const UserManagement: React.FC = () => {
         <div className="text-red-800 font-semibold text-lg">{error}</div>
       </div>
       <button
-        onClick={fetchUsers}
+        onClick={() => fetchUsers(true)}
         className="px-6 py-3 gradient-secondary text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300"
       >
         Thử lại
@@ -174,7 +216,7 @@ const UserManagement: React.FC = () => {
 
   return (
     <div className="p-6 animate-fadeIn">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-4">
         <div className="flex items-center">
           <div className="w-10 h-10 bg-sky-100 rounded-2xl flex items-center justify-center mr-4">
             <svg className="w-6 h-6 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,21 +228,21 @@ const UserManagement: React.FC = () => {
             <p className="text-black">Quản lý thông tin và quyền hạn người dùng</p>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-3">
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
+            className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-3 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2 text-sm"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
             <span>Thêm người dùng</span>
           </button>
-          <div className="flex items-center space-x-3 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl px-4 py-3 border border-gray-200">
-            <label htmlFor="role-filter" className="font-medium text-black">Lọc theo vai trò:</label>
+          <div className="flex items-center gap-2 bg-gradient-to-br from-gray-50 to-gray-100 rounded-lg px-3 py-2 border border-gray-200">
+            <label htmlFor="role-filter" className="font-medium text-black text-sm whitespace-nowrap">Lọc theo vai trò:</label>
             <select
               id="role-filter"
-              className="bg-gray-100 rounded-lg px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer hover:bg-gray-200 font-semibold"
+              className="bg-gray-100 rounded-lg px-2 py-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer hover:bg-gray-200 font-semibold text-sm"
               value={selectedRole}
               onChange={handleRoleChange}
             >
@@ -209,6 +251,28 @@ const UserManagement: React.FC = () => {
               <option value="admin" className="bg-white text-black">Quản trị viên</option>
             </select>
           </div>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      <div className="mb-8 animate-slideIn">
+        <div className="relative max-w-xl">
+          <input
+            type="text"
+            placeholder="Tìm kiếm theo email..."
+            value={searchEmail}
+            onChange={handleSearchChange}
+            className="w-full pl-10 pr-10 py-2.5 bg-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-black placeholder-gray-500 text-sm border border-gray-200"
+          />
+          {searchLoading ? (
+            <div className="absolute right-3 top-2.5">
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          ) : (
+            <svg className="absolute left-3 top-2.5 h-5 w-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          )}
         </div>
       </div>
 
@@ -330,7 +394,7 @@ const UserManagement: React.FC = () => {
                       </div>
                     ) : (
                       <span className={getRoleBadgeClass(user.role)}>
-                        {user.role === 'admin' ? 'Admin' : 'Student'}
+                        {user.role === 'admin' ? 'Quản trị viên' : 'Học viên'}
                       </span>
                     )}
                   </td>
