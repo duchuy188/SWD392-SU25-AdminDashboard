@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { getUsers, updateUser, updateUserStatus, createUser } from '../services/accountServices';
+import { getUsers, updateUser, updateUserStatus } from '../services/accountServices';
 import { User } from '../types/account';
 import UserDetail from './UserDetail';
-import { CreateUserRequest } from '../services/accountServices';
 import CreateUserModal from './CreateUserModal';
 import { toast } from 'react-toastify';
 
@@ -19,16 +18,9 @@ const UserManagement: React.FC = () => {
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [createForm, setCreateForm] = useState<CreateUserRequest>({
-    email: '',
-    fullName: '',
-    password: '',
-    phone: '',
-    address: '',
-    role: 'student'
-  });
 
   const fetchUsers = async () => {
+    setLoading(true);
     try {
       const params = {
         page,
@@ -39,8 +31,10 @@ const UserManagement: React.FC = () => {
       setUsers(res.data.users);
       setTotalPages(res.data.pagination.pages);
       setTotalItems(res.data.pagination.total);
+      setError('');
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Không thể tải danh sách người dùng');
+      toast.error('Không thể tải danh sách người dùng');
     } finally {
       setLoading(false);
     }
@@ -63,7 +57,6 @@ const UserManagement: React.FC = () => {
         user._id === userId ? { ...user, role: newRole } : user
       ));
       
-      // Thêm thông báo toast
       const user = users.find(u => u._id === userId);
       toast.success(`Đã cập nhật vai trò của ${user?.email || userId} thành ${newRole === 'admin' ? 'Quản trị viên' : 'Học viên'}!`);
     } catch (err: any) {
@@ -82,7 +75,6 @@ const UserManagement: React.FC = () => {
         user._id === userId ? { ...user, isActive: newValue === 'true' } : user
       ));
       
-      // Thêm thông báo toast
       const user = users.find(u => u._id === userId);
       const statusText = newValue === 'true' ? 'mở khóa' : 'khóa';
       toast.success(`Đã ${statusText} tài khoản ${user?.email || userId} thành công!`);
@@ -105,48 +97,23 @@ const UserManagement: React.FC = () => {
     }
   };
 
-
-  const handleCreateSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await createUser(createForm);
-      // Refresh the user list
-      const params = {
-        page,
-        limit,
-        ...(selectedRole !== 'all' && { role: selectedRole })
-      };
-      const res = await getUsers(params);
-      setUsers(res.data.users);
-      setTotalPages(res.data.pagination.pages);
-      setTotalItems(res.data.pagination.total);
-      toast.success('Đã tạo người dùng mới thành công!');
-      // Close modal and reset form
-      setIsCreateModalOpen(false);
-      setCreateForm({
-        email: '',
-        fullName: '',
-        password: '',
-        phone: '',
-        address: '',
-        role: 'student'
-      });
-    } catch (err: any) {
-      toast.error(err?.response?.data?.message || 'Không thể tạo người dùng mới');
-    }
-  };
-
-  // Thêm hàm callback để cập nhật thông tin người dùng
   const handleUserUpdate = async (userId: string, updatedData: Partial<User>) => {
     try {
-      // Cập nhật thông tin người dùng trong danh sách
       setUsers(users.map(user => 
         user._id === userId ? { ...user, ...updatedData } : user
       ));
-      
-      // Không cần hiển thị toast ở đây vì đã có toast trong UserDetail
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Không thể cập nhật thông tin người dùng');
+    }
+  };
+
+  const handleCreateSuccess = async () => {
+    try {
+      setPage(1); // Reset về trang đầu tiên
+      await fetchUsers();
+      setIsCreateModalOpen(false);
+    } catch (error) {
+      console.error('Error in handleCreateSuccess:', error);
     }
   };
 
@@ -161,7 +128,7 @@ const UserManagement: React.FC = () => {
       </div>
     </div>
   );
-  
+
   if (error) return (
     <div className="glass rounded-2xl p-6 border-l-4 border-red-500 animate-fadeIn">
       <div className="flex items-center mb-4">
@@ -196,6 +163,15 @@ const UserManagement: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-4">
+          <button
+            onClick={() => setIsCreateModalOpen(true)}
+            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Thêm người dùng</span>
+          </button>
           <div className="flex items-center space-x-3 bg-white rounded-xl px-4 py-3">
             <label htmlFor="role-filter" className="font-medium text-black">Lọc theo vai trò:</label>
             <select
@@ -509,7 +485,7 @@ const UserManagement: React.FC = () => {
       <CreateUserModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={fetchUsers}
+        onSuccess={handleCreateSuccess}
       />
 
       {/* User Detail Modal */}

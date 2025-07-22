@@ -24,10 +24,7 @@ const menuItems = [
   { 
     id: 'users', 
     label: 'Quản lý người dùng', 
-    icon: Users,
-    subItems: [
-      { id: 'users-create', label: 'Thêm người dùng', icon: UserPlus },
-    ]
+    icon: Users
   },
   { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
   { id: 'notifications', label: 'Quản lý thông báo', icon: Bell },
@@ -51,15 +48,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
   });
 
   const handleItemClick = (itemId: string, hasSubItems: boolean) => {
-    if (itemId === 'users') {
-      onItemClick('users');
-      if (hasSubItems) {
-        setExpandedItem(expandedItem === itemId ? null : itemId);
-      }
-    } else if (itemId === 'users-create') {
-      // Keep the users view active and let parent component handle modal
-      onItemClick('users-create');
-    } else if (hasSubItems) {
+    if (hasSubItems) {
       setExpandedItem(expandedItem === itemId ? null : itemId);
     } else {
       onItemClick(itemId);

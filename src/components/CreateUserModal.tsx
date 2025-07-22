@@ -25,8 +25,9 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ isOpen, onClose, onSu
 
     setIsSubmitting(true);
     try {
-      await createUser(createForm);
-      toast.success('Tạo người dùng thành công!');
+      const response = await createUser(createForm);
+      console.log('Create user response:', response); // Debug log
+      
       // Reset form
       setCreateForm({
         email: '',
@@ -36,9 +37,16 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ isOpen, onClose, onSu
         address: '',
         role: 'student'
       });
-      onSuccess();
+      
+      toast.success('Tạo người dùng thành công!');
+      
+      // Đảm bảo gọi onSuccess trước khi đóng modal
+      if (typeof onSuccess === 'function') {
+        await onSuccess();
+      }
       onClose();
     } catch (err: any) {
+      console.error('Create user error:', err); // Debug log
       toast.error(err?.response?.data?.message || 'Không thể tạo người dùng mới');
     } finally {
       setIsSubmitting(false);

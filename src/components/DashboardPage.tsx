@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
 import ChatManagement from './ChatManagement';
@@ -15,7 +14,7 @@ import {
 } from 'lucide-react';
 
 function DashboardPage() {
-  const [activeItem, setActiveItem] = useState('dashboard');
+  const [activeItem, setActiveItem] = useState('users');
   const [showNotificationModal, setShowNotificationModal] = useState(false);
   const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const navigate = useNavigate();
@@ -126,9 +125,6 @@ function DashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow">
-                <SystemStatus />
-              </div>
               <div className="bg-white p-6 rounded-xl shadow">
                 <RecentActivity />
               </div>
