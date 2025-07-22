@@ -9,8 +9,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f8fafc;
-  color: #000000;
+  background: theme('colors.primary.50');
+  color: theme('colors.secondary.900');
 }
 
 * {
@@ -19,27 +19,29 @@ body {
 
 /* Text colors */
 h1, h2, h3, h4, h5, h6, p, span, div {
-  color: #000000;
+  color: theme('colors.secondary.900');
 }
 
 /* Gradient backgrounds */
 .gradient-primary {
-  background: #f8fafc;
+  background: theme('colors.primary.100');
 }
 
 .gradient-secondary {
-  background: #f1f5f9;
+  background: theme('colors.primary.200');
 }
 
 /* Glass morphism effect */
 .glass {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: rgba(240, 249, 255, 0.7);
+  border: 1px solid theme('colors.primary.300');
+  backdrop-filter: blur(8px);
 }
 
 .glass-dark {
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: rgba(186, 230, 253, 0.7);
+  border: 1px solid theme('colors.primary.400');
+  backdrop-filter: blur(8px);
 }
 
 /* Custom scrollbar */
@@ -48,114 +50,114 @@ h1, h2, h3, h4, h5, h6, p, span, div {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: theme('colors.primary.100');
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
+  background: theme('colors.primary.300');
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: theme('colors.primary.400');
 }
 
 /* Status and Role specific styles */
 .role-admin {
-  background: #6366f1;
-  color: #ffffff;
+  background: theme('colors.primary.600');
+  color: theme('colors.primary.50');
 }
 
 .role-student {
-  background: #3b82f6;
-  color: #ffffff;
+  background: theme('colors.primary.500');
+  color: theme('colors.primary.50');
 }
 
 .status-active {
-  background: #10b981;
-  color: #ffffff;
+  background: theme('colors.success.500');
+  color: theme('colors.primary.50');
 }
 
 .status-inactive {
-  background: #ef4444;
-  color: #ffffff;
+  background: theme('colors.danger.500');
+  color: theme('colors.primary.50');
 }
 
 .filter-dropdown {
-  background: #f8fafc;
-  color: #000000;
-  border: 1px solid #e2e8f0;
+  background: theme('colors.primary.50');
+  color: theme('colors.secondary.900');
+  border: 1px solid theme('colors.primary.300');
 }
 
 .filter-dropdown:hover {
-  background: #f1f5f9;
+  background: theme('colors.primary.100');
 }
 
 /* Score badges */
 .score-excellent {
-  background: #22c55e;
-  color: #ffffff;
+  background: theme('colors.success.500');
+  color: theme('colors.primary.50');
 }
 
 .score-good {
-  background: #eab308;
-  color: #000000;
+  background: theme('colors.warning.500');
+  color: theme('colors.secondary.900');
 }
 
 .score-poor {
-  background: #ef4444;
-  color: #ffffff;
+  background: theme('colors.danger.500');
+  color: theme('colors.primary.50');
 }
 
 /* Interest and major tags */
 .interest-tag {
-  background: #3b82f6;
-  color: #ffffff;
+  background: theme('colors.primary.600');
+  color: theme('colors.primary.50');
 }
 
 .major-tag {
-  background: #10b981;
-  color: #ffffff;
+  background: theme('colors.success.500');
+  color: theme('colors.primary.50');
 }
 
 /* Select dropdown with role-based colors */
 .select-role-admin {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  color: #000000;
+  background: theme('colors.primary.50');
+  border: 2px solid theme('colors.primary.300');
+  color: theme('colors.secondary.900');
 }
 
 .select-role-admin:focus {
-  border-color: #6366f1;
+  border-color: theme('colors.primary.600');
 }
 
 .select-role-student {
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  color: #000000;
+  background: theme('colors.primary.50');
+  border: 2px solid theme('colors.primary.300');
+  color: theme('colors.secondary.900');
 }
 
 .select-role-student:focus {
-  border-color: #3b82f6;
+  border-color: theme('colors.primary.500');
 }
 
 /* Table row hover effects */
 .table-row-hover:hover {
-  background: #f1f5f9;
+  background: theme('colors.primary.100');
 }
 
 /* Empty state illustrations */
 .empty-state-icon {
   opacity: 0.6;
-  color: #000000;
+  color: theme('colors.secondary.400');
 }
 
 /* Button styles */
 .btn-primary {
   padding: 0.5rem 1rem;
-  background: #1f2937;
-  color: #ffffff;
+  background: theme('colors.primary.600');
+  color: theme('colors.primary.50');
   font-weight: 500;
   border-radius: 0.5rem;
   display: flex;
@@ -163,16 +165,17 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   gap: 0.5rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-primary:hover {
-  background: #111827;
+  background: theme('colors.primary.700');
 }
 
 .btn-secondary {
   padding: 0.5rem 1rem;
-  background: #64748b;
-  color: #ffffff;
+  background: theme('colors.primary.400');
+  color: theme('colors.primary.50');
   font-weight: 500;
   border-radius: 0.5rem;
   display: flex;
@@ -180,16 +183,17 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   gap: 0.5rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-secondary:hover {
-  background: #475569;
+  background: theme('colors.primary.500');
 }
 
 .btn-success {
   padding: 0.5rem 1rem;
-  background: #10b981;
-  color: #ffffff;
+  background: theme('colors.success.500');
+  color: theme('colors.primary.50');
   font-weight: 500;
   border-radius: 0.5rem;
   display: flex;
@@ -197,16 +201,17 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   gap: 0.5rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-success:hover {
-  background: #059669;
+  background: theme('colors.success.600');
 }
 
 .btn-danger {
   padding: 0.5rem 1rem;
-  background: #ef4444;
-  color: #ffffff;
+  background: theme('colors.danger.500');
+  color: theme('colors.primary.50');
   font-weight: 500;
   border-radius: 0.5rem;
   display: flex;
@@ -214,16 +219,17 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   gap: 0.5rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-danger:hover {
-  background: #dc2626;
+  background: theme('colors.danger.600');
 }
 
 .btn-warning {
   padding: 0.5rem 1rem;
-  background: #f59e0b;
-  color: #000000;
+  background: theme('colors.warning.500');
+  color: theme('colors.secondary.900');
   font-weight: 500;
   border-radius: 0.5rem;
   display: flex;
@@ -231,8 +237,9 @@ h1, h2, h3, h4, h5, h6, p, span, div {
   gap: 0.5rem;
   border: none;
   cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
 .btn-warning:hover {
-  background: #d97706;
+  background: theme('colors.warning.600');
 }

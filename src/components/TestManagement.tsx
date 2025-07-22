@@ -115,7 +115,7 @@ const TestManagement: React.FC = () => {
       </div>
 
       {/* Search and Filter */}
-      <div className="bg-white p-6 rounded-xl border border-gray-200">
+      <div className="bg-sky-50 p-6 rounded-xl border border-sky-200">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -124,7 +124,7 @@ const TestManagement: React.FC = () => {
               placeholder="Tìm kiếm bài test..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full pl-10 pr-4 py-2 bg-sky-100 border border-sky-200 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
           <div className="flex items-center gap-2">
@@ -132,7 +132,7 @@ const TestManagement: React.FC = () => {
             <select
               value={filterType}
               onChange={(e) => setFilterType(e.target.value)}
-              className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 hover:bg-gray-100 cursor-pointer"
+              className="px-4 py-2 bg-sky-100 border border-sky-200 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 hover:bg-sky-200 cursor-pointer"
               aria-label="Lọc theo loại bài test"
             >
               <option value="ALL" className="bg-white text-black">Tất cả loại</option>

@@ -22,7 +22,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
     fullName: '',
     phone: '',
     address: '',
-    role: '' // Thêm trường role
+    role: '', // Thêm trường role
+    isActive: false // Thêm trường isActive
   });
 
   // Thêm state để theo dõi trạng thái cập nhật vai trò
@@ -75,7 +76,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
           fullName: userData.user.fullName || '',
           phone: userData.user.phone || '',
           address: userData.user.address || '',
-          role: userData.user.role // Thêm role vào form
+          role: userData.user.role, // Thêm role vào form
+          isActive: userData.user.isActive // Thêm isActive vào form
         });
       } catch (err: any) {
         setError(
@@ -104,6 +106,7 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
         phone: user.phone || '',
         address: user.address || '',
         role: user.role || '', // Lưu lại vai trò khi hủy chỉnh sửa
+        isActive: user.isActive // Lưu lại trạng thái khi hủy chỉnh sửa
       });
     }
     setIsEditing(false);
@@ -130,7 +133,8 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
       const response = await updateUser(user._id, {
         fullName: editForm.fullName,
         phone: editForm.phone,
-        address: editForm.address
+        address: editForm.address,
+        isActive: editForm.isActive // Thêm isActive vào request
       });
 
       // Biến để kiểm tra xem có thay đổi vai trò không
@@ -378,6 +382,23 @@ const UserDetail: React.FC<UserDetailProps> = ({ userId, onClose, onRoleUpdate, 
                     </select>
                   </div>
                 )}
+                
+                {/* Thêm phần chỉnh sửa trạng thái khi đang ở chế độ chỉnh sửa */}
+                <div>
+                  <label htmlFor="isActive" className="block text-sm font-semibold text-gray-700 mb-2">
+                    Trạng thái
+                  </label>
+                  <select
+                    id="isActive"
+                    name="isActive"
+                    value={editForm.isActive.toString()}
+                    onChange={(e) => setEditForm(prev => ({ ...prev, isActive: e.target.value === 'true' }))}
+                    className="w-full bg-white/90 text-gray-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-300 border border-blue-200"
+                  >
+                    <option value="true" className="bg-gray-800 text-white">Đang hoạt động</option>
+                    <option value="false" className="bg-gray-800 text-white">Không hoạt động</option>
+                  </select>
+                </div>
                 
                 <div className="flex justify-end space-x-4 pt-4">
                   <button

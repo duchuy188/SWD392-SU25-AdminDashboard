@@ -300,7 +300,7 @@ const MajorManagement: React.FC = () => {
             </div>
 
             {/* Search and Filter */}
-            <div className="bg-white p-6 rounded-xl border border-gray-200">
+            <div className="bg-sky-50 p-6 rounded-xl border border-sky-200">
                 <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex-1 relative">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -309,7 +309,7 @@ const MajorManagement: React.FC = () => {
                             placeholder="Tìm kiếm ngành học..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className="w-full pl-10 pr-4 py-2 bg-sky-100 border border-sky-200 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                     <div className="flex items-center gap-2">

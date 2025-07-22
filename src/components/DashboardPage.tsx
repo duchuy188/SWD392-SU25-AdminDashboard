@@ -91,20 +91,20 @@ function DashboardPage() {
         return (
           <div>
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-black mb-2">Quản lý thông báo</h1>
-              <p className="text-black text-lg">Gửi thông báo đến người dùng</p>
+              <h1 className="text-3xl font-bold text-primary-900 mb-2">Quản lý thông báo</h1>
+              <p className="text-primary-700 text-lg">Gửi thông báo đến người dùng</p>
             </div>
-            <div className="bg-white rounded-xl p-6 shadow">
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-primary-200">
               <div className="flex justify-center">
                 <button
                   onClick={() => setShowNotificationModal(true)}
-                  className="mb-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                  className="mb-6 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors duration-200"
                 >
                   Tạo thông báo mới
                 </button>
               </div>
               {showNotificationModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-primary-900/50 backdrop-blur-sm flex items-center justify-center z-50">
                   <div className="max-w-2xl w-full mx-4">
                     <CreateNotifications
                       onClose={() => setShowNotificationModal(false)}
@@ -120,12 +120,12 @@ function DashboardPage() {
         return (
           <div>
             <div className="mb-8">
-              <h1 className="text-3xl font-bold text-black mb-2">Dashboard</h1>
-              <p className="text-black text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
+              <h1 className="text-3xl font-bold text-primary-900 mb-2">Dashboard</h1>
+              <p className="text-primary-700 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow">
+              <div className="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-primary-200">
                 <RecentActivity />
               </div>
             </div>
@@ -135,7 +135,7 @@ function DashboardPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gradient-to-br from-primary-50 to-primary-100">
       <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
       
       <div className="flex-1 overflow-auto">

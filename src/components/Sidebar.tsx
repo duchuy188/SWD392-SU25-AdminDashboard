@@ -11,16 +11,18 @@ import {
   Brain,
   Bell,
   UserPlus,
-  List
+  List,
+  LucideIcon
 } from 'lucide-react';
 
-interface SidebarProps {
-  activeItem: string;
-  onItemClick: (item: string) => void;
-  onLogout: () => void;
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  subItems?: MenuItem[];
 }
 
-const menuItems = [
+const menuItems: MenuItem[] = [
   { 
     id: 'users', 
     label: 'Quản lý người dùng', 
@@ -31,6 +33,12 @@ const menuItems = [
   { id: 'tests', label: 'Quản lý bài test', icon: Brain },
   { id: 'majors', label: 'Ngành học', icon: GraduationCap },
 ];
+
+interface SidebarProps {
+  activeItem: string;
+  onItemClick: (item: string) => void;
+  onLogout: () => void;
+}
 
 const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
@@ -57,37 +65,43 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
   };
 
   return (
-    <div className="bg-white h-screen w-64 border-r border-gray-200 flex flex-col">
-      <div className="p-6 border-b border-gray-200">
+    <div className="bg-gradient-to-br from-primary-100 to-primary-200 h-screen w-64 border-r border-primary-300 flex flex-col">
+      <div className="p-6 border-b border-primary-300 bg-white/30 backdrop-blur-sm">
         <div className="flex items-center">
-          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center mr-3">
-            <span className="text-black font-bold text-lg">E</span>
+          <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center mr-3">
+            <span className="text-white font-bold text-lg">E</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-black">EduBot</h2>
-            <p className="text-sm text-black">Admin Dashboard</p>
+            <h2 className="text-xl font-bold text-primary-900">EduBot</h2>
+            <p className="text-sm text-primary-700">Admin Dashboard</p>
           </div>
         </div>
       </div>
       <nav className="mt-6 flex-1 px-4">
         {filteredMenuItems.map((item) => {
           const IconComponent = item.icon;
-          const isActive = activeItem === item.id || (item.subItems?.some(sub => sub.id === activeItem));
+          const isActive = activeItem === item.id;
           const isExpanded = expandedItem === item.id;
           
           return (
             <div key={item.id}>
               <button
-                onClick={() => handleItemClick(item.id, !!item.subItems)}
-                className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl ${
+                onClick={() => handleItemClick(item.id, false)}
+                className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl transition-all duration-200 ${
                   isActive 
-                    ? 'bg-gray-100 text-black' 
-                    : 'text-black hover:bg-gray-50'
+                    ? 'bg-white/50 backdrop-blur-sm text-primary-900 shadow-sm' 
+                    : 'text-primary-800 hover:bg-white/30 hover:backdrop-blur-sm'
                 }`}
               >
-                <IconComponent className="w-5 h-5 mr-3" />
+                <IconComponent className={`w-5 h-5 mr-3 ${
+                  item.id === 'users' ? 'text-primary-600' :
+                  item.id === 'chat' ? 'text-emerald-600' :
+                  item.id === 'notifications' ? 'text-amber-600' :
+                  item.id === 'tests' ? 'text-violet-600' :
+                  item.id === 'majors' ? 'text-rose-600' : ''
+                }`} />
                 <span className="font-medium">{item.label}</span>
-                {item.subItems && (
+                {false && (
                   <svg
                     className={`ml-auto w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
                     fill="none"
@@ -98,7 +112,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
                   </svg>
                 )}
                 {isActive && !item.subItems && (
-                  <div className="ml-auto w-2 h-2 bg-gray-400 rounded-full"></div>
+                  <div className="ml-auto w-2 h-2 bg-primary-500 rounded-full"></div>
                 )}
               </button>
               
@@ -112,16 +126,16 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
                       <button
                         key={subItem.id}
                         onClick={() => handleItemClick(subItem.id, false)}
-                        className={`flex items-center px-4 py-2 w-full text-left rounded-lg ${
+                        className={`flex items-center px-4 py-2 w-full text-left rounded-lg transition-all duration-200 ${
                           isSubActive
-                            ? 'bg-gray-100 text-black'
-                            : 'text-black hover:bg-gray-50'
+                            ? 'bg-white/50 backdrop-blur-sm text-primary-900 shadow-sm'
+                            : 'text-primary-800 hover:bg-white/30 hover:backdrop-blur-sm'
                         }`}
                       >
                         <SubIconComponent className="w-4 h-4 mr-3" />
                         <span className="font-medium text-sm">{subItem.label}</span>
                         {isSubActive && (
-                          <div className="ml-auto w-2 h-2 bg-gray-400 rounded-full"></div>
+                          <div className="ml-auto w-2 h-2 bg-primary-500 rounded-full"></div>
                         )}
                       </button>
                     );
@@ -132,10 +146,10 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
           );
         })}
       </nav>
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-primary-300 bg-white/30 backdrop-blur-sm">
         <button
           onClick={onLogout}
-          className="flex items-center px-4 py-3 text-black hover:bg-gray-50 hover:text-red-600 w-full text-left rounded-xl"
+          className="flex items-center px-4 py-3 text-primary-800 hover:bg-white/50 hover:text-rose-600 w-full text-left rounded-xl transition-all duration-200"
         >
           <LogOut className="w-5 h-5 mr-3" />
           <span className="font-medium">Đăng xuất</span>
