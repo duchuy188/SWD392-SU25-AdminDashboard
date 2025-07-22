@@ -231,7 +231,7 @@ const UserManagement: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-3 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2 text-sm"
+            className="bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 text-white px-3 py-2 rounded-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2 text-sm"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />

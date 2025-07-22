@@ -364,7 +364,7 @@ const MajorManagement: React.FC = () => {
                     </div>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
+                        className="bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
                     >
                         <GraduationCap className="w-5 h-5" />
                         <span>Thêm ngành học</span>
@@ -373,17 +373,17 @@ const MajorManagement: React.FC = () => {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 shadow-sm">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-3xl font-bold text-blue-900 mb-1">{majors.length}</div>
-                            <div className="text-blue-700">Tổng số ngành</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-6 border border-blue-200 shadow-sm">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <div className="text-3xl font-bold text-blue-900 mb-1">{majors.length}</div>
+                                <div className="text-blue-700">Tổng số ngành</div>
+                            </div>
+                            <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-inner">
+                                <GraduationCap className="w-6 h-6 text-white" />
+                            </div>
                         </div>
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-500 rounded-2xl flex items-center justify-center shadow-inner">
-                            <GraduationCap className="w-6 h-6 text-white" />
-                        </div>
-                    </div>
                 </div>
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-6 border border-purple-200 shadow-sm">
                     <div className="flex items-center justify-between">
@@ -406,17 +406,6 @@ const MajorManagement: React.FC = () => {
                         </div>
                         <div className="w-12 h-12 bg-gradient-to-br from-indigo-400 to-indigo-500 rounded-2xl flex items-center justify-center shadow-inner">
                             <BookOpen className="w-6 h-6 text-white" />
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-2xl p-6 border border-green-200 shadow-sm">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <div className="text-3xl font-bold text-green-900 mb-1">-</div>
-                            <div className="text-green-700">Sinh viên</div>
-                        </div>
-                        <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 rounded-2xl flex items-center justify-center shadow-inner">
-                            <Users className="w-6 h-6 text-white" />
                         </div>
                     </div>
                 </div>
@@ -465,9 +454,17 @@ const MajorManagement: React.FC = () => {
                                     <tr key={major?._id || major?.code || Math.random()} className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
                                         <td className="w-2/5 px-6 py-4">
                                             <div className="flex items-center gap-4">
-                                                <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center">
-                                                    <GraduationCap className="w-6 h-6 text-indigo-600" />
-                                                </div>
+                                                {(major.majorImage || major.imageUrl) ? (
+                                                    <img
+                                                        src={major.imageUrl || (major.majorImage instanceof File ? URL.createObjectURL(major.majorImage) : '')}
+                                                        alt={major.name}
+                                                        className="w-12 h-12 object-cover rounded-xl border border-indigo-200"
+                                                    />
+                                                ) : (
+                                                    <div className="w-12 h-12 bg-gradient-to-br from-indigo-100 to-indigo-200 rounded-xl flex items-center justify-center">
+                                                        <GraduationCap className="w-6 h-6 text-indigo-600" />
+                                                    </div>
+                                                )}
                                                 <div>
                                                     <div className="text-black font-semibold text-lg mb-1">{major?.name || 'N/A'}</div>
                                                     <div className="text-gray-600 text-sm line-clamp-1">{major?.shortDescription || 'Chưa có mô tả'}</div>

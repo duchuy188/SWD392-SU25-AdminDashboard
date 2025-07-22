@@ -121,7 +121,7 @@ const TestManagement: React.FC = () => {
         <div className="flex items-center space-x-4">
           <button
             onClick={fetchTests}
-            className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
+            className="bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center space-x-2"
             disabled={loading}
           >
             <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />

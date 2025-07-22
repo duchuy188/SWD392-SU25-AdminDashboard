@@ -79,7 +79,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout, on
             <span className="text-white font-bold text-lg">E</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-primary-900">EduBot</h2>
+            <h2 className="text-xl font-bold text-primary-900 animate-bounce">EduBot</h2>
             <p className="text-sm text-primary-700">Admin Dashboard</p>
           </div>
         </div>
