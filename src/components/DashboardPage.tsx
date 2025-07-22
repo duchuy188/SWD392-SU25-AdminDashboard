@@ -8,17 +8,16 @@ import ChatManagement from './ChatManagement';
 import TestManagement from './TestManagement';
 import CreateNotifications from './CreateNotifications';
 import MajorManagement from './MajorManagement';
+import CreateUserModal from './CreateUserModal';
 import { 
-  Users, 
-  MessageSquare, 
-  Target, 
-  Clock,
-  DivideIcon
+  DivideIcon,
+  ChevronDown
 } from 'lucide-react';
 
 function DashboardPage() {
   const [activeItem, setActiveItem] = useState('dashboard');
   const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -64,72 +63,88 @@ function DashboardPage() {
     setShowNotificationModal(false);
   };
 
+  const renderContent = () => {
+    switch (activeItem) {
+      case 'users':
+      case 'users-list':
+      case 'users-create':
+        return (
+          <>
+            <UserManagement />
+            {activeItem === 'users-create' && (
+              <CreateUserModal 
+                isOpen={true}
+                onClose={() => setActiveItem('users')}
+                onSuccess={() => {
+                  setActiveItem('users');
+                }}
+              />
+            )}
+          </>
+        );
+      case 'chat':
+        return <ChatManagement />;
+      case 'tests':
+        return <TestManagement />;
+      case 'majors':
+        return <MajorManagement />;
+      case 'notifications':
+        return (
+          <div>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-black mb-2">Quản lý thông báo</h1>
+              <p className="text-black text-lg">Gửi thông báo đến người dùng</p>
+            </div>
+            <div className="bg-white rounded-xl p-6 shadow">
+              <div className="flex justify-center">
+                <button
+                  onClick={() => setShowNotificationModal(true)}
+                  className="mb-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
+                >
+                  Tạo thông báo mới
+                </button>
+              </div>
+              {showNotificationModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="max-w-2xl w-full mx-4">
+                    <CreateNotifications
+                      onClose={() => setShowNotificationModal(false)}
+                      onSuccess={handleNotificationSuccess}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-black mb-2">Dashboard</h1>
+              <p className="text-black text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white p-6 rounded-xl shadow">
+                <SystemStatus />
+              </div>
+              <div className="bg-white p-6 rounded-xl shadow">
+                <RecentActivity />
+              </div>
+            </div>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">
-          {activeItem === 'users' ? (
-            <div>
-              <UserManagement />
-            </div>
-          ) : activeItem === 'chat' ? (
-            <div>
-              <ChatManagement />
-            </div>
-          ) : activeItem === 'tests' ? (
-            <div>
-              <TestManagement />
-            </div>
-          ) : activeItem === 'majors' ? (
-            <div>
-              <MajorManagement />
-            </div>
-          ) : activeItem === 'notifications' ? (
-            <div>
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-black mb-2">Quản lý thông báo</h1>
-                <p className="text-black text-lg">Gửi thông báo đến người dùng</p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow">
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => setShowNotificationModal(true)}
-                    className="mb-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
-                  >
-                    Tạo thông báo mới
-                  </button>
-                </div>
-                {showNotificationModal && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="max-w-2xl w-full mx-4">
-                      <CreateNotifications
-                        onClose={() => setShowNotificationModal(false)}
-                        onSuccess={handleNotificationSuccess}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-black mb-2">Dashboard</h1>
-                <p className="text-black text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-white p-6 rounded-xl shadow">
-                  <SystemStatus />
-                </div>
-                <div className="bg-white p-6 rounded-xl shadow">
-                  <RecentActivity />
-                </div>
-              </div>
-            </div>
-          )}
+          {renderContent()}
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Home, 
   Settings, 
@@ -9,7 +9,9 @@ import {
   LogOut,
   MessageCircle,
   Brain,
-  Bell
+  Bell,
+  UserPlus,
+  List
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -19,7 +21,14 @@ interface SidebarProps {
 }
 
 const menuItems = [
-  { id: 'users', label: 'Quản lý người dùng', icon: Users },
+  { 
+    id: 'users', 
+    label: 'Quản lý người dùng', 
+    icon: Users,
+    subItems: [
+      { id: 'users-create', label: 'Thêm người dùng', icon: UserPlus },
+    ]
+  },
   { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
   { id: 'notifications', label: 'Quản lý thông báo', icon: Bell },
   { id: 'tests', label: 'Quản lý bài test', icon: Brain },
@@ -27,6 +36,7 @@ const menuItems = [
 ];
 
 const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) => {
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   let role = '';
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -39,6 +49,23 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
     }
     return true;
   });
+
+  const handleItemClick = (itemId: string, hasSubItems: boolean) => {
+    if (itemId === 'users') {
+      onItemClick('users');
+      if (hasSubItems) {
+        setExpandedItem(expandedItem === itemId ? null : itemId);
+      }
+    } else if (itemId === 'users-create') {
+      // Keep the users view active and let parent component handle modal
+      onItemClick('users-create');
+    } else if (hasSubItems) {
+      setExpandedItem(expandedItem === itemId ? null : itemId);
+    } else {
+      onItemClick(itemId);
+      setExpandedItem(null);
+    }
+  };
 
   return (
     <div className="bg-white h-screen w-64 border-r border-gray-200 flex flex-col">
@@ -56,24 +83,63 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
       <nav className="mt-6 flex-1 px-4">
         {filteredMenuItems.map((item) => {
           const IconComponent = item.icon;
-          const isActive = activeItem === item.id;
+          const isActive = activeItem === item.id || (item.subItems?.some(sub => sub.id === activeItem));
+          const isExpanded = expandedItem === item.id;
           
           return (
-            <button
-              key={item.id}
-              onClick={() => onItemClick(item.id)}
-              className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl ${
-                isActive 
-                  ? 'bg-gray-100 text-black' 
-                  : 'text-black hover:bg-gray-50'
-              }`}
-            >
-              <IconComponent className="w-5 h-5 mr-3" />
-              <span className="font-medium">{item.label}</span>
-              {isActive && (
-                <div className="ml-auto w-2 h-2 bg-gray-400 rounded-full"></div>
+            <div key={item.id}>
+              <button
+                onClick={() => handleItemClick(item.id, !!item.subItems)}
+                className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl ${
+                  isActive 
+                    ? 'bg-gray-100 text-black' 
+                    : 'text-black hover:bg-gray-50'
+                }`}
+              >
+                <IconComponent className="w-5 h-5 mr-3" />
+                <span className="font-medium">{item.label}</span>
+                {item.subItems && (
+                  <svg
+                    className={`ml-auto w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
+                {isActive && !item.subItems && (
+                  <div className="ml-auto w-2 h-2 bg-gray-400 rounded-full"></div>
+                )}
+              </button>
+              
+              {item.subItems && isExpanded && (
+                <div className="ml-4 space-y-1">
+                  {item.subItems.map((subItem) => {
+                    const SubIconComponent = subItem.icon;
+                    const isSubActive = activeItem === subItem.id;
+                    
+                    return (
+                      <button
+                        key={subItem.id}
+                        onClick={() => handleItemClick(subItem.id, false)}
+                        className={`flex items-center px-4 py-2 w-full text-left rounded-lg ${
+                          isSubActive
+                            ? 'bg-gray-100 text-black'
+                            : 'text-black hover:bg-gray-50'
+                        }`}
+                      >
+                        <SubIconComponent className="w-4 h-4 mr-3" />
+                        <span className="font-medium text-sm">{subItem.label}</span>
+                        {isSubActive && (
+                          <div className="ml-auto w-2 h-2 bg-gray-400 rounded-full"></div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
-            </button>
+            </div>
           );
         })}
       </nav>
