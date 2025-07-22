@@ -99,18 +99,18 @@ const UserManagement: React.FC = () => {
   const getRoleBadgeClass = (role: string) => {
     switch (role) {
       case 'admin':
-        return 'bg-gradient-to-r from-red-500 to-pink-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg';
+        return 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200';
       case 'student':
-        return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg';
+        return 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200';
       default:
-        return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg';
+        return 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200';
     }
   };
 
   const getStatusBadgeClass = (isActive: boolean) => {
     return isActive
-      ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg'
-      : 'bg-gradient-to-r from-red-500 to-rose-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg';
+      ? 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200'
+      : 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200';
   };
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
@@ -205,37 +205,37 @@ const UserManagement: React.FC = () => {
     <div className="p-6 animate-fadeIn">
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center">
-          <div className="w-10 h-10 gradient-primary rounded-2xl flex items-center justify-center mr-4 animate-pulse-custom">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 bg-gray-100 rounded-2xl flex items-center justify-center mr-4">
+            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-white mb-1">Quản lý người dùng</h1>
-            <p className="text-white/80">Quản lý thông tin và quyền hạn người dùng</p>
+            <h1 className="text-3xl font-bold text-black mb-1">Quản lý người dùng</h1>
+            <p className="text-black">Quản lý thông tin và quyền hạn người dùng</p>
           </div>
         </div>
         <div className="flex items-center space-x-4">
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="px-6 py-3 gradient-success text-white rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 flex items-center gap-2 font-semibold"
+            className="px-6 py-3 bg-emerald-500 text-white rounded-xl hover:bg-emerald-600 flex items-center gap-2 font-semibold"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
             </svg>
             Tạo người dùng mới
           </button>
-          <div className="flex items-center space-x-3 glass rounded-xl px-4 py-3">
-            <label htmlFor="role-filter" className="font-medium text-white">Lọc theo vai trò:</label>
+          <div className="flex items-center space-x-3 bg-white rounded-xl px-4 py-3">
+            <label htmlFor="role-filter" className="font-medium text-black">Lọc theo vai trò:</label>
             <select
               id="role-filter"
-              className="bg-gradient-to-r from-indigo-500 to-purple-500 border border-white/30 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all duration-300 cursor-pointer hover:from-indigo-600 hover:to-purple-600 font-semibold"
+              className="bg-gray-100 rounded-lg px-4 py-2 text-black focus:outline-none focus:ring-2 focus:ring-blue-400 cursor-pointer hover:bg-gray-200 font-semibold"
               value={selectedRole}
               onChange={handleRoleChange}
             >
-              <option value="all" className="bg-gray-800 text-white">Tất cả</option>
-              <option value="student" className="bg-gray-800 text-white">Học viên</option>
-              <option value="admin" className="bg-gray-800 text-white">Quản trị viên</option>
+              <option value="all" className="bg-white text-black">Tất cả</option>
+              <option value="student" className="bg-white text-black">Học viên</option>
+              <option value="admin" className="bg-white text-black">Quản trị viên</option>
             </select>
           </div>
         </div>
@@ -243,42 +243,42 @@ const UserManagement: React.FC = () => {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="glass rounded-2xl p-6 hover-lift group animate-fadeIn delay-0">
+        <div className="bg-white rounded-2xl p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold text-white mb-1">{totalItems}</div>
-              <div className="text-white/80">Tổng người dùng</div>
+              <div className="text-3xl font-bold text-black mb-1">{totalItems}</div>
+              <div className="text-black">Tổng người dùng</div>
             </div>
-            <div className="w-12 h-12 gradient-primary rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
             </div>
           </div>
         </div>
         
-        <div className="glass rounded-2xl p-6 hover-lift group animate-fadeIn delay-100">
+        <div className="bg-white rounded-2xl p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold text-white mb-1">{users.filter(u => u.role === 'student').length}</div>
-              <div className="text-white/80">Học viên</div>
+              <div className="text-3xl font-bold text-black mb-1">{users.filter(u => u.role === 'student').length}</div>
+              <div className="text-black">Học viên</div>
             </div>
-            <div className="w-12 h-12 gradient-success rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
               </svg>
             </div>
           </div>
         </div>
         
-        <div className="glass rounded-2xl p-6 hover-lift group animate-fadeIn delay-200">
+        <div className="bg-white rounded-2xl p-6">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-3xl font-bold text-white mb-1">{users.filter(u => u.role === 'admin').length}</div>
-              <div className="text-white/80">Quản trị viên</div>
+              <div className="text-3xl font-bold text-black mb-1">{users.filter(u => u.role === 'admin').length}</div>
+              <div className="text-black">Quản trị viên</div>
             </div>
-            <div className="w-12 h-12 gradient-warning rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center">
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
@@ -286,54 +286,54 @@ const UserManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="glass rounded-2xl shadow-2xl overflow-hidden animate-fadeIn delay-300">
+      <div className="bg-white rounded-2xl shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full">
-            <thead className="glass-dark">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
                     </svg>
                     Email
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     Họ tên
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                     Vai trò
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     Trạng thái
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3a4 4 0 118 0v4m-4 12v6m0 0l3-3m-3 3l-3-3m3 3V9a4 4 0 118 0v8" />
                     </svg>
                     Ngày tạo
                   </div>
                 </th>
-                <th className="px-6 py-4 text-left text-sm font-bold text-white uppercase tracking-wider">
+                <th className="px-6 py-4 text-left text-sm font-bold text-black uppercase tracking-wider">
                   <div className="flex items-center">
-                    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
                     </svg>
                     Thao tác
@@ -341,24 +341,24 @@ const UserManagement: React.FC = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/20">
+            <tbody className="divide-y divide-gray-200">
               {users.map((user, index) => (
                 <tr 
                   key={user._id} 
-                  className={`hover:bg-white/10 transition-colors duration-300 animate-fadeIn delay-${index % 5}00`}
+                  className="hover:bg-gray-50"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 gradient-secondary rounded-full flex items-center justify-center mr-3">
-                        <span className="text-white font-bold text-sm">
+                      <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+                        <span className="text-gray-600 font-bold text-sm">
                           {user.email[0]?.toUpperCase()}
                         </span>
                       </div>
-                      <div className="text-sm font-semibold text-white">{user.email}</div>
+                      <div className="text-sm font-semibold text-black">{user.email}</div>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-white">{user.fullName}</div>
+                    <div className="text-sm font-medium text-black">{user.fullName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={getRoleBadgeClass(user.role)}>
@@ -368,7 +368,7 @@ const UserManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {updatingStatus === user._id ? (
                       <div className="animate-pulse">
-                        <div className="h-8 w-20 glass rounded-full"></div>
+                        <div className="h-8 w-20 bg-gray-100 rounded-full"></div>
                       </div>
                     ) : (
                       <select
@@ -376,26 +376,22 @@ const UserManagement: React.FC = () => {
                         onChange={(e) => handleStatusUpdate(user._id, e.target.value)}
                         title="Chọn trạng thái"
                         aria-label="Chọn trạng thái người dùng"
-                        className={`text-white px-4 py-2 rounded-full text-sm font-bold border-none cursor-pointer focus:ring-2 focus:ring-yellow-400 transition-all duration-300 min-w-[100px] shadow-lg hover:shadow-xl transform hover:scale-105 ${
-                          user.isActive 
-                            ? 'bg-gradient-to-r from-emerald-400 via-green-500 to-teal-600 hover:from-emerald-500 hover:via-green-600 hover:to-teal-700' 
-                            : 'bg-gradient-to-r from-red-500 via-rose-500 to-pink-600 hover:from-red-600 hover:via-rose-600 hover:to-pink-700'
-                        }`}
+                        className="bg-gray-100 text-black px-4 py-2 rounded-full text-sm font-medium border border-gray-200 cursor-pointer focus:ring-2 focus:ring-gray-300 min-w-[100px] hover:bg-gray-200"
                       >
-                        <option value="true" className="bg-gray-800 text-white font-medium">Unblock</option>
-                        <option value="false" className="bg-gray-800 text-white font-medium">Block</option>
+                        <option value="true" className="bg-white text-black font-medium">Unblock</option>
+                        <option value="false" className="bg-white text-black font-medium">Block</option>
                       </select>
                     )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-white/80">
+                    <div className="text-sm text-black">
                       {new Date(user.createdAt).toLocaleString('vi-VN')}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button
                       onClick={() => setSelectedUserId(user._id)}
-                      className="glass text-white px-4 py-2 rounded-xl hover:bg-white/20 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+                      className="bg-gray-100 text-black px-4 py-2 rounded-xl hover:bg-gray-200 flex items-center gap-2"
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -412,26 +408,26 @@ const UserManagement: React.FC = () => {
 
         {users.length === 0 && (
           <div className="text-center py-12">
-            <div className="w-16 h-16 gradient-info rounded-full flex items-center justify-center mx-auto mb-4 opacity-50">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
-            <div className="text-white/80 text-lg">Không tìm thấy người dùng nào</div>
+            <div className="text-black text-lg">Không tìm thấy người dùng nào</div>
           </div>
         )}
       </div>
 
       {/* Pagination controls */}
-      <div className="mt-8 glass rounded-2xl p-6 animate-fadeIn delay-400">
+      <div className="mt-8 bg-white rounded-2xl p-6">
         <div className="flex flex-1 justify-between sm:hidden">
           <button
             onClick={() => setPage(page > 1 ? page - 1 : 1)}
             disabled={page === 1}
-            className={`relative inline-flex items-center rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300 ${
+            className={`relative inline-flex items-center rounded-xl px-6 py-3 text-sm font-medium ${
               page === 1
-                ? 'glass-dark text-white/50 cursor-not-allowed'
-                : 'glass text-white hover:bg-white/20 hover:scale-105 transform'
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-white text-black hover:bg-gray-50'
             }`}
           >
             <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -442,10 +438,10 @@ const UserManagement: React.FC = () => {
           <button
             onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
             disabled={page === totalPages}
-            className={`relative ml-3 inline-flex items-center rounded-xl px-6 py-3 text-sm font-medium transition-all duration-300 ${
+            className={`relative ml-3 inline-flex items-center rounded-xl px-6 py-3 text-sm font-medium ${
               page === totalPages
-                ? 'glass-dark text-white/50 cursor-not-allowed'
-                : 'glass text-white hover:bg-white/20 hover:scale-105 transform'
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-white text-black hover:bg-gray-50'
             }`}
           >
             Trang sau
@@ -456,15 +452,15 @@ const UserManagement: React.FC = () => {
         </div>
         <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
           <div className="flex items-center">
-            <div className="w-8 h-8 gradient-info rounded-full flex items-center justify-center mr-3">
-              <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
-            <p className="text-white/90 font-medium">
-              Hiển thị <span className="text-yellow-400 font-bold">{(page - 1) * limit + 1}</span> đến{' '}
-              <span className="text-yellow-400 font-bold">{Math.min(page * limit, totalItems)}</span> trong{' '}
-              <span className="text-yellow-400 font-bold">{totalItems}</span> kết quả
+            <p className="text-black font-medium">
+              Hiển thị <span className="font-bold">{(page - 1) * limit + 1}</span> đến{' '}
+              <span className="font-bold">{Math.min(page * limit, totalItems)}</span> trong{' '}
+              <span className="font-bold">{totalItems}</span> kết quả
             </p>
           </div>
           <div>
@@ -472,10 +468,10 @@ const UserManagement: React.FC = () => {
               <button
                 onClick={() => setPage(page > 1 ? page - 1 : 1)}
                 disabled={page === 1}
-                className={`relative inline-flex items-center rounded-xl px-4 py-3 transition-all duration-300 ${
+                className={`relative inline-flex items-center rounded-xl px-4 py-3 ${
                   page === 1
-                    ? 'glass-dark text-white/50 cursor-not-allowed'
-                    : 'glass text-white hover:bg-white/20 hover:scale-105 transform'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-black hover:bg-gray-50'
                 }`}
               >
                 <span className="sr-only">Trang trước</span>
@@ -501,10 +497,10 @@ const UserManagement: React.FC = () => {
                     <button
                       key={pageNum}
                       onClick={() => setPage(pageNum)}
-                      className={`relative inline-flex items-center px-4 py-3 text-sm font-semibold rounded-xl transition-all duration-300 ${
+                      className={`relative inline-flex items-center px-4 py-3 text-sm font-semibold rounded-xl ${
                         page === pageNum
-                          ? 'gradient-primary text-white shadow-lg transform scale-110'
-                          : 'glass text-white hover:bg-white/20 hover:scale-105 transform'
+                          ? 'bg-gray-100 text-black'
+                          : 'bg-white text-black hover:bg-gray-50'
                       }`}
                     >
                       {pageNum}
@@ -516,10 +512,10 @@ const UserManagement: React.FC = () => {
               <button
                 onClick={() => setPage(page < totalPages ? page + 1 : totalPages)}
                 disabled={page === totalPages}
-                className={`relative inline-flex items-center rounded-xl px-4 py-3 transition-all duration-300 ${
+                className={`relative inline-flex items-center rounded-xl px-4 py-3 ${
                   page === totalPages
-                    ? 'glass-dark text-white/50 cursor-not-allowed'
-                    : 'glass text-white hover:bg-white/20 hover:scale-105 transform'
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-white text-black hover:bg-gray-50'
                 }`}
               >
                 <span className="sr-only">Trang sau</span>
@@ -545,7 +541,7 @@ const UserManagement: React.FC = () => {
           userId={selectedUserId}
           onClose={() => setSelectedUserId(null)}
           onRoleUpdate={handleRoleUpdate}
-          onUserUpdate={handleUserUpdate} // Thêm prop này
+          onUserUpdate={handleUserUpdate}
         />
       )}
     </div>

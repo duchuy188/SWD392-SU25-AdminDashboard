@@ -62,42 +62,41 @@ function DashboardPage() {
 
   const handleNotificationSuccess = () => {
     setShowNotificationModal(false);
-    // You can add additional success handling here, like showing a toast message
   };
 
   return (
-    <div className="flex h-screen gradient-primary">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">
           {activeItem === 'users' ? (
-            <div className="animate-fadeIn">
+            <div>
               <UserManagement />
             </div>
           ) : activeItem === 'chat' ? (
-            <div className="animate-fadeIn">
+            <div>
               <ChatManagement />
             </div>
           ) : activeItem === 'tests' ? (
-            <div className="animate-fadeIn">
+            <div>
               <TestManagement />
             </div>
           ) : activeItem === 'majors' ? (
-            <div className="animate-fadeIn">
+            <div>
               <MajorManagement />
             </div>
           ) : activeItem === 'notifications' ? (
-            <div className="animate-fadeIn">
+            <div>
               <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Quản lý thông báo</h1>
-                <p className="text-white/80 text-lg">Gửi thông báo đến người dùng</p>
+                <h1 className="text-3xl font-bold text-black mb-2">Quản lý thông báo</h1>
+                <p className="text-black text-lg">Gửi thông báo đến người dùng</p>
               </div>
-              <div className="bg-white rounded-xl p-6 shadow-lg">
+              <div className="bg-white rounded-xl p-6 shadow">
                 <div className="flex justify-center">
                   <button
                     onClick={() => setShowNotificationModal(true)}
-                    className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    className="mb-6 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800"
                   >
                     Tạo thông báo mới
                   </button>
@@ -115,17 +114,17 @@ function DashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="animate-fadeIn">
+            <div>
               <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-                <p className="text-white/80 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
+                <h1 className="text-3xl font-bold text-black mb-2">Dashboard</h1>
+                <p className="text-black text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="animate-fadeIn hover-lift delay-400">
+                <div className="bg-white p-6 rounded-xl shadow">
                   <SystemStatus />
                 </div>
-                <div className="animate-fadeIn hover-lift delay-500">
+                <div className="bg-white p-6 rounded-xl shadow">
                   <RecentActivity />
                 </div>
               </div>

@@ -17,7 +17,7 @@ export const chatServices = {
     return axiosInstance.get(`/chat/history/${studentId}`);
   },
 
-  // GET /chat/admin/conversations - Lọc và tìm kiếm lịch sử chat (chỉ dành cho admin)
+  // GET /api/chat/all - Lấy tất cả lịch sử chat (chỉ dành cho admin)
   getAllChats: (page?: number, limit?: number, userId?: string, keyword?: string, startDate?: string, endDate?: string, hasImage?: boolean) => {
     const params = new URLSearchParams();
     if (page) params.append('page', page.toString());
@@ -28,7 +28,7 @@ export const chatServices = {
     if (endDate) params.append('endDate', endDate);
     if (hasImage !== undefined) params.append('hasImage', hasImage.toString());
     
-    return axiosInstance.get(`/chat/admin/conversations${params.toString() ? `?${params.toString()}` : ''}`);
+    return axiosInstance.get(`/chat/all${params.toString() ? `?${params.toString()}` : ''}`);
   },
 
 

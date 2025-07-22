@@ -248,32 +248,32 @@ const MajorManagement: React.FC = () => {
     const LoadingSkeleton = () => (
         <>
             {[1, 2, 3].map((i) => (
-                <tr key={i} className="animate-pulse border-b border-white/10">
+                <tr key={i} className="animate-pulse border-b border-gray-200">
                     <td className="py-5 px-6">
                         <div className="flex items-center gap-4">
-                            <div className="h-12 w-12 rounded-xl bg-white/10"></div>
+                            <div className="h-12 w-12 rounded-xl bg-gray-100"></div>
                             <div className="flex-1">
-                                <div className="h-5 w-48 bg-white/10 rounded mb-2"></div>
-                                <div className="h-3 w-32 bg-white/10 rounded"></div>
+                                <div className="h-5 w-48 bg-gray-100 rounded mb-2"></div>
+                                <div className="h-3 w-32 bg-gray-100 rounded"></div>
                             </div>
                         </div>
                     </td>
                     <td className="py-5 px-4 text-center">
                         <div className="inline-flex">
-                            <div className="h-6 w-16 bg-white/10 rounded-full"></div>
+                            <div className="h-6 w-16 bg-gray-100 rounded-full"></div>
                         </div>
                     </td>
                     <td className="py-5 px-4 text-center">
-                        <div className="h-4 w-24 bg-white/10 rounded mx-auto"></div>
+                        <div className="h-4 w-24 bg-gray-100 rounded mx-auto"></div>
                     </td>
                     <td className="py-5 px-4 text-center">
-                        <div className="h-4 w-12 bg-white/10 rounded mx-auto"></div>
+                        <div className="h-4 w-12 bg-gray-100 rounded mx-auto"></div>
                     </td>
                     <td className="py-5 px-4">
                         <div className="flex items-center justify-center gap-1">
-                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
-                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
-                            <div className="h-9 w-9 bg-white/10 rounded-lg"></div>
+                            <div className="h-9 w-9 bg-gray-100 rounded-lg"></div>
+                            <div className="h-9 w-9 bg-gray-100 rounded-lg"></div>
+                            <div className="h-9 w-9 bg-gray-100 rounded-lg"></div>
                         </div>
                     </td>
                 </tr>
@@ -284,7 +284,7 @@ const MajorManagement: React.FC = () => {
     if (initialLoad) {
         return (
             <div className="flex justify-center items-center min-h-96">
-                <RefreshCw className="w-8 h-8 text-blue-400 animate-spin" />
+                <RefreshCw className="w-8 h-8 text-gray-400 animate-spin" />
             </div>
         );
     }
@@ -294,41 +294,41 @@ const MajorManagement: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Quản lý Ngành học</h1>
-                    <p className="text-white/80">Quản lý thông tin các ngành học trong hệ thống</p>
+                    <h1 className="text-3xl font-bold text-black mb-2">Quản lý Ngành học</h1>
+                    <p className="text-gray-600">Quản lý thông tin các ngành học trong hệ thống</p>
                 </div>
             </div>
 
             {/* Search and Filter */}
-            <div className="glass p-6 rounded-xl border border-white/20">
+            <div className="bg-white p-6 rounded-xl border border-gray-200">
                 <div className="flex flex-col lg:flex-row gap-4">
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50 w-4 h-4" />
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                         <input
                             type="text"
                             placeholder="Tìm kiếm ngành học..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
                     <div className="flex items-center gap-2">
-                        <Filter className="text-purple-300 w-4 h-4" />
+                        <Filter className="text-gray-600 w-4 h-4" />
                         <select
                             value={selectedDepartment}
                             onChange={(e) => setSelectedDepartment(e.target.value)}
                             aria-label="Chọn khoa/viện để lọc"
-                            className="px-4 py-2 bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-400/50 hover:from-purple-500/30 hover:to-blue-500/30 transition-all duration-200 appearance-none cursor-pointer"
+                            className="px-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-400 hover:bg-gray-100 cursor-pointer"
                         >
                             <option value="">Tất cả khoa/viện</option>
                             {departments.map(dept => (
-                                <option key={dept} value={dept} className="bg-gray-800 text-white">{dept}</option>
+                                <option key={dept} value={dept} className="bg-white text-black">{dept}</option>
                             ))}
                         </select>
                     </div>
                     <button
                         onClick={() => setShowCreateModal(true)}
-                        className="btn-primary flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg transition-all duration-200"
+                        className="bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 flex items-center gap-2"
                     >
                         <GraduationCap className="w-4 h-4" />
                         Thêm ngành học
@@ -338,63 +338,63 @@ const MajorManagement: React.FC = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="glass p-4 rounded-xl border border-white/20">
+                <div className="bg-white p-4 rounded-xl border border-gray-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-white/60 text-sm">Tổng số ngành</p>
-                            <p className="text-2xl font-bold text-white">{majors.length}</p>
+                            <p className="text-gray-600 text-sm">Tổng số ngành</p>
+                            <p className="text-2xl font-bold text-black">{majors.length}</p>
                         </div>
-                        <GraduationCap className="w-8 h-8 text-blue-400" />
+                        <GraduationCap className="w-8 h-8 text-gray-600" />
                     </div>
                 </div>
-                <div className="glass p-4 rounded-xl border border-white/20">
+                <div className="bg-white p-4 rounded-xl border border-gray-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-white/60 text-sm">Số khoa/viện</p>
-                            <p className="text-2xl font-bold text-white">{departments.length}</p>
+                            <p className="text-gray-600 text-sm">Số khoa/viện</p>
+                            <p className="text-2xl font-bold text-black">{departments.length}</p>
                         </div>
-                        <Building2 className="w-8 h-8 text-purple-400" />
+                        <Building2 className="w-8 h-8 text-gray-600" />
                     </div>
                 </div>
-                <div className="glass p-4 rounded-xl border border-white/20">
+                <div className="bg-white p-4 rounded-xl border border-gray-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-white/60 text-sm">Tổng tín chỉ</p>
-                            <p className="text-2xl font-bold text-white">
+                            <p className="text-gray-600 text-sm">Tổng tín chỉ</p>
+                            <p className="text-2xl font-bold text-black">
                                 {majors.reduce((sum, major) => sum + (major.totalCredits || 0), 0)}
                             </p>
                         </div>
-                        <BookOpen className="w-8 h-8 text-green-400" />
+                        <BookOpen className="w-8 h-8 text-gray-600" />
                     </div>
                 </div>
-                <div className="glass p-4 rounded-xl border border-white/20">
+                <div className="bg-white p-4 rounded-xl border border-gray-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-white/60 text-sm">Sinh viên</p>
-                            <p className="text-2xl font-bold text-white">-</p>
+                            <p className="text-gray-600 text-sm">Sinh viên</p>
+                            <p className="text-2xl font-bold text-black">-</p>
                         </div>
-                        <Users className="w-8 h-8 text-yellow-400" />
+                        <Users className="w-8 h-8 text-gray-600" />
                     </div>
                 </div>
             </div>
 
             {/* Major List */}
-            <div className="glass p-6 rounded-xl border border-white/20">
+            <div className="bg-white p-6 rounded-xl border border-gray-200">
                 {loading ? (
                     <div className="text-center py-8">
-                        <RefreshCw className="w-8 h-8 text-blue-400 animate-spin mx-auto mb-4" />
-                        <p className="text-white/80">Đang tải danh sách ngành học...</p>
+                        <RefreshCw className="w-8 h-8 text-gray-400 animate-spin mx-auto mb-4" />
+                        <p className="text-gray-600">Đang tải danh sách ngành học...</p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
                             <thead>
-                                <tr className="border-b border-white/20">
-                                    <th className="text-left py-4 px-6 text-white font-semibold">Ngành học</th>
-                                    <th className="text-center py-4 px-4 text-white font-semibold">Mã ngành</th>
-                                    <th className="text-center py-4 px-4 text-white font-semibold">Khoa/Viện</th>
-                                    <th className="text-center py-4 px-4 text-white font-semibold">Tín chỉ</th>
-                                    <th className="text-center py-4 px-4 text-white font-semibold">Thao tác</th>
+                                <tr className="border-b border-gray-200">
+                                    <th className="text-left py-4 px-6 text-gray-600 font-semibold">Ngành học</th>
+                                    <th className="text-center py-4 px-4 text-gray-600 font-semibold">Mã ngành</th>
+                                    <th className="text-center py-4 px-4 text-gray-600 font-semibold">Khoa/Viện</th>
+                                    <th className="text-center py-4 px-4 text-gray-600 font-semibold">Tín chỉ</th>
+                                    <th className="text-center py-4 px-4 text-gray-600 font-semibold">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -402,63 +402,54 @@ const MajorManagement: React.FC = () => {
                                     <LoadingSkeleton />
                                 ) : (
                                     Array.isArray(majors) && majors.length > 0 ? majors.map((major) => (
-                                        <tr key={major?._id || major?.code || Math.random()} className="border-b border-white/10 hover:bg-white/5 transition-all duration-200 group">
+                                        <tr key={major?._id || major?.code || Math.random()} className="border-b border-gray-100 hover:bg-gray-50 transition-all duration-200">
                                             <td className="py-5 px-6">
                                                 <div className="flex items-center gap-4">
-                                                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-                                                        <GraduationCap className="w-6 h-6 text-white" />
+                                                    <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center">
+                                                        <GraduationCap className="w-6 h-6 text-gray-600" />
                                                     </div>
                                                     <div className="flex-1">
-                                                        <div className="text-white font-semibold text-lg mb-1">{major?.name || 'N/A'}</div>
-                                                        <div className="text-white/60 text-sm line-clamp-1">{major?.shortDescription || 'Chưa có mô tả'}</div>
+                                                        <div className="text-black font-semibold text-lg mb-1">{major?.name || 'N/A'}</div>
+                                                        <div className="text-gray-600 text-sm line-clamp-1">{major?.shortDescription || 'Chưa có mô tả'}</div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td className="py-5 px-4 text-center">
-                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-600 border border-gray-200">
                                                     {major?.code || 'N/A'}
                                                 </span>
                                             </td>
                                             <td className="py-5 px-4 text-center">
-                                                <div className="text-white/90 font-medium">{major?.department || 'N/A'}</div>
+                                                <div className="text-gray-900 font-medium">{major?.department || 'N/A'}</div>
                                             </td>
                                             <td className="py-5 px-4 text-center">
                                                 <div className="inline-flex items-center gap-1">
-                                                    <BookOpen className="w-4 h-4 text-green-400" />
-                                                    <span className="text-white font-medium">{major?.totalCredits || 'N/A'}</span>
+                                                    <BookOpen className="w-4 h-4 text-gray-600" />
+                                                    <span className="text-gray-900 font-medium">{major?.totalCredits || 'N/A'}</span>
                                                 </div>
                                             </td>
                                             <td className="py-5 px-4">
                                                 <div className="flex items-center justify-center gap-1">
                                                     <button
                                                         onClick={() => handleViewDetails(major)}
-                                                        className="group/btn relative p-2 hover:bg-blue-500/20 rounded-lg transition-all duration-200 text-blue-400 hover:text-blue-300"
+                                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                                         title="Xem chi tiết"
                                                     >
                                                         <Eye className="w-5 h-5" />
-                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
-                                                            Xem chi tiết
-                                                        </span>
                                                     </button>
                                                     <button
                                                         onClick={() => handleEditMajor(major)}
-                                                        className="group/btn relative p-2 hover:bg-yellow-500/20 rounded-lg transition-all duration-200 text-yellow-400 hover:text-yellow-300"
+                                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                                         title="Chỉnh sửa"
                                                     >
                                                         <Edit className="w-5 h-5" />
-                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
-                                                            Chỉnh sửa
-                                                        </span>
                                                     </button>
                                                     <button
                                                         onClick={() => major?._id && handleDeleteMajor(major._id)}
-                                                        className="group/btn relative p-2 hover:bg-red-500/20 rounded-lg transition-all duration-200 text-red-400 hover:text-red-300"
+                                                        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                                                         title="Xóa"
                                                     >
                                                         <Trash2 className="w-5 h-5" />
-                                                        <span className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover/btn:opacity-100 transition-opacity whitespace-nowrap">
-                                                            Xóa
-                                                        </span>
                                                     </button>
                                                 </div>
                                             </td>
@@ -470,13 +461,13 @@ const MajorManagement: React.FC = () => {
 
                         {(!Array.isArray(majors) || majors.length === 0) && !loading && (
                             <div className="text-center py-8">
-                                <GraduationCap className="w-12 h-12 text-white/30 mx-auto mb-4" />
-                                <p className="text-white/60 text-lg mb-2">
+                                <GraduationCap className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                                <p className="text-gray-600 text-lg mb-2">
                                     {searchTerm || selectedDepartment
                                         ? 'Không tìm thấy ngành học nào'
                                         : 'Chưa có ngành học nào'}
                                 </p>
-                                <p className="text-white/40">
+                                <p className="text-gray-500">
                                     {searchTerm || selectedDepartment
                                         ? 'Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc'
                                         : 'Thêm ngành học đầu tiên để bắt đầu'}
@@ -489,15 +480,15 @@ const MajorManagement: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-                <div className="flex items-center justify-between bg-[#7E57C2]/30 rounded-xl px-4 py-2">
-                    <div className="text-white/80">
+                <div className="flex items-center justify-between bg-white rounded-xl px-4 py-2 border border-gray-200">
+                    <div className="text-gray-600">
                         Hiển thị {majors.length} ngành học
                     </div>
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                             disabled={currentPage === 1}
-                            className="text-white/80 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed px-2"
+                            className="text-gray-600 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed px-2"
                         >
                             Trước
                         </button>
@@ -507,8 +498,8 @@ const MajorManagement: React.FC = () => {
                                 onClick={() => setCurrentPage(page)}
                                 className={`min-w-[2rem] px-2 py-1 rounded-md ${
                                     currentPage === page
-                                        ? 'bg-[#7E57C2] text-white'
-                                        : 'text-white/80 hover:text-white'
+                                        ? 'bg-gray-100 text-black'
+                                        : 'text-gray-600 hover:text-black'
                                 }`}
                             >
                                 {page}
@@ -517,7 +508,7 @@ const MajorManagement: React.FC = () => {
                         <button
                             onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="text-white/80 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed px-2"
+                            className="text-gray-600 hover:text-black disabled:opacity-50 disabled:cursor-not-allowed px-2"
                         >
                             Sau
                         </button>
