@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Home, 
   Settings, 
@@ -9,36 +9,47 @@ import {
   LogOut,
   MessageCircle,
   Brain,
-  Bell
+  Bell,
+  UserPlus,
+  List,
+  LucideIcon
 } from 'lucide-react';
+
+interface MenuItem {
+  id: string;
+  label: string;
+  icon: LucideIcon;
+  subItems?: MenuItem[];
+  showModal?: boolean;
+}
+
+const menuItems: MenuItem[] = [
+  { 
+    id: 'users', 
+    label: 'Quản lý người dùng', 
+    icon: Users
+  },
+  { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
+  { id: 'notifications', label: 'Tạo thông báo', icon: Bell, showModal: true },
+  { id: 'tests', label: 'Quản lý bài test', icon: Brain },
+  { id: 'majors', label: 'Ngành học', icon: GraduationCap },
+];
 
 interface SidebarProps {
   activeItem: string;
   onItemClick: (item: string) => void;
   onLogout: () => void;
+  onShowNotificationModal?: () => void;
 }
 
-const menuItems = [
-  // { id: 'dashboard', label: 'Dashboard', icon: Home },
-  // { id: 'system', label: 'Hệ thống', icon: Settings },
-  { id: 'users', label: 'Quản lý người dùng', icon: Users },
-  { id: 'chat', label: 'Quản lý Chat', icon: MessageCircle },
-  { id: 'notifications', label: 'Quản lý thông báo', icon: Bell },
-  { id: 'tests', label: 'Quản lý bài test', icon: Brain },
-  // { id: 'logs', label: 'Logs', icon: FileText },
-  { id: 'majors', label: 'Ngành học', icon: GraduationCap },
-  // { id: 'career', label: 'Hướng nghiệp', icon: MapPin },
-];
-
-const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) => {
-  // Lấy role từ localStorage
+const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout, onShowNotificationModal }) => {
+  const [expandedItem, setExpandedItem] = useState<string | null>(null);
   let role = '';
   try {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     role = user.role || '';
   } catch {}
 
-  // Lọc menu: chỉ admin mới thấy mục 'users', 'chat', 'tests' và 'notifications'
   const filteredMenuItems = menuItems.filter(item => {
     if (item.id === 'users' || item.id === 'chat' || item.id === 'tests' || item.id === 'notifications') {
       return role === 'admin';
@@ -46,48 +57,108 @@ const Sidebar: React.FC<SidebarProps> = ({ activeItem, onItemClick, onLogout }) 
     return true;
   });
 
+  const handleItemClick = (itemId: string, hasSubItems: boolean, showModal?: boolean) => {
+    if (showModal && onShowNotificationModal) {
+      onShowNotificationModal();
+      return;
+    }
+    
+    if (hasSubItems) {
+      setExpandedItem(expandedItem === itemId ? null : itemId);
+    } else {
+      onItemClick(itemId);
+      setExpandedItem(null);
+    }
+  };
+
   return (
-    <div className="glass h-screen w-64 border-r border-white/20 flex flex-col animate-slideIn">
-      <div className="p-6 border-b border-white/20">
+    <div className="bg-gradient-to-br from-primary-100 to-primary-200 h-screen w-64 border-r border-primary-300 flex flex-col">
+      <div className="p-6 border-b border-primary-300 bg-white/30 backdrop-blur-sm">
         <div className="flex items-center">
-          <div className="w-10 h-10 gradient-secondary rounded-xl flex items-center justify-center mr-3 animate-pulse-custom">
+          <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center mr-3">
             <span className="text-white font-bold text-lg">E</span>
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-800">EduBot</h2>
-            <p className="text-sm text-gray-600">Admin Dashboard</p>
+            <h2 className="text-xl font-bold text-primary-900 animate-bounce">EduBot</h2>
+            <p className="text-sm text-primary-700">Admin Dashboard</p>
           </div>
         </div>
       </div>
       <nav className="mt-6 flex-1 px-4">
-        {filteredMenuItems.map((item, index) => {
+        {filteredMenuItems.map((item) => {
           const IconComponent = item.icon;
           const isActive = activeItem === item.id;
-          const delayClass = `delay-${index * 100}`;
+          const isExpanded = expandedItem === item.id;
           
           return (
-            <button
-              key={item.id}
-              onClick={() => onItemClick(item.id)}
-              className={`group flex items-center px-4 py-3 my-1 text-gray-700 hover:bg-gradient-to-r hover:from-purple-500 hover:to-pink-500 hover:text-white w-full text-left rounded-xl transition-all duration-300 transform hover:scale-105 animate-fadeIn ${delayClass} ${
-                isActive ? 'gradient-primary text-white shadow-lg scale-105' : ''
-              }`}
-            >
-              <IconComponent className={`w-5 h-5 mr-3 transition-all duration-300 ${isActive ? 'animate-pulse-custom' : ''}`} />
-              <span className="font-medium">{item.label}</span>
-              {isActive && (
-                <div className="ml-auto w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
+            <div key={item.id}>
+              <button
+                onClick={() => handleItemClick(item.id, false, item.showModal)}
+                className={`flex items-center px-4 py-3 my-1 w-full text-left rounded-xl transition-all duration-200 ${
+                  isActive 
+                    ? 'bg-white/50 backdrop-blur-sm text-primary-900 shadow-sm' 
+                    : 'text-primary-800 hover:bg-white/30 hover:backdrop-blur-sm'
+                }`}
+              >
+                <IconComponent className={`w-5 h-5 mr-3 ${
+                  item.id === 'users' ? 'text-primary-600' :
+                  item.id === 'chat' ? 'text-emerald-600' :
+                  item.id === 'notifications' ? 'text-amber-600' :
+                  item.id === 'tests' ? 'text-violet-600' :
+                  item.id === 'majors' ? 'text-rose-600' : ''
+                }`} />
+                <span className="font-medium">{item.label}</span>
+                {false && (
+                  <svg
+                    className={`ml-auto w-4 h-4 transform transition-transform ${isExpanded ? 'rotate-180' : ''}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                )}
+                {isActive && !item.subItems && (
+                  <div className="ml-auto w-2 h-2 bg-primary-500 rounded-full"></div>
+                )}
+              </button>
+              
+              {item.subItems && isExpanded && (
+                <div className="ml-4 space-y-1">
+                  {item.subItems.map((subItem) => {
+                    const SubIconComponent = subItem.icon;
+                    const isSubActive = activeItem === subItem.id;
+                    
+                    return (
+                      <button
+                        key={subItem.id}
+                        onClick={() => handleItemClick(subItem.id, false)}
+                        className={`flex items-center px-4 py-2 w-full text-left rounded-lg transition-all duration-200 ${
+                          isSubActive
+                            ? 'bg-white/50 backdrop-blur-sm text-primary-900 shadow-sm'
+                            : 'text-primary-800 hover:bg-white/30 hover:backdrop-blur-sm'
+                        }`}
+                      >
+                        <SubIconComponent className="w-4 h-4 mr-3" />
+                        <span className="font-medium text-sm">{subItem.label}</span>
+                        {isSubActive && (
+                          <div className="ml-auto w-2 h-2 bg-primary-500 rounded-full"></div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
               )}
-            </button>
+            </div>
           );
         })}
       </nav>
-      <div className="p-4 border-t border-white/20">
+      <div className="p-4 border-t border-primary-300 bg-white/30 backdrop-blur-sm">
         <button
           onClick={onLogout}
-          className="group flex items-center px-4 py-3 text-red-500 hover:bg-red-500 hover:text-white w-full text-left rounded-xl transition-all duration-300 transform hover:scale-105"
+          className="flex items-center px-4 py-3 text-primary-800 hover:bg-white/50 hover:text-rose-600 w-full text-left rounded-xl transition-all duration-200"
         >
-          <LogOut className="w-5 h-5 mr-3 transition-transform duration-300 group-hover:rotate-12" />
+          <LogOut className="w-5 h-5 mr-3" />
           <span className="font-medium">Đăng xuất</span>
         </button>
       </div>

@@ -40,19 +40,19 @@ export function RecentActivity() {
     switch (type) {
       case 'success':
         return (
-          <div className="w-8 h-8 gradient-success rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-emerald-500 rounded-full flex items-center justify-center">
             <CheckCircle className="w-4 h-4 text-white" />
           </div>
         );
       case 'warning':
         return (
-          <div className="w-8 h-8 gradient-warning rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
             <AlertCircle className="w-4 h-4 text-white" />
           </div>
         );
       case 'info':
         return (
-          <div className="w-8 h-8 gradient-primary rounded-full flex items-center justify-center">
+          <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
             <Info className="w-4 h-4 text-white" />
           </div>
         );
@@ -66,34 +66,32 @@ export function RecentActivity() {
   };
 
   return (
-    <div className="glass rounded-2xl shadow-2xl p-6 group">
+    <div className="bg-white rounded-xl shadow p-6">
       <div className="flex items-center mb-6">
-        <div className="w-6 h-6 gradient-info rounded-full flex items-center justify-center mr-3 animate-pulse-custom">
-          <div className="w-3 h-3 bg-white rounded-full"></div>
+        <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mr-3">
+          <div className="w-3 h-3 bg-gray-400 rounded-full"></div>
         </div>
-        <h3 className="text-xl font-bold text-gray-800 group-hover:text-purple-700 transition-colors duration-300">Hoạt động gần đây</h3>
+        <h3 className="text-xl font-bold text-black">Hoạt động gần đây</h3>
       </div>
       
       <div className="space-y-4">
-        {activities.map((activity, index) => (
+        {activities.map((activity) => (
           <div 
             key={activity.id} 
-            className={`flex items-start space-x-4 p-4 glass rounded-xl hover:bg-white/40 transition-all duration-300 hover:scale-105 animate-fadeIn delay-${index}00`}
+            className="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl"
           >
             <div className="flex-shrink-0 mt-1">
               {getIcon(activity.type)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-gray-800 leading-relaxed">{activity.message}</p>
+              <p className="text-sm font-medium text-black leading-relaxed">{activity.message}</p>
             </div>
             <div className="flex-shrink-0">
-              <span className="text-xs text-gray-600 bg-white/50 px-2 py-1 rounded-full font-semibold">{activity.time}</span>
+              <span className="text-xs text-black bg-white px-2 py-1 rounded-full font-semibold">{activity.time}</span>
             </div>
           </div>
         ))}
       </div>
-      
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-400/10 to-yellow-400/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
     </div>
   );
 }

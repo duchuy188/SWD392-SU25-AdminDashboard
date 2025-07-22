@@ -1,24 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import { SystemStatus } from './SystemStatus';
 import { RecentActivity } from './RecentActivity';
 import UserManagement from './UserManagement';
 import ChatManagement from './ChatManagement';
 import TestManagement from './TestManagement';
 import CreateNotifications from './CreateNotifications';
 import MajorManagement from './MajorManagement';
+import CreateUserModal from './CreateUserModal';
 import { 
-  Users, 
-  MessageSquare, 
-  Target, 
-  Clock,
-  DivideIcon
+  DivideIcon,
+  ChevronDown
 } from 'lucide-react';
 
 function DashboardPage() {
-  const [activeItem, setActiveItem] = useState('dashboard');
-  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const [activeItem, setActiveItem] = useState('users');
+  const [showCreateUserModal, setShowCreateUserModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,77 +57,72 @@ function DashboardPage() {
     }
   ];
 
-  const handleNotificationSuccess = () => {
-    setShowNotificationModal(false);
-    // You can add additional success handling here, like showing a toast message
+  const renderContent = () => {
+    switch (activeItem) {
+      case 'users':
+      case 'users-list':
+      case 'users-create':
+        return (
+          <>
+            <UserManagement />
+            {activeItem === 'users-create' && (
+              <CreateUserModal 
+                isOpen={true}
+                onClose={() => setActiveItem('users')}
+                onSuccess={() => {
+                  setActiveItem('users');
+                }}
+              />
+            )}
+          </>
+        );
+      case 'chat':
+        return <ChatManagement />;
+      case 'tests':
+        return <TestManagement />;
+      case 'majors':
+        return <MajorManagement />;
+      case 'notifications':
+        return (
+          <div>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-primary-900 mb-2">Quản lý thông báo</h1>
+              <p className="text-primary-700 text-lg">Gửi thông báo đến người dùng</p>
+            </div>
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-6 shadow-lg border border-primary-200">
+              <CreateNotifications />
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <div>
+            <div className="mb-8">
+              <h1 className="text-3xl font-bold text-primary-900 mb-2">Dashboard</h1>
+              <p className="text-primary-700 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-primary-200">
+                <RecentActivity />
+              </div>
+            </div>
+          </div>
+        );
+    }
   };
 
   return (
-    <div className="flex h-screen gradient-primary">
-      <Sidebar activeItem={activeItem} onItemClick={setActiveItem} onLogout={handleLogout} />
+    <div className="flex h-screen bg-gradient-to-br from-primary-50 to-primary-100">
+      <Sidebar 
+        activeItem={activeItem} 
+        onItemClick={setActiveItem} 
+        onLogout={handleLogout}
+      />
       
       <div className="flex-1 overflow-auto">
         <div className="p-8">
-          {activeItem === 'users' ? (
-            <div className="animate-fadeIn">
-              <UserManagement />
-            </div>
-          ) : activeItem === 'chat' ? (
-            <div className="animate-fadeIn">
-              <ChatManagement />
-            </div>
-          ) : activeItem === 'tests' ? (
-            <div className="animate-fadeIn">
-              <TestManagement />
-            </div>
-          ) : activeItem === 'majors' ? (
-            <div className="animate-fadeIn">
-              <MajorManagement />
-            </div>
-          ) : activeItem === 'notifications' ? (
-            <div className="animate-fadeIn">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Quản lý thông báo</h1>
-                <p className="text-white/80 text-lg">Gửi thông báo đến người dùng</p>
-              </div>
-              <div className="bg-white rounded-xl p-6 shadow-lg">
-                <div className="flex justify-center">
-                  <button
-                    onClick={() => setShowNotificationModal(true)}
-                    className="mb-6 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Tạo thông báo mới
-                  </button>
-                </div>
-                {showNotificationModal && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="max-w-2xl w-full mx-4">
-                      <CreateNotifications
-                        onClose={() => setShowNotificationModal(false)}
-                        onSuccess={handleNotificationSuccess}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            <div className="animate-fadeIn">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
-                <p className="text-white/80 text-lg">Tổng quan về hoạt động của hệ thống EduBot</p>
-              </div>
-
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="animate-fadeIn hover-lift delay-400">
-                  <SystemStatus />
-                </div>
-                <div className="animate-fadeIn hover-lift delay-500">
-                  <RecentActivity />
-                </div>
-              </div>
-            </div>
-          )}
+          {renderContent()}
         </div>
       </div>
     </div>
