@@ -28,7 +28,7 @@ export const chatServices = {
     if (endDate) params.append('endDate', endDate);
     if (hasImage !== undefined) params.append('hasImage', hasImage.toString());
     
-    return axiosInstance.get(`/chat/all${params.toString() ? `?${params.toString()}` : ''}`);
+    return axiosInstance.get(`/chat/admin/conversations${params.toString() ? `?${params.toString()}` : ''}`);
   },
 
 
