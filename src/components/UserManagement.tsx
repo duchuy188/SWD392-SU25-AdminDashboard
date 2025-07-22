@@ -27,8 +27,6 @@ const UserManagement: React.FC = () => {
     address: '',
     role: 'student'
   });
-  const [createLoading, setCreateLoading] = useState(false);
-  const [createError, setCreateError] = useState('');
 
   const fetchUsers = async () => {
     try {
@@ -107,16 +105,9 @@ const UserManagement: React.FC = () => {
     }
   };
 
-  const getStatusBadgeClass = (isActive: boolean) => {
-    return isActive
-      ? 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200'
-      : 'bg-gray-100 text-black px-3 py-1 rounded-full text-sm font-medium border border-gray-200';
-  };
 
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCreateLoading(true);
-    setCreateError('');
     try {
       await createUser(createForm);
       // Refresh the user list
@@ -141,19 +132,8 @@ const UserManagement: React.FC = () => {
         role: 'student'
       });
     } catch (err: any) {
-      setCreateError(err?.response?.data?.message || 'Không thể tạo người dùng mới');
       toast.error(err?.response?.data?.message || 'Không thể tạo người dùng mới');
-    } finally {
-      setCreateLoading(false);
     }
-  };
-
-  const handleCreateInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setCreateForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
   };
 
   // Thêm hàm callback để cập nhật thông tin người dùng
@@ -352,9 +332,15 @@ const UserManagement: React.FC = () => {
                     <div className="text-sm font-medium text-black">{user.fullName}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={getRoleBadgeClass(user.role)}>
-                      {user.role === 'admin' ? 'Admin' : 'Student'}
-                    </span>
+                    {updatingRole === user._id ? (
+                      <div className="animate-pulse">
+                        <div className="h-8 w-20 bg-gray-100 rounded-full"></div>
+                      </div>
+                    ) : (
+                      <span className={getRoleBadgeClass(user.role)}>
+                        {user.role === 'admin' ? 'Admin' : 'Student'}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {updatingStatus === user._id ? (
